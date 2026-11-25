@@ -6,5 +6,10 @@
   "videos": { "tiktok": "", "instagram": "", "youtube": "" },
   "apuntados": null,
   "dias": [],
-  "ganador": null
+  "ganador": null,
+  "pago": { "oro": "", "vecino": "", "negocio": "" },
+  "correo": "",
+  "apoyos": {},
+  "vecinos": {},
+  "negocios": []
 }

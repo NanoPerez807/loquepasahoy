@@ -35,6 +35,8 @@
   --cesped:#19c592;                          /* verde: sigue en pie */
   --senal:#d90f1e;                           /* orla roja de las señales */
   --autovia:#0a56b0;                         /* azul de los carteles de autovía */
+  --oro:#ffc526;    --oro-2:#e58a00;        /* pueblos de oro: pared y tejado */
+  --brillo:linear-gradient(112deg,var(--oro) 0 61%,#fff0a8 61% 70%,var(--oro) 70% 75%,#fff0a8 75% 78%,var(--oro) 78% 100%);   /* el oro lleva un destello en diagonal: así no se confunde con el amarillo de los botones */
   --letra:'Montserrat','Avenir Next','Segoe UI',system-ui,sans-serif;
   --r:14px;
   --borde:3px solid var(--tinta);
@@ -247,23 +249,80 @@ button,input{font:inherit;color:inherit}
 .pie p{max-width:66em}
 .pie b{color:#fff;font-weight:800}
 
-/* ---------- apoyar: los niveles van rotulados como señales (límite de velocidad y cartel azul de servicios) */
-.apoya{background:var(--carton);overflow:hidden}
-.apoya-mono{display:none}
-.sin-precios .disco{display:none}
-.sin-precios .niveles li{grid-template-columns:minmax(0,1fr)}
+/* ---------- pueblos de oro: los precios van en señales (disco de límite y cartel azul de servicios), la clasificación en un
+   cartel de distancias (pueblo y cifra, como los kilómetros) y el pueblo dorado lleva su placa bajo la señal de entrada */
+.apoya{background:var(--carton)}
+.apoya-in{display:grid;gap:44px;grid-template-columns:minmax(0,1fr)}
 .apoya .sub{margin-top:12px;max-width:33em;font-size:17.5px;font-weight:600}
-.niveles{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:20px;max-width:680px}
-.niveles li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;align-items:center}
+.niveles{margin-top:28px;display:grid;gap:22px;max-width:680px}
+.niveles li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;align-items:start}
 .disco{display:grid;place-items:center;align-content:center;width:78px;height:78px;border-radius:50%;background:#fff;border:9px solid var(--senal);font-weight:900;font-size:26px;line-height:1;box-shadow:0 4px 0 rgba(11,23,54,.22)}
 .disco small{display:block;font-size:12px;font-weight:800;margin-top:1px}
 .disco.azul{border-radius:14px;border:4px solid #fff;background:var(--autovia);color:#fff;box-shadow:0 0 0 3px var(--autovia),0 6px 0 3px rgba(11,23,54,.22)}
 .niveles h3{font-weight:900;font-size:19.5px;line-height:1.15;letter-spacing:-.005em}
 .niveles p{margin-top:5px;font-size:15.5px;line-height:1.45;color:#232b4b}
+.niveles .chip{margin-top:11px;min-height:44px;padding:6px 16px;background:var(--brillo);line-height:1.2;text-align:center}
+.niveles .chip.blanco{background:#fff}
+.pronto.mini{margin-top:11px;font-size:13.5px;padding:4px 10px 3px;box-shadow:0 3px 0 var(--tinta)}
 .apoya .regla{margin-top:28px;padding-top:20px;border-top:var(--borde);max-width:680px;font-weight:800;font-size:17px;line-height:1.4}
-.apoya .acciones{margin-top:6px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.niveles .chip{margin-top:10px;background:var(--sol)}
+.apoya .letra{margin-top:8px;max-width:680px;font-size:14.5px;font-weight:500;color:#232b4b}
+.ranking-caja{display:grid;justify-items:center;align-content:start}
+.ranking-caja h3{justify-self:start;font-weight:900;font-size:24px;letter-spacing:-.01em;margin-bottom:16px}
+.ranking{width:100%;padding:6px 18px;background:var(--autovia);color:#fff;border:4px solid #fff;border-radius:16px;box-shadow:0 0 0 3px var(--autovia),0 9px 0 3px rgba(11,23,54,.28)}
+.ranking li+li{border-top:2px solid rgba(255,255,255,.38)}
+.ranking button{display:grid;grid-template-columns:1.5em minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:56px;padding:9px 0;border:0;border-radius:8px;background:none;color:inherit;text-align:left;cursor:pointer}
+.ranking .r-n{font-weight:900;font-size:17px;font-variant-numeric:tabular-nums}
+.ranking .r-p{min-width:0;font-weight:800;font-size:17.5px;line-height:1.15}
+.ranking .r-p small{display:block;margin-top:2px;font-weight:500;font-size:13px}
+.ranking b{font-weight:900;font-size:27px;line-height:1;color:var(--oro);font-variant-numeric:tabular-nums}
+.ranking button:hover .r-p{text-decoration:underline;text-underline-offset:3px}
+.ranking button:focus-visible{outline:3px solid var(--sol);outline-offset:3px;box-shadow:none}
+.ranking .vacio{padding:18px 0;font-weight:700;font-size:17px;line-height:1.35}
+.ranking-caja .nota{margin-top:6px;font-weight:600;text-align:center;max-width:30em}
 .marcas .botones{display:flex;flex-wrap:wrap;gap:0 12px}
+.senal-oro{display:inline-flex;align-items:center;gap:6px;margin-top:7px;background:var(--oro);border:2px solid var(--tinta);border-radius:7px;padding:3px 11px 2px 8px;font-weight:800;font-size:13.5px;line-height:1.3}
+.senal-oro svg{flex:none}
+.ficha>*{min-width:0}
+.oro{display:grid;gap:12px;justify-items:start;width:100%;max-width:520px;min-width:0;background:#fff;border:var(--borde);border-radius:14px;padding:14px 14px 16px}
+.oro-estado{font-weight:600}
+.oro-estado b{font-weight:900}
+.ficha .oro-linea{font-size:15px}
+.oro-linea a{font-weight:700}
+.ficha .oro-letra{font-size:13.5px;line-height:1.45;color:#2f3759}
+.boton.largo{padding:9px 18px;line-height:1.2;text-align:center}
+.boton.dorado{background:var(--brillo)}
+.oro .fila{display:grid;width:100%;gap:11px}
+.oro .fila .boton{justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:8px 12px 8px 16px;font-size:15.5px;text-align:left}
+.oro .fila .boton span:first-child{min-width:0;overflow-wrap:anywhere}
+.precio{flex:none;background:#fff;border:2px solid var(--tinta);border-radius:999px;padding:4px 10px 3px;font-weight:900;font-size:14.5px;line-height:1.15;white-space:nowrap}
+.boton.blanco .precio{background:var(--oro)}
+.ficha .oro .pronto.mini{margin-top:2px}
+.pago{display:grid;gap:12px;justify-items:start;width:100%}
+.pago:focus{outline:0}
+.pago h3{font-weight:900;font-size:20px;line-height:1.15;text-wrap:balance}
+.pago .campo-n{width:100%}
+.pago label{display:block;font-weight:800;font-size:15px}
+.pago input{display:block;width:100%;height:50px;margin:6px 0 0;border:var(--borde);border-radius:12px;padding:0 12px;font-weight:700;font-size:17px;background:#fff}
+.pago .boton.largo{width:100%;min-height:52px}
+.pago-pasos{display:grid;gap:14px;width:100%;counter-reset:paso}
+.pago-pasos li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.pago-pasos li::before{counter-increment:paso;content:counter(paso);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--sol);border:var(--borde);font-weight:900;font-size:15px;line-height:1}
+.pago-pasos p{font-weight:700;margin-bottom:8px}
+.pago .comenta{max-width:none}
+.pago .comenta output{overflow-wrap:anywhere}
+.pago .aviso:empty{display:none}
+@media (max-width:339px){
+  .niveles li{grid-template-columns:60px minmax(0,1fr);gap:12px}
+  .disco{width:60px;height:60px;border-width:7px;font-size:21px}
+  .disco small{font-size:10.5px}
+  .niveles h3{font-size:17.5px}
+  .ranking{padding:4px 12px}
+  .ranking b{font-size:23px}
+  .comenta{grid-template-columns:minmax(0,1fr)}
+  .oro{padding:12px 10px 14px}
+  .oro .fila .boton{gap:8px;padding:8px 9px 8px 12px;font-size:15px}
+  .precio{padding:4px 8px 3px;font-size:14px}
+}
 
 /* ---------- pantallas anchas */
 @media (min-width:560px){
@@ -289,8 +348,7 @@ button,input{font:inherit;color:inherit}
   .pista{font-size:16px;top:34px;width:calc(100% - 290px)}
   .sello{font-size:18px;padding:7px 14px 5px}
   .sec{padding:84px 24px}
-  .apoya .sec-in{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:48px;align-items:end}
-  .apoya-mono{display:block;height:430px;width:auto;margin:0 40px -104px 0}
+  .apoya-in{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:64px;align-items:start}
   .como-grid{grid-template-columns:minmax(0,372px) minmax(0,1fr);gap:56px;align-items:start}
   .pasos{gap:22px}
   .pasos li{grid-template-columns:122px minmax(0,1fr);gap:20px}
@@ -375,7 +433,7 @@ button,input{font:inherit;color:inherit}
       </div>
     </div>
 
-    <article class="ficha" id="ficha" aria-live="polite" hidden></article>
+    <article class="ficha" id="ficha" aria-live="polite" tabindex="-1" hidden></article>
 
     <section class="parte" id="parte" aria-labelledby="parte-t" hidden>
       <h2 id="parte-t">Parte de catástrofes</h2>
@@ -400,7 +458,7 @@ button,input{font:inherit;color:inherit}
       <ol class="pasos">
         <li>
           <div class="foto"><img src="media/paso-comenta.webp" width="384" height="384" loading="lazy" alt="El presentador, con el móvil en la mano"><b aria-hidden="true">1</b></div>
-          <div><h3>Comenta tu pueblo y tu provincia</h3><p>En el vídeo del juego, en TikTok, Instagram o YouTube. Con un comentario basta. <span id="paso-plazo">Tienes hasta el jueves 26 de noviembre a las 18:00.</span></p></div>
+          <div><h3>Comenta tu pueblo y tu provincia</h3><p>En cualquier vídeo del juego, en TikTok, Instagram o YouTube. Con un comentario basta. <span id="paso-plazo">Tienes hasta el jueves 26 de noviembre a las 18:00.</span></p></div>
         </li>
         <li>
           <div class="foto"><img src="media/paso-catastrofe.webp" width="384" height="384" loading="lazy" alt="Una ola gigante entra en el tablero"><b aria-hidden="true">2</b></div>
@@ -426,7 +484,7 @@ button,input{font:inherit;color:inherit}
         <li>Cada día sale un episodio con los pueblos que caen.</li>
         <li>Gana el último pueblo que quede en pie.</li>
       </ul>
-      <a class="boton" href="#apoya" style="margin-top:26px">¿Quieres salir en un episodio?</a>
+      <a class="boton dorado" href="#apoya" style="margin-top:26px">Haz de oro a tu pueblo</a>
     </div>
   </div>
 </section>
@@ -498,19 +556,27 @@ button,input{font:inherit;color:inherit}
 </section>
 
 <section class="sec apoya" id="apoya">
-  <div class="sec-in">
+  <div class="sec-in apoya-in">
     <div>
-    <h2>¿Quieres salir en un episodio?</h2>
-    <p class="sub">Apoya el canal y tu nombre aparece al final de un episodio del juego.</p>
-    <ul class="niveles">
-      <li><span class="disco">3<small>€</small></span><div><h3>Tu nombre</h3><p>Sale en la lista del final del episodio.</p><a class="chip pago" data-n="3" hidden>Salir por 3 €</a></div></li>
-      <li><span class="disco">10<small>€</small></span><div><h3>Tu nombre y tu pueblo, en grande</h3><p>«Gracias a Marta, de Tomelloso».</p><a class="chip pago" data-n="10" hidden>Salir por 10 €</a></div></li>
-      <li><span class="disco azul">30<small>€ o más</small></span><div><h3>Tu negocio o tu ayuntamiento</h3><p>«Episodio con el apoyo de…», con vuestro nombre en pantalla.</p><a class="chip pago" data-n="negocio" hidden>Escríbeme</a></div></li>
-    </ul>
-    <p class="regla">Apoyar no cambia el sorteo. Los pueblos caen al azar, también el tuyo.</p>
-    <div class="acciones"><p class="pronto" id="apoyar-pronto">Muy pronto</p></div>
+      <h2>Haz de oro a tu pueblo</h2>
+      <p class="sub">Apoya el canal y la casita de tu pueblo se vuelve dorada en el mapa. El oro no salva: si cae, cae con estilo.</p>
+      <ul class="niveles">
+        <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
+          <button type="button" class="chip ir-pago" data-m="oro" hidden>Elige tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
+        <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro.</p>
+          <button type="button" class="chip ir-pago" data-m="vecino" hidden>Elige tu pueblo</button><p class="pronto mini" data-m="vecino">Muy pronto</p></div></li>
+        <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…» y un cartel con vuestro nombre sobre vuestro pueblo en el mapa.</p>
+          <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
+      </ul>
+      <p class="regla">Apoyar no cambia el sorteo. Los pueblos caen al azar, también el tuyo.</p>
+      <p class="letra">Los apoyos aparecen en el mapa en menos de 24 horas. Solo para mayores de 18 años.</p>
     </div>
-    <img class="apoya-mono" src="media/m-fiesta.webp" width="550" height="900" loading="lazy" alt="" aria-hidden="true">
+    <div class="ranking-caja">
+      <h3 id="ranking-t">Los pueblos de oro</h3>
+      <ol class="ranking" id="ranking" aria-labelledby="ranking-t"><li class="vacio">Todavía no hay ninguno. El tuyo puede ser el primero.</li></ol>
+      <div class="cartel-patas" aria-hidden="true"><i></i><i></i></div>
+      <p class="nota" id="ranking-nota">Los diez pueblos con más apoyos de oro.</p>
+    </div>
   </div>
 </section>
 </main>
@@ -523,7 +589,7 @@ button,input{font:inherit;color:inherit}
       <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
       <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
     </nav>
-    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP.</p>
+    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP. Los apoyos se pagan en una página externa: aquí no se pide ni se guarda ningún dato de pago. A esa página solo viaja el pueblo que has elegido y, si lo escribes, el nombre para los agradecimientos.</p>
     <p><b>Mapa.</b> Obra derivada de Equipamiento Geográfico de Referencia Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> <a href="https://www.ign.es">ign.es</a>, a través del paquete es-atlas.</p>
   </div>
 </footer>
@@ -538,22 +604,22 @@ button,input{font:inherit;color:inherit}
 const $ = (id) => document.getElementById(id);
 const REDES = { tiktok: 'https://www.tiktok.com/@loquepasa.es', instagram: 'https://www.instagram.com/loquepasahoy.es', youtube: 'https://www.youtube.com/@loquepasa-hoy' };
 const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube' };
-// Correo para marcas y enlace para apoyar (Ko-fi o parecido). Vacíos: el botón del correo no sale y el de apoyar dice «Muy pronto».
-const CORREO = '';
-// Enlace de pago de cada nivel (Ko-fi, PayPal…). Vacío: ese botón no sale. El de negocios, si está vacío, lleva al correo o a Instagram.
-const PAGO = { 3: '', 10: '', negocio: '' };
-// Los precios de los niveles no se enseñan hasta que estén confirmados (true = se ven los discos con el precio).
-const PRECIOS_VISIBLES = false;
+// Pueblos de oro: los enlaces de pago, el correo y los apoyos de cada pueblo van en data/juego.json (pago, correo, apoyos, vecinos, negocios).
+// Aquí solo están los precios. La página no cobra ni manda nada: enseña el texto que hay que pegar en el mensaje del pago y enlaza a la página de pago.
+const PRECIO = { oro: 3, vecino: 10 };
+const enlace = (u) => (typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/.test(u.trim()) ? u.trim() : '');
 const POR_DEFECTO = { fase: 'inscripcion', cierre: '2026-11-26T18:00:00+01:00', cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27' };
 const CALMA = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const miles = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const minus = (s) => s.charAt(0).toLowerCase() + s.slice(1);
-const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n) => (n === 1 ? 'cae ' : 'caen ') + miles(n);
+const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n) => (n === 1 ? 'cae ' : 'caen ') + miles(n), apoyosT = (n) => (n === 1 ? '1 apoyo' : miles(n) + ' apoyos');
 
 let PUEBLOS = [], PROV = [], IDX = new Map(), MAPA = null, REAL = null, JUEGO = null, EST = null;
 let sel = -1, faseVista = '';
+let ORO = null, OROS = [], RANK = [], NEG = new Map();     // apoyos de oro por pueblo · índices de los dorados · clasificación · negocios por pueblo
+let pagoModo = '', pagoNombre = '', pendiente = '';       // panel de pago abierto ('oro' | 'vecino') · nombre del vecino · modo elegido antes de tener pueblo
 
 /* ---------- estado del juego */
 function prepara(j) {
@@ -563,6 +629,14 @@ function prepara(j) {
   J.caidos = new Map();
   for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
   J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
+  const pg = j.pago || {};
+  J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', negocio: '' } : { oro: enlace(pg.oro), vecino: enlace(pg.vecino), negocio: enlace(pg.negocio) };
+  J.correo = typeof j.correo === 'string' && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(j.correo.trim()) ? j.correo.trim() : '';
+  J.vecinos = new Map(); J.apoyos = new Map(); J.negocios = new Map();
+  for (const c in j.vecinos || {}) { const v = j.vecinos[c]; if (Array.isArray(v) && v.length) J.vecinos.set(String(c), v.map(String)); }
+  for (const c in j.apoyos || {}) { const n = Math.floor(+j.apoyos[c]); if (n > 0) J.apoyos.set(String(c), n); }
+  for (const [c, v] of J.vecinos) J.apoyos.set(c, (J.apoyos.get(c) || 0) + v.length);       // cada vecino de honor suma un apoyo de oro
+  for (const g of Array.isArray(j.negocios) ? j.negocios : []) { if (!g || !g.c || !g.n) continue; const c = String(g.c); if (!J.negocios.has(c)) J.negocios.set(c, []); J.negocios.get(c).push({ n: String(g.n), url: enlace(g.url) }); }
   return J;
 }
 function fase() {                       // las inscripciones se cierran solas al llegar la hora, aunque nadie toque juego.json
@@ -613,6 +687,12 @@ function refresca() {
   const f = faseVista;                  // 0 casita normal · 1 no juega · 2 eliminada · 3 ganadora
   for (let i = 0; i < PUEBLOS.length; i++) { const e = f === 'inscripcion' || f === 'cerrado' ? '' : estado(PUEBLOS[i].c); EST[i] = e === 'nojuega' ? 1 : e === 'eliminado' ? 2 : e === 'ganador' ? 3 : 0; }
   GAN = f === 'final' && JUEGO.ganador && IDX.has(JUEGO.ganador) ? IDX.get(JUEGO.ganador) : -1;
+  ORO.fill(0); OROS = []; NEG = new Map();
+  for (const [c, n] of JUEGO.apoyos) { const i = IDX.get(c); if (i != null) { ORO[i] = Math.min(65535, n); OROS.push(i); } }
+  for (const [c, L] of JUEGO.negocios) { const i = IDX.get(c); if (i != null) NEG.set(i, L); }
+  RANK = OROS.slice().sort((a, b) => ORO[b] - ORO[a] || PUEBLOS[a].n.localeCompare(PUEBLOS[b].n, 'es'));
+  if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
+  cv.setAttribute('aria-label', 'Mapa de España con una casita por cada municipio.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + ' Usa el buscador para encontrar el tuyo.');
   pintaPanel(); pintaFicha(false); tic(); pide();
 }
 
@@ -622,6 +702,7 @@ const vista = { x: 0, y: 0, k: 1 };
 const CEL = 80; let COLS = 0, celdas = [];
 let W = 0, H = 0, DPR = 1, base = 1, anim = null, raf = 0, t0 = 0, entrando = false, GAN = -1, OLAS = [];
 const COL = [['#ffffff', '#ff2e4d'], ['#d9dde8', '#a2a9bd'], ['#2a2f3f', '#3b4155'], ['#ffffff', '#ffb300']];
+const COL_ORO = [['#ffd43b', '#f5a300'], ['#d9a520', '#96700f']];     // pueblo de oro: en pie · caído (ruinas doradas)
 
 function montaMapa(m) {
   const arcos = m.arcs.map((a) => { const p = new Float32Array(a.length); let x = 0, y = 0;
@@ -650,7 +731,7 @@ function montaPueblos(p) {
   PUEBLOS = p.map((r, i) => { const k = norm(r[1]), t = { c: r[0], n: r[1], p: r[2], x: r[3], y: r[4], k, w: ' ' + k, ks: r[1].indexOf('/') > 0 ? r[1].split('/').map(norm) : null,
       d: 120 + (r[3] / MAPA.w) * 760 + ((i * 7919) % 211) };
     IDX.set(t.c, i); const c = Math.floor(t.y / CEL) * COLS + Math.floor(t.x / CEL); (celdas[c] || (celdas[c] = [])).push(i); return t; });
-  EST = new Uint8Array(PUEBLOS.length);
+  EST = new Uint8Array(PUEBLOS.length); ORO = new Uint16Array(PUEBLOS.length);
 }
 function cerca(gx, gy, max, salvo) {       // el pueblo más cercano a un punto de la rejilla (o -1)
   const c0 = Math.floor(gx / CEL), r0 = Math.floor(gy / CEL), n = Math.ceil(max / CEL); let mejor = -1, bd = max * max;
@@ -670,8 +751,8 @@ function mide() {
   W = r.width; H = r.height; DPR = Math.min(3, window.devicePixelRatio || 1);
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); base = Math.min(W / MAPA.w, H / MAPA.h); return true;
 }
-function casa(x, y, h, e) {                 // casita con detalle (cuando se ve de cerca)
-  const c = COL[e];
+function casa(x, y, h, e, oro) {            // casita con detalle (cuando se ve de cerca); oro = apoyos de oro que lleva
+  const dor = oro > 0, c = dor ? COL_ORO[e === 2 ? 1 : 0] : COL[e];
   cx.fillStyle = 'rgba(11,23,54,.2)'; cx.beginPath(); cx.ellipse(x, y + h * 0.5, h * 0.56, h * 0.15, 0, 0, 6.3); cx.fill();
   cx.lineJoin = 'round'; cx.lineWidth = Math.max(1, h * 0.085); cx.strokeStyle = '#0b1736';
   if (e === 2) {                            // en ruinas: muros rotos, cascotes y un poco de humo
@@ -680,12 +761,27 @@ function casa(x, y, h, e) {                 // casita con detalle (cuando se ve 
     cx.fillRect(x + h * 0.53, y + h * 0.37, h * 0.14, h * 0.13); cx.fillRect(x - h * 0.7, y + h * 0.4, h * 0.12, h * 0.1);
     cx.fillStyle = 'rgba(255,255,255,.6)'; cx.beginPath(); cx.arc(x + h * 0.04, y - h * 0.26, h * 0.17, 0, 6.3); cx.fill(); cx.beginPath(); cx.arc(x + h * 0.24, y - h * 0.5, h * 0.12, 0, 6.3); cx.fill(); return;
   }
-  cx.fillStyle = c[0]; cx.beginPath(); cx.rect(x - h * 0.4, y - h * 0.04, h * 0.8, h * 0.54); cx.fill(); cx.stroke();
+  cx.fillStyle = c[0]; cx.beginPath(); cx.rect(x - h * 0.4, y - h * 0.04, h * 0.8, h * 0.54); cx.fill();
+  if (dor && h >= 9) { cx.fillStyle = '#fff6c4'; cx.fillRect(x - h * 0.31, y - h * 0.04, h * 0.13, h * 0.54); cx.fillRect(x + h * 0.2, y - h * 0.04, h * 0.06, h * 0.54); cx.beginPath(); cx.rect(x - h * 0.4, y - h * 0.04, h * 0.8, h * 0.54); }   // brillo del oro
+  cx.stroke();
   cx.fillStyle = c[1]; cx.beginPath(); cx.moveTo(x - h * 0.58, y + h * 0.02); cx.lineTo(x, y - h * 0.52); cx.lineTo(x + h * 0.58, y + h * 0.02); cx.closePath(); cx.fill(); cx.stroke();
-  cx.fillStyle = e === 1 ? '#8a91a6' : '#0b1736'; cx.fillRect(x - h * 0.1, y + h * 0.2, h * 0.2, h * 0.3);
+  cx.fillStyle = e === 1 && !dor ? '#8a91a6' : '#0b1736'; cx.fillRect(x - h * 0.1, y + h * 0.2, h * 0.2, h * 0.3);
+  if (dor && h >= 8) {                      // destello de cuatro puntas
+    const sx = x + h * 0.6, sy = y - h * 0.46, r = h * 0.21; cx.beginPath();
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, d = k % 2 ? r * 0.34 : r; if (k) cx.lineTo(sx + Math.cos(a) * d, sy + Math.sin(a) * d); else cx.moveTo(sx + d, sy); }
+    cx.closePath(); cx.fillStyle = '#fff'; cx.fill(); cx.lineWidth = Math.max(1, h * 0.05); cx.stroke();
+  }
+}
+function insignia(x, y, h, n) {             // cuántos apoyos de oro lleva (de cerca)
+  const r = Math.max(7.5, Math.min(11, h * 0.44)), bx = x + h * 0.56, by = y + h * 0.4, t = n > 99 ? '99+' : String(n);
+  cx.beginPath(); cx.arc(bx, by, r, 0, 6.3); cx.fillStyle = '#0b1736'; cx.fill(); cx.lineWidth = 1.5; cx.strokeStyle = '#ffd43b'; cx.stroke();
+  rotulo(t, bx, by + 0.5, '800 ' + (r * (t.length > 2 ? 0.82 : t.length > 1 ? 1 : 1.2)).toFixed(1) + 'px Montserrat, sans-serif', '#ffd43b');
 }
 function rotulo(txt, x, y, fuente, relleno, halo) { cx.font = fuente; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineJoin = 'round';
   if (halo) { cx.strokeStyle = halo; cx.lineWidth = 3.5; cx.strokeText(txt, x, y); } cx.fillStyle = relleno; cx.fillText(txt, x, y); }
+const rotNeg = (L) => { const t = L[0].n + (L.length > 1 ? ' +' + (L.length - 1) : ''); return t.length > 24 ? t.slice(0, 23).trim() + '…' : t; };      // cartel azul del negocio que apoya a su pueblo
+function cartelNeg(x, y, w, txt, f, px, y0, y1) { cx.strokeStyle = '#5c6480'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(px, y0); cx.lineTo(px, y1); cx.stroke();
+  caja(x, y, w, 21, 5); cx.fillStyle = '#0a56b0'; cx.fill(); cx.lineWidth = 2; cx.strokeStyle = '#fff'; cx.stroke(); rotulo(txt, x + w / 2, y + 11, f, '#fff'); }
 function caja(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
 
 function pinta(ahora) {
@@ -711,11 +807,13 @@ function pinta(ahora) {
   cx.setTransform(DPR, 0, 0, DPR, 0, 0);                                             // casitas, en píxeles
 
   const hs = Math.min(17, Math.max(1.3, base * MAPA.w / 225) * Math.pow(vista.k, 0.8)), te = entrando ? ahora - t0 : 1e9, N = PUEBLOS.length;
-  let senalSel = null;                                                               // la señal con el nombre del pueblo elegido (se pinta al final, pero reserva su sitio)
+  let senalSel = null; const fNeg = '700 ' + (W > 500 ? 12 : 11) + 'px Montserrat, sans-serif';    // la señal con el nombre del pueblo elegido (se pinta al final, pero reserva su sitio)
   if (sel >= 0) { const t = PUEBLOS[sel], x = t.x * s + ox, y = t.y * s + oy, h = Math.max(13, hs * 1.55), f = '800 ' + (W > 500 ? 14 : 12.5) + 'px Montserrat, sans-serif';
     let txt = t.n.toLocaleUpperCase('es'); if (txt.length > 28) txt = txt.slice(0, 27).trim() + '…';
     cx.font = f; const w = Math.min(W - 12, cx.measureText(txt).width + 22); let by = y - h * 0.52 - 28 - 27 - 5; if (by < 6) by = y + h * 0.5 + 12;
-    senalSel = { x: Math.max(6, Math.min(W - w - 6, x - w / 2)), y: by, w, h: 27, txt, f, casa: [x - h * 1.3, y - h * 0.52 - 30, x + h * 1.3, y + h * 1.35] }; }
+    senalSel = { x: Math.max(6, Math.min(W - w - 6, x - w / 2)), y: by, w, h: 27, txt, f, casa: [x - h * 1.3, y - h * 0.52 - 30, x + h * 1.3, y + h * 1.35] };
+    const L = NEG.get(sel); if (L) { const nt = rotNeg(L); cx.font = fNeg; const nw = cx.measureText(nt).width + 16, bajo = by > y ? by + 27 : y + h * 1.2 + 2;     // su negocio, debajo de la casita elegida
+      senalSel.neg = { x: Math.max(4, Math.min(W - nw - 4, x - nw / 2)), y: bajo + 8, w: nw, txt: nt, px: x, y0: bajo }; } }
   const crece = (i) => { if (!entrando) return 1; const u = (te - PUEBLOS[i].d) / 260; if (u <= 0) return 0; if (u >= 1) return 1; const v = u - 1; return 1 + 2.7 * v * v * v + 1.7 * v * v; };
   if (hs < 5.2) {
     for (let e = 0; e < 4; e++) for (let capa = 0; capa < 2; capa++) {              // por tandas de color: primero paredes, luego tejados
@@ -724,13 +822,29 @@ function pinta(ahora) {
         const h = hs * crece(i) * (e === 3 ? 1.6 : 1); if (!h) continue;
         if (capa) cx.fillRect(x - h / 2, y - h / 2, h, h * 0.55); else cx.fillRect(x - h / 2, y - h * 0.05, h, h * 0.55); }
     }
+    if (OROS.length) {                                                               // los pueblos de oro van encima, más grandes y con contorno: se tienen que ver desde lejos
+      const g = Math.max(4.6, hs * 1.9);
+      for (const i of OROS) { if (i === sel || i === GAN) continue; const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -8 || x > W + 8 || y < -8 || y > H + 8) continue;
+        const h = g * crece(i); if (!h) continue; const c = COL_ORO[EST[i] === 2 ? 1 : 0];
+        cx.fillStyle = '#fff'; cx.fillRect(x - h / 2 - 2.1, y - h / 2 - 2.1, h + 4.2, h + 4.2);
+        cx.fillStyle = '#0b1736'; cx.fillRect(x - h / 2 - 1.1, y - h / 2 - 1.1, h + 2.2, h + 2.2);
+        cx.fillStyle = c[0]; cx.fillRect(x - h / 2, y - h / 2, h, h); cx.fillStyle = c[1]; cx.fillRect(x - h / 2, y - h / 2, h, h * 0.4); }
+    }
   } else {
     const vis = []; for (let i = 0; i < N; i++) { const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -20 || x > W + 20 || y < -20 || y > H + 20 || i === sel) continue; vis.push([y, x, i]); }
     vis.sort((a, b) => a[0] - b[0]);
-    for (const v of vis) { const h = hs * crece(v[2]); if (h) casa(v[1], v[0], h, EST[v[2]]); }
+    for (const v of vis) { const o = ORO[v[2]], h = hs * crece(v[2]) * (o ? 1.18 : 1); if (h) casa(v[1], v[0], h, EST[v[2]], o); }
+    if (hs >= 7.5 && !entrando) for (const v of vis) if (ORO[v[2]]) insignia(v[1], v[0], hs * 1.18, ORO[v[2]]);
     if (vista.k >= 5 && !anim) {                                                     // nombres de los vecinos, sin pisarse
-      const cxm = W / 2, cym = H / 2, puestos = [[0, H - 58, 172, H], [W * 0.36, 0, W, 50]]; if (senalSel) puestos.push([senalSel.x - 4, senalSel.y - 4, senalSel.x + senalSel.w + 4, senalSel.y + senalSel.h + 4], senalSel.casa);
+      const cxm = W / 2, cym = H / 2, puestos = [[0, H - 58, 172, H], [W * 0.36, 0, W, 50]]; if (senalSel) { puestos.push([senalSel.x - 4, senalSel.y - 4, senalSel.x + senalSel.w + 4, senalSel.y + senalSel.h + 4], senalSel.casa); const g = senalSel.neg; if (g) puestos.push([g.x - 3, g.y - 9, g.x + g.w + 3, g.y + 24]); }
       const casas = vis.map((v) => [v[1] - hs * 0.62, v[0] - hs * 0.58, v[1] + hs * 0.62, v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
+      for (const v of vis) { const L = NEG.get(v[2]); if (!L) continue; const txt = rotNeg(L);                                        // carteles de los negocios: encima de su casita y, si ahí estorban, debajo
+        cx.font = fNeg; const tw = cx.measureText(txt).width + 16, y1 = v[0] - hs * 0.6, y2 = v[0] + hs * 0.62;
+        const lado = Math.max(0, tw / 2 - 13); let puesto = false;
+        for (const dx of [0, -lado, lado]) { if (puesto) break; const xc = Math.max(4 + tw / 2, Math.min(W - 4 - tw / 2, v[1] + dx));
+          for (const c of [[y1 - 31, y1, y1 - 10], [y2 + 9, y2, y2 + 9]]) { const k = [xc - tw / 2 - 3, c[0] - 3, xc + tw / 2 + 3, c[0] + 24];
+            if (k[1] < 0 || k[3] > H || v[1] < k[0] + 8 || v[1] > k[2] - 8 || puestos.some((p) => k[0] < p[2] && k[2] > p[0] && k[1] < p[3] && k[3] > p[1])) continue;
+            cartelNeg(xc - tw / 2, c[0], tw, txt, fNeg, v[1], c[1], c[2]); puestos.push(k); puesto = true; break; } } }
       vis.sort((a, b) => Math.hypot(a[1] - cxm, a[0] - cym) - Math.hypot(b[1] - cxm, b[0] - cym));
       const f = '700 ' + (W > 500 ? 12.5 : 11.5) + 'px Montserrat, sans-serif'; cx.font = f; let n = 0;
       for (const v of vis) { if (n >= 16) break; const nombre = PUEBLOS[v[2]].n, tw = cx.measureText(nombre).width, x = v[1], y = v[0] + hs * 0.5 + 11;
@@ -744,7 +858,7 @@ function pinta(ahora) {
     if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
     cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12, 0, 6.3); cx.fillStyle = 'rgba(255,212,59,.5)'; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = '#fff'; cx.stroke();
     cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12 + 2.5, 0, 6.3); cx.lineWidth = 1.5; cx.strokeStyle = '#0b1736'; cx.stroke();
-    casa(x, y, h, EST[m]);
+    casa(x, y, h, EST[m], ORO[m]); if (ORO[m]) insignia(x, y, h, ORO[m]);
     if (m !== sel) continue;
     const py = y - h * 0.52;
     cx.strokeStyle = '#0b1736'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(x, py); cx.lineTo(x, py - 15); cx.stroke();
@@ -752,6 +866,7 @@ function pinta(ahora) {
     cx.beginPath(); cx.arc(x - 2.2, py - 23.2, 2, 0, 6.3); cx.fillStyle = 'rgba(255,255,255,.85)'; cx.fill();
     const R = senalSel; caja(R.x, R.y, R.w, R.h, 6); cx.fillStyle = '#fff'; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = EST[m] === 1 ? '#8f96ab' : '#d90f1e'; cx.stroke();
     cx.save(); caja(R.x, R.y, R.w, R.h, 6); cx.clip(); rotulo(R.txt, R.x + R.w / 2, R.y + R.h / 2 + 1, R.f, '#101014'); cx.restore();
+    if (R.neg) cartelNeg(R.neg.x, R.neg.y, R.neg.w, R.neg.txt, fNeg, R.neg.px, R.neg.y0, R.neg.y);
   }
 }
 function pide() { if (!raf) raf = requestAnimationFrame(cuadro); }
@@ -782,8 +897,71 @@ function chips(directos) { return '<div class="fila">' + Object.keys(REDES).map(
 
 // si el texto de la pista no cabe encima de la mesa (pantallas estrechas o letra grande), la mesa baja lo que haga falta
 function encajaPista() { const e = $('escena'), p = $('pista'); e.style.paddingTop = ''; const base = parseFloat(getComputedStyle(e).paddingTop) || 0, hace = p.offsetTop + p.offsetHeight + 12; if (hace > base) e.style.paddingTop = hace + 'px'; }
+
+// ----- pueblos de oro. La página no cobra: lleva a la página de pago. Si el enlace de juego.json tiene {ref} (Stripe: client_reference_id),
+// el pueblo viaja en el enlace (ORO-13082, VEC-13082-Marta_G); si no, se enseña el texto que hay que pegar en el mensaje del pago.
+const DESTELLO = '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.7 7.8 7.8 2.7-7.8 2.7-2.7 7.8-2.7-7.8L1.5 12l7.8-2.7z" fill="#fff" stroke="#0b1736" stroke-width="2" stroke-linejoin="round"/></svg>';
+const limpiaNombre = (v) => String(v).replace(/[\u0000-\u001f<>{}]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 30).trim();
+const refNombre = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40).replace(/_+$/, '');   // solo letras, cifras y guiones bajos
+const conRef = (m) => JUEGO.pago[m].indexOf('{ref}') >= 0;
+const notaPago = (m, t, nombre) => (m === 'vecino' ? 'VECINO ' + t.c + ' ' + t.n + ' · ' + (nombre || '…') : 'ORO ' + t.c + ' ' + t.n);
+const refPago = (m, t, nombre) => (m === 'vecino' ? 'VEC-' + t.c + '-' + refNombre(nombre) : 'ORO-' + t.c);
+const faltaNombre = () => pagoModo === 'vecino' && !(conRef('vecino') ? refNombre(pagoNombre) : pagoNombre);
+const hrefPago = () => (JUEGO.demo ? '#juego' : faltaNombre() && conRef(pagoModo) ? '#f-nombre' : JUEGO.pago[pagoModo].split('{ref}').join(refPago(pagoModo, PUEBLOS[sel], pagoNombre)));
+const parte = (v) => esc(v).replace(/\//g, '/<wbr>');          // «Alacant/Alicante» puede partirse tras la barra
+const enumera = (L) => { if (L.length < 2) return L.map((v) => v[1]).join(''); const u = L[L.length - 1]; return L.slice(0, -1).map((v) => v[1]).join(', ') + (/^h?i(?![aeou])/.test(norm(u[0])) ? ' e ' : ' y ') + u[1]; };
+
+function pagoHTML(t, e) {                    // el panel de pago, dentro del bloque dorado de la ficha
+  const m = pagoModo, T = parte(t.n), ref = conRef(m), vec = m === 'vecino';
+  const pagar = `<a class="boton dorado largo" id="f-pagar" target="_blank" rel="noopener" href="${esc(hrefPago())}">Ir a pagar</a>`;
+  let h = `<div class="pago" id="f-pago" tabindex="-1" role="group" aria-labelledby="f-pago-t"><h3 id="f-pago-t">${vec ? 'Vecino de honor de ' + T : (ORO[sel] ? 'Más oro para ' : 'Haz de oro a ') + T}</h3>
+    <p class="oro-linea">${vec ? `${PRECIO.vecino} €. Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y ${T} suma un apoyo de oro.` : `${PRECIO.oro} € cada apoyo.${ref ? ' En la página de pago eliges cuántos.' : ''}`}</p>`;
+  if (vec) h += `<div class="campo-n"><label for="f-nombre">¿Qué nombre pongo?</label><input id="f-nombre" type="text" maxlength="30" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" placeholder="Marta G." value="${esc(pagoNombre)}"></div>`;
+  if (ref) h += pagar;
+  else h += `<ol class="pago-pasos"><li><div><p>Copia este texto:</p><div class="comenta"><output id="f-nota">${esc(notaPago(m, t, pagoNombre))}</output><button type="button" class="boton" id="f-nota-copiar">Copiar</button></div></div></li>
+    <li><div><p>Pégalo en el mensaje del pago:</p>${pagar}</div></li></ol>`;
+  return h + `<p class="oro-letra">${ref ? (vec ? 'El pueblo y el nombre van apuntados en el enlace. ' : 'Tu pueblo va apuntado en el enlace. ') : ''}Aparece en el mapa en menos de 24 horas. ${vec ? 'Nada de insultos ni nombres de otras personas: esos no salen y se devuelve el dinero.' : e === 'eliminado' ? 'El oro no lo levanta: lo que brilla son las ruinas.' : 'El oro no salva: si cae, cae con estilo.'} Solo para mayores de 18 años.</p>
+    <p class="aviso" id="f-pago-aviso" role="status"></p><button type="button" class="chip" id="f-pago-cerrar">Ahora no</button></div>`;
+}
+function oroFicha(t, e) {                    // el bloque dorado de la ficha: cuántos apoyos lleva, quién lo apoya y cómo sumarle uno
+  const J = JUEGO, n = ORO[sel], T = parte(t.n), vec = J.vecinos.get(t.c), neg = NEG.get(sel), ofrece = e !== 'nojuega';   // al que no juega no se le vende oro
+  let h = '';
+  if (n) { const pos = RANK.indexOf(sel), sube = pos > 0 ? RANK[pos - 1] : -1;
+    h += `<p class="oro-estado"><b>${n === 1 ? '1 apoyo' : miles(n) + ' apoyos'} de oro.</b> ${pos === 0 ? (RANK.length > 1 ? 'Ahora mismo es el que más tiene de España.' : 'De momento es el único de España.')
+      : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + (ORO[sube] - n + 1) + ' más adelanta a ' + esc(PUEBLOS[sube].n) : '') + '.'}${e === 'eliminado' ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
+  if (vec) { const L = vec.slice(0, 8).map((v) => [v, esc(v)]);
+    h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${vec.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vec.length - 8) + ' más' : enumera(L)}.</p>`; }
+  if (neg) h += `<p class="oro-linea">Con el apoyo de ${enumera(neg.map((g) => [g.n, g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.n)}</a>` : '<b>' + esc(g.n) + '</b>']))}.</p>`;
+  if (ofrece) {
+    if (pagoModo && J.pago[pagoModo]) h += pagoHTML(t, e);
+    else if (J.pago.oro || J.pago.vecino) {
+      if (!n) h += `<p class="oro-linea">${e === 'eliminado' ? 'El oro no lo levanta, pero sus ruinas pueden brillar en el mapa.' : 'Su casita puede brillar en el mapa. El oro no salva: si cae, cae con estilo.'}</p>`;
+      h += '<div class="fila">' + (J.pago.oro ? `<button type="button" class="boton dorado" id="f-oro"><span>${n ? 'Dale más oro a ' : 'Haz de oro a '}${T}</span><span class="precio">${PRECIO.oro} €</span></button>` : '')
+        + (J.pago.vecino ? `<button type="button" class="boton blanco" id="f-vecino"><span>Vecino de honor</span><span class="precio">${PRECIO.vecino} €</span></button>` : '') + '</div>';
+    } else h += `<p class="oro-linea"><b>Pueblo de oro, ${PRECIO.oro} € cada apoyo.</b> ${e === 'eliminado' ? 'Las ruinas de ' + T + ' se vuelven doradas' : 'La casita de ' + T + ' se vuelve dorada'} en el mapa.</p><p class="pronto mini">Muy pronto</p>`;
+  }
+  return h ? `<div class="oro">${h}</div>` : '';
+}
+function abrePago() {                        // lleva la vista y el foco al panel de pago recién abierto
+  const p = $('f-pago'); if (!p) return; p.focus({ preventScroll: true });
+  const r = p.getBoundingClientRect(); if (r.top < 8 || r.bottom > innerHeight - 8) scrollTo({ top: Math.max(0, r.top + scrollY - Math.max(14, Math.min(96, (innerHeight - r.height) / 2))), behavior: CALMA ? 'auto' : 'smooth' });
+}
+function pintaApoya() {                      // la sección «Haz de oro a tu pueblo»: botones de cada nivel y clasificación
+  const J = JUEGO, hay = sel >= 0 && estado(PUEBLOS[sel].c) !== 'nojuega';
+  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = hay ? (m === 'oro' ? 'Haz de oro a ' : 'Vecino de honor de ') + PUEBLOS[sel].n : 'Elige tu pueblo'; }
+  for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
+  const top = RANK.slice(0, 10);
+  $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = PROV[t.p].n;
+    return `<li><button type="button" data-i="${i}" aria-label="${k + 1}.º: ${esc(t.n)} (${esc(pv)}), ${apoyosT(ORO[i])} de oro. Ver en el mapa"><span class="r-n">${k + 1}</span><span class="r-p">${parte(t.n)}<small>${esc(pv)}${EST[i] === 2 ? ' · caído con estilo' : ''}</small></span><b>${ORO[i] > 9999 ? '9999+' : miles(ORO[i])}</b></button></li>`; }).join('')
+    : '<li class="vacio">Todavía no hay ninguno. El tuyo puede ser el primero.</li>';
+  $('ranking-nota').textContent = !RANK.length ? 'Los diez pueblos con más apoyos de oro.' : RANK.length > 10 ? 'Los diez con más apoyos de oro, de ' + miles(RANK.length) + ' pueblos dorados. Toca uno para verlo en el mapa.' : 'Los pueblos con más apoyos de oro. Toca uno para verlo en el mapa.';
+  const R = REAL || J, ne = $('negocio-escribe'), co = $('correo');                    // el contacto no cambia en las vistas de prueba
+  ne.href = R.pago.negocio ? R.pago.negocio.split('{ref}').join('NEGOCIO') : R.correo ? 'mailto:' + R.correo + '?subject=' + encodeURIComponent('Cartel en el mapa') : REDES.instagram;
+  if (R.correo) { co.href = 'mailto:' + R.correo; co.hidden = false; } else co.hidden = true;
+}
 function pintaFicha(conGolpe) {
   const F = $('ficha'), S = $('sello');
+  pintaApoya();
   $('pista').innerHTML = sel < 0 ? '<b>8.132</b> municipios, una casita cada uno. Toca el mapa o escribe el tuyo.' : 'Toca otra casita para ver cómo va ese pueblo.';
   encajaPista();
   if (sel < 0) { F.hidden = true; S.hidden = true; mono('abajo'); return; }
@@ -794,7 +972,7 @@ function pintaFicha(conGolpe) {
     h = `${T} todavía puede entrar`;
     cuerpo = `<p>Si alguien ya lo ha comentado, está dentro. Si no, hazlo tú: con un comentario basta.</p>
       <div class="comenta"><output id="f-texto">${T}, ${esc(pv)}</output><button type="button" class="boton" id="f-copiar">Copiar</button></div>
-      <p>${directo ? 'Pégalo en el vídeo del juego:' : 'Pégalo en el vídeo «¿Sobrevivirá tu pueblo?», en la red que uses:'}</p>${chips(true)}`;
+      <p>${directo ? 'Pégalo en un vídeo del juego:' : 'Pégalo en los comentarios de cualquier vídeo del juego, en la red que uses:'}</p>${chips(true)}`;
   } else if (e === 'contando') {
     h = 'Las inscripciones están cerradas';
     cuerpo = `<p>Estoy contando los comentarios de las tres redes. Si alguien comentó ${T} antes del cierre, saldrá en la lista.${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
@@ -816,8 +994,8 @@ function pintaFicha(conGolpe) {
     cuerpo = `<p>Es el último pueblo en pie de los ${miles(N)} que jugaban. El vídeo del premio sale en las tres redes.</p>${chips(false)}`;
   }
   const mio = guardado.lee() === t.c;
-  F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div><div class="senal-patas"><i></i><i></i></div></div>
-    <h2>${h}</h2>${cuerpo}<hr class="sep">
+  F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div>${ORO[sel] ? `<div class="senal-oro">${DESTELLO}Pueblo de oro</div>` : ''}<div class="senal-patas"><i></i><i></i></div></div>
+    <h2>${h}</h2>${cuerpo}${oroFicha(t, e)}<hr class="sep">
     <div class="fila"><button type="button" class="boton blanco" id="f-guardar">${mio ? 'Dejar de guardarlo' : 'Guardar como mi pueblo'}</button>
     <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button></div>
     <p class="aviso" id="f-aviso" role="status"></p>`;
@@ -828,9 +1006,20 @@ function pintaFicha(conGolpe) {
 }
 async function copia(txt) { try { await navigator.clipboard.writeText(txt); return true; } catch (e) { return false; } }
 $('ficha').addEventListener('click', async (ev) => {
-  const b = ev.target.closest('button'); if (!b || sel < 0) return;
-  const t = PUEBLOS[sel], aviso = (m) => { $('f-aviso').textContent = m; };
-  if (b.id === 'f-copiar') {
+  const b = ev.target.closest('button, #f-pagar'); if (!b || sel < 0) return;
+  const t = PUEBLOS[sel], aviso = (m) => { $('f-aviso').textContent = m; }, avisoPago = (m) => { $('f-pago-aviso').textContent = m; };
+  const pideNombre = () => { avisoPago('Escribe primero el nombre que quieres que salga, con letras o números.'); $('f-nombre').focus(); };
+  if (b.id === 'f-oro' || b.id === 'f-vecino') { pagoModo = b.id === 'f-oro' ? 'oro' : 'vecino'; pintaFicha(false); abrePago(); }
+  else if (b.id === 'f-pago-cerrar') { const v = pagoModo === 'vecino' ? 'f-vecino' : 'f-oro'; pagoModo = ''; pintaFicha(false); if ($(v)) $(v).focus({ preventScroll: true }); }
+  else if (b.id === 'f-pagar') {              // es un enlace: solo se frena si falta el nombre o si es una vista de prueba
+    if (faltaNombre() && conRef(pagoModo)) { ev.preventDefault(); pideNombre(); }
+    else if (JUEGO.demo) { ev.preventDefault(); avisoPago('Vista de prueba: aquí se abriría la página de pago con la referencia ' + refPago(pagoModo, t, pagoNombre) + '.'); }
+    else avisoPago('La página de pago se abre aparte. Cuando termines, el oro aparece aquí en menos de 24 horas.');
+  } else if (b.id === 'f-nota-copiar') {
+    if (faltaNombre()) { pideNombre(); return; }
+    if (await copia($('f-nota').textContent)) { b.textContent = 'Copiado'; avisoPago('Texto copiado. Pégalo en el mensaje del pago.'); setTimeout(() => { b.textContent = 'Copiar'; }, 2500); }
+    else { const r = document.createRange(); r.selectNodeContents($('f-nota')); const g = getSelection(); g.removeAllRanges(); g.addRange(r); avisoPago('No se ha podido copiar solo. El texto está seleccionado: cópialo tú.'); }
+  } else if (b.id === 'f-copiar') {
     if (await copia($('f-texto').textContent)) { b.textContent = 'Copiado'; aviso('Comentario copiado. Ya puedes pegarlo en el vídeo.'); setTimeout(() => { b.textContent = 'Copiar'; }, 2500); }
     else { const r = document.createRange(); r.selectNodeContents($('f-texto')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); aviso('No se ha podido copiar solo. El texto está seleccionado: cópialo tú.'); }
   } else if (b.id === 'f-guardar') {
@@ -846,17 +1035,32 @@ $('ficha').addEventListener('click', async (ev) => {
   }
 });
 
+$('ficha').addEventListener('input', (ev) => {   // el nombre del vecino de honor: cambia el texto y el enlace sin repintar la ficha (el campo no pierde el foco)
+  if (ev.target.id !== 'f-nombre' || sel < 0 || !pagoModo) return;
+  pagoNombre = limpiaNombre(ev.target.value); const o = $('f-nota'), a = $('f-pagar');
+  if (o) o.textContent = notaPago(pagoModo, PUEBLOS[sel], pagoNombre); if (a) a.setAttribute('href', hrefPago()); if (!faltaNombre()) $('f-pago-aviso').textContent = '';
+});
+for (const b of document.querySelectorAll('.ir-pago')) b.addEventListener('click', () => {      // botones de la sección: con pueblo elegido abren su pago; sin pueblo, llevan al buscador
+  const m = b.dataset.m; if (!JUEGO || !JUEGO.pago[m]) return;
+  if (sel >= 0 && estado(PUEBLOS[sel].c) !== 'nojuega') { pagoModo = m; pintaFicha(false); abrePago(); return; }
+  pendiente = m; scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); q.focus({ preventScroll: true });
+});
+$('ranking').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-i]'); if (b) elige(+b.dataset.i, 'ranking'); });
+
 function elige(i, desde) {
   const t = PUEBLOS[i]; sel = i;
+  pagoModo = pendiente && JUEGO.pago[pendiente] && estado(t.c) !== 'nojuega' ? pendiente : ''; pendiente = '';
   q.value = t.n; $('q-borrar').hidden = false; cierraLista();
   const medio = Math.max(60, Math.min(250, radioVecinos(i) * 1.75));
   vuela(t.x, t.y, Math.min(W, H * 1.15) / base / 2 / medio);
   pintaFicha(true);
   if (location.hash !== '#pueblo-' + t.c) location.hash = 'pueblo-' + t.c;
-  if (desde === 'busca' && matchMedia('(max-width: 939px)').matches) { q.blur(); scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); }
+  if (pagoModo) { q.blur(); abrePago(); }
+  else if (desde === 'ranking') { const d = matchMedia('(max-width: 939px)').matches ? $('buscar') : $('juego'); scrollTo({ top: Math.max(0, d.getBoundingClientRect().top + scrollY - 10), behavior: CALMA ? 'auto' : 'smooth' }); $('ficha').focus({ preventScroll: true }); }
+  else if (desde === 'busca' && matchMedia('(max-width: 939px)').matches) { q.blur(); scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); }
 }
 function suelta() {
-  sel = -1; q.value = ''; $('q-borrar').hidden = true; cierraLista(); pintaFicha(false); vuela(MAPA.w / 2, MAPA.h / 2, 1);
+  sel = -1; pagoModo = pendiente = ''; q.value = ''; $('q-borrar').hidden = true; cierraLista(); pintaFicha(false); vuela(MAPA.w / 2, MAPA.h / 2, 1);
   if (/^#pueblo-/.test(location.hash)) { try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; } }
 }
 $('ver-todo').addEventListener('click', () => vuela(MAPA.w / 2, MAPA.h / 2, 1));
@@ -865,7 +1069,7 @@ cv.addEventListener('click', (ev) => { if (!MAPA || anim) return; const g = aRej
 cv.addEventListener('pointermove', (ev) => {
   if (ev.pointerType !== 'mouse' || !MAPA) return; const g = aRejilla(ev), i = anim ? -1 : cerca(g[0], g[1], 13 / g[2]), tip = $('tip');
   cv.style.cursor = i >= 0 ? 'pointer' : ''; tip.hidden = i < 0 || i === sel; if (tip.hidden) return;
-  tip.textContent = PUEBLOS[i].n + ' (' + PROV[PUEBLOS[i].p].n + ')';
+  tip.textContent = PUEBLOS[i].n + ' (' + PROV[PUEBLOS[i].p].n + ')' + (ORO[i] ? ' · ' + apoyosT(ORO[i]) + ' de oro' : '');
   const tw = tip.offsetWidth; tip.style.transform = `translate(${Math.max(4, Math.min(W - tw - 4, g[3] - tw / 2))}px, ${g[4] < 44 ? g[4] + 20 : g[4] - 38}px)`;
 });
 cv.addEventListener('pointerleave', () => { $('tip').hidden = true; });
@@ -922,21 +1126,24 @@ $('q-borrar').addEventListener('click', () => { suelta(); q.focus(); });
 /* ---------- vistas de prueba (datos inventados, solo para ver cómo quedará cada fase) */
 function demo(f) {
   let a = 20261126; const rnd = () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-  const j = { demo: true, fase: f, cierre: new Date(Date.now() + (f === 'inscripcion' ? 26.5 : -1) * 3600e3).toISOString(), cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27', apuntados: null, dias: [], ganador: null };
+  const ORO_D = { 13082: 9, 13005: 14, 27051: 7, 22130: 6, 41095: 5, '03031': 5, 24008: 4, 31232: 3, 50067: 3, '06083': 2, 30024: 2, 43123: 2, 48044: 1, '07033': 1, 23092: 1, 11032: 1, 13019: 3, 13061: 1, 13028: 2, '02081': 1 };
+  const RUINA = new Set(['13019', '13061']), FIRME = new Set(['13082', '13005', '13028']);     // dos dorados que caen seguro (ruinas doradas) y tres que aguantan
+  const j = { demo: true, fase: f, cierre: new Date(Date.now() + (f === 'inscripcion' ? 26.5 : -1) * 3600e3).toISOString(), cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27', apuntados: null, dias: [], ganador: null,
+    apoyos: ORO_D, vecinos: { 13082: ['Marta G.', 'El Chato', 'Peña Los Tardíos'] }, negocios: [{ c: '13082', n: 'Churrería La Prueba', url: '' }, { c: '13005', n: 'Bar El Ejemplo', url: '' }] };
   if (f === 'listo' || f === 'jugando' || f === 'final') {
-    const ap = PUEBLOS.filter((t) => rnd() < 0.46 || t.c === '13082'); j.apuntados = ap.map((t) => t.c);
+    const ap = PUEBLOS.filter((t) => rnd() < 0.46 || ORO_D[t.c]); j.apuntados = ap.map((t) => t.c);
     if (f !== 'listo') {
       const focos = [['Tsunami en el Cantábrico', 1900, 300, 620], ['Terremoto en La Mancha', 2150, 1650, 520], ['Volcán en el Pirineo', 3000, 520, 560], ['Meteorito en el Guadalquivir', 1500, 2250, 600]];
       const vivos = new Set(ap), dias = f === 'final' ? 4 : 3;
       for (let d = 0; d < dias; d++) { const F = focos[d], caen = [];
-        for (const t of vivos) if (t.c !== '13082' && rnd() < (Math.hypot(t.x - F[1], t.y - F[2]) < F[3] ? 0.86 : 0.07)) caen.push(t);
+        for (const t of vivos) { const r = rnd(); if (!FIRME.has(t.c) && (r < (Math.hypot(t.x - F[1], t.y - F[2]) < F[3] ? 0.86 : 0.07) || (d === 1 && RUINA.has(t.c)))) caen.push(t); }
         caen.forEach((t) => vivos.delete(t)); j.dias.push({ dia: d + 1, titulo: F[0], caidos: caen.map((t) => t.c) }); }
       if (f === 'final') { j.dias.push({ dia: 5, titulo: 'Lluvia de meteoritos', caidos: [...vivos].filter((t) => t.c !== '13082').map((t) => t.c) }); j.ganador = '13082'; }
     }
   }
-  JUEGO = prepara(j); $('demo').hidden = false; refresca();
+  JUEGO = prepara(j); pagoModo = pendiente = ''; $('demo').hidden = false; refresca();
 }
-$('demo-salir').addEventListener('click', () => { JUEGO = REAL; $('demo').hidden = true; refresca(); });
+$('demo-salir').addEventListener('click', () => { JUEGO = REAL; pagoModo = pendiente = ''; $('demo').hidden = true; refresca(); });
 function leeHash() {
   const h = location.hash.slice(1); let m;
   if ((m = /^pueblo-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null && i !== sel) elige(i, 'hash'); }
@@ -968,10 +1175,6 @@ Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego
   refresca(); setInterval(tic, 1000);
   if (document.fonts && document.fonts.load) document.fonts.load('800 13px Montserrat').then(pide, () => {});
   addEventListener('hashchange', leeHash);
-  if (CORREO) { const c = $('correo'); c.href = 'mailto:' + CORREO; c.hidden = false; }
-  $('apoya').classList.toggle('sin-precios', !PRECIOS_VISIBLES);
-  for (const a of document.querySelectorAll('.pago')) { const n = a.dataset.n, u = PAGO[n] || (n === 'negocio' ? (CORREO ? 'mailto:' + CORREO : REDES.instagram) : ''); if (u) { a.href = u; a.hidden = false; } }
-  if (PAGO[3] || PAGO[10]) $('apoyar-pronto').hidden = true;
   addEventListener('resize', encajaPista); if (document.fonts && document.fonts.ready) document.fonts.ready.then(encajaPista, () => {});
   const ini = () => { leeHash(); if (sel < 0) { const g = IDX.get(guardado.lee()); if (g != null) elige(g, 'hash'); } };
   if (CALMA) ini(); else setTimeout(ini, /^#pueblo-/.test(location.hash) || guardado.lee() ? 1150 : 0);

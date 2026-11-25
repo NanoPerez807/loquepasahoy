@@ -1,0 +1,10 @@
+{
+  "fase": "inscripcion",
+  "cierre": "2026-11-26T18:00:00+01:00",
+  "cierre_texto": "el jueves 26 a las 18:00",
+  "inicio_texto": "el viernes 27",
+  "videos": { "tiktok": "", "instagram": "", "youtube": "" },
+  "apuntados": null,
+  "dias": [],
+  "ganador": null
+}

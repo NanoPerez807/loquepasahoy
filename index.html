@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El último pueblo en pie</title>
+<meta name="description" content="Comenta tu pueblo y tu provincia. Cada día caen catástrofes sobre España y el último pueblo que quede en pie gana. Busca el tuyo en el mapa.">
+<meta name="theme-color" content="#5f4fe0">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="media/icono-180.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="LO QUE PASA">
+<meta property="og:title" content="El último pueblo en pie">
+<meta property="og:description" content="Cada día caen catástrofes sobre España. Busca tu pueblo en el mapa y mira si sigue en pie.">
+<meta property="og:url" content="https://loquepasahoy.es/">
+<meta property="og:image" content="https://loquepasahoy.es/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="media/montserrat.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+:root{
+  /* Tablero y carretera: campos planos con los colores del decorado 3D de los vídeos (suelo morado, mesa de madera,
+     mar turquesa) y cada pueblo rotulado como una señal de entrada a población. Una sola familia: Montserrat, la de los vídeos. */
+  color-scheme:light;
+  --suelo:#5f4fe0;  --suelo-2:#4335b8;      /* suelo del plató y su sombra */
+  --mar:#19b3df;    --mar-2:#0f86c9;        /* mar del tablero */
+  --madera:#e2ab62; --madera-2:#c48a43;     /* mesa */
+  --tinta:#0b1736;                           /* azul noche: texto y contornos */
+  --carton:#fff9ea;                          /* blanco cálido */
+  --sol:#ffd43b;                             /* amarillo del logo */
+  --tejado:#ff2e4d;                          /* rojo de los tejados y del punto del logo */
+  --cesped:#19c592;                          /* verde: sigue en pie */
+  --senal:#d90f1e;                           /* orla roja de las señales */
+  --autovia:#0a56b0;                         /* azul de los carteles de autovía */
+  --letra:'Montserrat','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --r:14px;
+  --borde:3px solid var(--tinta);
+}
+@font-face{font-family:'Montserrat';src:url('media/montserrat.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--suelo);color:var(--tinta);font:500 17px/1.5 var(--letra);overflow-wrap:break-word}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+img,video,canvas{display:block;max-width:100%}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--tinta);outline-offset:2px;box-shadow:0 0 0 7px #fff}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.salto{position:absolute;left:12px;top:-60px;z-index:50;background:#fff;color:var(--tinta);font-weight:800;padding:10px 14px;border-radius:10px;border:var(--borde)}
+.salto:focus{top:10px}
+
+/* ---------- piezas comunes */
+.boton,.chip{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:var(--borde);background:var(--sol);color:var(--tinta);font-weight:800;text-decoration:none;cursor:pointer;transition:transform .08s,box-shadow .08s;-webkit-tap-highlight-color:transparent}
+.boton{min-height:50px;padding:0 20px;border-radius:var(--r);font-size:16px;box-shadow:0 4px 0 var(--tinta)}
+.boton:active{transform:translateY(3px);box-shadow:0 1px 0 var(--tinta)}
+.boton.blanco,.chip{background:#fff}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;font-size:15px;box-shadow:0 3px 0 var(--tinta)}
+.chip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tinta)}
+.fila{display:flex;flex-wrap:wrap;gap:10px}
+.sec{padding:60px 16px}
+.sec-in{max-width:1180px;margin:0 auto}
+.sec h2{font-weight:900;font-size:clamp(31px,8.4vw,50px);line-height:1;letter-spacing:-.018em;text-wrap:balance}
+.nota{font-size:14px;font-weight:500}
+
+/* ---------- aviso de la vista de prueba */
+.demo{background:var(--tinta);color:#fff;font-size:14px;font-weight:600;padding:8px 16px;text-align:center}
+.demo a{color:var(--sol);font-weight:800}
+
+/* ---------- cabecera */
+.cab{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1212px;margin:0 auto;padding:12px 16px 4px}
+.logo{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:900;font-size:15px;letter-spacing:.03em;border-radius:999px}
+.logo i{position:relative;display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;background:var(--sol);color:var(--tinta);font-style:normal;font-size:13.5px;letter-spacing:-.03em;padding-right:2px}
+.logo i::after{content:'';position:absolute;top:9px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--tejado)}
+.cab nav{display:flex}
+.cab nav a{color:#fff;font-weight:700;font-size:14.5px;text-decoration:none;padding:11px 10px;border-radius:10px}
+.cab nav a:hover{background:rgba(255,255,255,.16)}
+.cab nav a:first-child{display:none}
+.logo span{white-space:nowrap}
+@media (max-width:429px){.cab nav a{padding:11px 7px}.logo span{font-size:14px}}
+@media (max-width:389px){.logo span{display:none}}
+@media (max-width:359px){.logo{gap:8px}.cab nav a{padding:11px 6px;font-size:13.5px}.reloj span{font-size:10.5px}}
+@media (max-width:289px){.cab nav a:nth-child(2){display:none}}
+
+/* ---------- el juego */
+.hero{padding:10px 16px 34px}
+.hero-in{display:grid;gap:20px;max-width:1180px;margin:0 auto;grid-template-columns:minmax(0,1fr)}
+.h-titulo{container-type:inline-size}
+.titulo{font-weight:900;text-transform:uppercase;line-height:.93;letter-spacing:-.012em;color:#fff;--o:3px;
+  text-shadow:var(--o) 0 var(--tinta),calc(var(--o)*-1) 0 var(--tinta),0 var(--o) var(--tinta),0 calc(var(--o)*-1) var(--tinta),
+    calc(var(--o)*.71) calc(var(--o)*.71) var(--tinta),calc(var(--o)*-.71) calc(var(--o)*.71) var(--tinta),calc(var(--o)*.71) calc(var(--o)*-.71) var(--tinta),calc(var(--o)*-.71) calc(var(--o)*-.71) var(--tinta),
+    calc(var(--o)*.92) calc(var(--o)*.38) var(--tinta),calc(var(--o)*-.92) calc(var(--o)*.38) var(--tinta),calc(var(--o)*.92) calc(var(--o)*-.38) var(--tinta),calc(var(--o)*-.92) calc(var(--o)*-.38) var(--tinta),
+    calc(var(--o)*.38) calc(var(--o)*.92) var(--tinta),calc(var(--o)*-.38) calc(var(--o)*.92) var(--tinta),calc(var(--o)*.38) calc(var(--o)*-.92) var(--tinta),calc(var(--o)*-.38) calc(var(--o)*-.92) var(--tinta),
+    0 calc(var(--o) + 4px) var(--tinta),calc(var(--o)*.7) calc(var(--o) + 3px) var(--tinta),calc(var(--o)*-.7) calc(var(--o) + 3px) var(--tinta)}
+.titulo span{display:block}
+.titulo .t1{font-size:7.4vw;font-size:min(7.9cqi,56px)}
+.titulo .t2{font-size:11vw;font-size:min(12cqi,86px);color:var(--sol);margin-top:.07em}
+.entrada{color:#fff;font-weight:600;font-size:17px;line-height:1.42;max-width:30em;margin-top:16px;text-wrap:pretty}
+
+.panel{display:grid;gap:9px;background:var(--sol);border:var(--borde);border-radius:var(--r);padding:12px 12px 12px;box-shadow:0 5px 0 var(--suelo-2)}
+.panel-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;padding:0 2px}
+.p-estado{font-weight:900;font-size:19px;line-height:1.2}
+.p-texto{font-weight:600;font-size:15px}
+.reloj{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.reloj div{background:var(--tinta);border-radius:10px;padding:8px 2px 6px;text-align:center}
+.reloj b{display:block;color:var(--sol);font-weight:900;font-size:27px;line-height:1;font-variant-numeric:tabular-nums}
+.reloj span{display:block;color:#fff;font-weight:700;font-size:11.5px;margin-top:3px}
+
+.busca h2{color:#fff;font-weight:900;font-size:22px;line-height:1.15;margin-bottom:8px}
+.campo{position:relative}
+.campo input{display:block;width:100%;height:58px;margin:0;border:var(--borde);border-radius:var(--r);padding:0 52px;font-weight:700;font-size:18px;color:var(--tinta);box-shadow:0 5px 0 var(--suelo-2);-webkit-appearance:none;appearance:none;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1736' stroke-width='3' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5 21 21'/%3E%3C/svg%3E") no-repeat 16px 50%/23px}
+.campo input::placeholder{color:#626a8a;font-weight:600;opacity:1}
+.campo input:placeholder-shown{padding-right:14px}
+.campo input:focus-visible{outline:3px solid var(--sol);outline-offset:0;box-shadow:0 5px 0 var(--suelo-2)}
+#q-borrar{position:absolute;right:7px;top:7px;width:44px;height:44px;border:0;border-radius:10px;background:none;cursor:pointer;display:grid;place-items:center}
+#q-borrar:hover{background:#eef0f7}
+.lista{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 9px);margin:0;padding:6px;background:#fff;border:var(--borde);border-radius:var(--r);box-shadow:0 8px 0 rgba(11,23,54,.28);max-height:min(336px,48vh);overflow:auto;overscroll-behavior:contain}
+.lista li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;min-height:46px;padding:11px 12px;border-radius:9px;cursor:pointer;font-weight:700;line-height:1.25}
+.lista li span{flex:none;font-weight:500;font-size:14px;color:#3f4768}
+.lista li[aria-selected="true"]{background:var(--sol)}
+.lista li.mas,.lista li.nada{display:block;cursor:default;font-weight:600;font-size:15px;color:#2f3759}
+
+.escena{position:relative;margin:0 -16px;padding-top:112px;--H:250px;--X:calc(100% - 92px)}
+.mono{position:absolute;z-index:1;width:auto;max-width:none;height:calc(var(--H)*var(--f,1));top:calc(8px - var(--H)*var(--f,1)*var(--ty,0)/900);left:calc(var(--X) - var(--H)*var(--f,1)*var(--hc)/900);opacity:0;pointer-events:none;user-select:none}
+.mono.ver{opacity:1}
+.pista{position:absolute;left:16px;top:14px;width:calc(100% - 200px);max-width:300px;color:#fff;font-weight:600;font-size:15px;line-height:1.38}
+.pista b{font-weight:900}
+.pista button{border:0;padding:0;background:none;color:var(--sol);font-weight:800;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left}
+.mesa{position:relative;z-index:2;padding:14px 12px 20px;border-top:4px solid #f1c88c;
+  background:repeating-linear-gradient(90deg,rgba(120,72,20,0) 0 118px,rgba(120,72,20,.16) 118px 120px),linear-gradient(#e6b26a,#dba258)}
+.tablero{position:relative;overflow:hidden;border:5px solid #fff;border-radius:7px;background:var(--mar);box-shadow:0 4px 0 rgba(105,62,14,.5),0 12px 20px rgba(80,44,6,.3)}
+#mapa{width:100%;aspect-ratio:9/8;max-height:min(86vh,780px);touch-action:manipulation}
+.carga{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;background:var(--mar);color:#fff;font-weight:800;font-size:16px}
+#ver-todo{position:absolute;z-index:3;left:8px;bottom:10px;min-height:40px;font-size:14px;padding:0 14px}
+.sello{position:absolute;z-index:3;right:10px;top:10px;max-width:62%;transform:rotate(4deg);background:var(--sol);color:var(--tinta);border:var(--borde);border-radius:10px;padding:5px 11px 4px;font-weight:900;font-size:15px;line-height:1.15;text-transform:uppercase;letter-spacing:.02em;text-align:center;box-shadow:0 3px 0 var(--tinta);pointer-events:none}
+.sello[data-e="eliminado"]{background:var(--senal);color:#fff}
+.sello[data-e="enpie"],.sello[data-e="apuntado"]{background:var(--cesped)}
+.sello[data-e="contando"]{background:#7fe3ff}
+.sello[data-e="nojuega"]{background:#d5d9e6}
+.sello.pum{animation:pum .3s cubic-bezier(.2,1.5,.4,1)}
+@keyframes pum{from{transform:rotate(4deg) scale(1.8);opacity:0}55%{opacity:1}to{transform:rotate(4deg) scale(1)}}
+.tip{position:absolute;z-index:4;left:0;top:0;pointer-events:none;background:var(--tinta);color:#fff;font-weight:700;font-size:12.5px;line-height:1.2;padding:5px 9px;border-radius:8px;white-space:nowrap}
+
+.ficha{display:grid;gap:14px;justify-items:start;background:var(--carton);border:var(--borde);border-radius:18px;padding:18px 16px 18px;box-shadow:0 6px 0 var(--suelo-2)}
+.ficha h2{font-weight:900;font-size:25px;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.ficha p{font-size:16px;max-width:34em}
+.senal{display:inline-grid;justify-items:center;max-width:100%}
+.senal-cartel{position:relative;min-width:160px;max-width:100%;background:#fff;border:5px solid var(--senal);border-radius:10px;padding:10px 18px 9px;text-align:center;font-weight:800;font-size:clamp(20px,6.4vw,31px);line-height:1.04;text-transform:uppercase;color:#101014;text-wrap:balance;box-shadow:0 0 0 2px #fff,0 4px 0 2px rgba(11,23,54,.22)}
+.senal[data-e="eliminado"] .senal-cartel::after{content:'';position:absolute;inset:-5px;border-radius:10px;background:linear-gradient(to top right,transparent calc(50% - 7px),var(--senal) calc(50% - 7px),var(--senal) calc(50% + 7px),transparent calc(50% + 7px))}
+.senal[data-e="nojuega"] .senal-cartel{border-color:#8f96ab;color:#5d6480}
+.senal[data-e="ganador"] .senal-cartel{background:var(--sol);border-color:var(--tinta)}
+.senal-prov{margin-top:6px;background:var(--autovia);color:#fff;border:2px solid #fff;border-radius:7px;padding:3px 13px 2px;font-weight:700;font-size:14px;box-shadow:0 0 0 2px var(--autovia)}
+.senal-patas{display:flex;justify-content:center;gap:70px;height:13px;margin-top:2px}
+.senal-patas i{width:6px;background:#8d94a8;border-radius:0 0 2px 2px}
+.comenta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;width:100%;max-width:520px}
+.comenta output{display:flex;align-items:center;min-height:50px;background:#fff;border:2px dashed #9aa2bd;border-radius:12px;padding:8px 11px;font-weight:700;font-size:15.5px;line-height:1.25;-webkit-user-select:all;user-select:all}
+.ficha .chip{padding:0 13px}
+.ficha .fila{gap:8px}
+.ficha .boton.blanco{min-height:46px;padding:0 16px;font-size:15px}
+.comenta .boton{padding:0 16px}
+.ficha .sep{width:100%;border:0;border-top:2px solid #e3dcc4;margin:2px 0}
+.ficha .aviso{font-size:14px;font-weight:600;color:#2f3759}
+.ficha .aviso:empty{margin-top:-14px}
+
+.parte{background:var(--suelo-2);border-radius:18px;padding:16px;color:#fff}
+.parte h2{font-weight:900;font-size:20px}
+.parte ol{display:grid;gap:8px;margin-top:10px}
+.parte li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:600;font-size:15px;line-height:1.25}
+.parte li b{display:grid;place-items:center;min-width:34px;height:34px;padding:0 6px;border-radius:17px;background:var(--sol);color:var(--tinta);font-weight:900;font-size:14px;font-variant-numeric:tabular-nums}
+.parte li span{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- así se juega */
+.como{background:var(--carton)}
+.como .sub{margin-top:12px;font-size:17.5px;font-weight:600;max-width:32em}
+.como-grid{display:grid;gap:30px;margin-top:28px;grid-template-columns:minmax(0,1fr)}
+.clip-caja{position:relative;border:var(--borde);border-radius:20px;overflow:hidden;background:var(--suelo);box-shadow:0 6px 0 var(--tinta)}
+.clip video{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover}
+.clip button{position:absolute;right:10px;top:10px;min-height:42px;font-size:14px}
+.clip figcaption{margin-top:14px;font-size:14.5px;font-weight:600;color:#2f3759}
+.pasos{display:grid;gap:20px}
+.pasos li{display:grid;grid-template-columns:108px minmax(0,1fr);gap:16px;align-items:center}
+.pasos .foto{position:relative}
+.pasos img{width:108px;height:108px;object-fit:cover;border:var(--borde);border-radius:18px;background:var(--mar)}
+.pasos .foto b{position:absolute;left:-9px;top:-9px;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--sol);border:var(--borde);font-weight:900;font-size:17px;line-height:1}
+.pasos h3{font-weight:900;font-size:19.5px;line-height:1.15;letter-spacing:-.005em}
+.pasos p{margin-top:5px;font-size:15.5px;line-height:1.45;color:#232b4b}
+.reglas{margin-top:40px;border-top:var(--borde);padding-top:24px}
+.reglas h3{font-weight:900;font-size:24px;letter-spacing:-.01em}
+.reglas ul{display:grid;gap:11px 36px;margin-top:16px}
+.reglas li{position:relative;padding-left:32px;font-size:16px;line-height:1.45;max-width:36em}
+.reglas li::before{content:'';position:absolute;left:0;top:.12em;width:21px;height:21px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.5 11h15v10h-15z' fill='%23fff' stroke='%230b1736' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M1.8 12 12 3l10.2 9z' fill='%23ff2e4d' stroke='%230b1736' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat 50%/contain}
+
+/* ---------- vídeos */
+.videos{background:var(--tinta);color:#fff}
+.videos h2{color:var(--sol)}
+.videos .sub{margin-top:12px;max-width:33em;color:#e3e8f8}
+.car-caja{margin:26px -16px 0}
+.carrusel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:16px;padding:6px 16px 16px;scrollbar-width:thin;scrollbar-color:#42508a transparent}
+.carrusel figure{flex:none;min-width:0;width:min(56vw,232px);scroll-snap-align:start}
+.carrusel img{width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;border:3px solid #fff;border-radius:16px;background:#1b2854}
+.carrusel figcaption{margin-top:9px;font-size:14px;font-weight:600;color:#d5dcf2;line-height:1.25}
+.carrusel figcaption b{display:block;color:#fff;font-weight:900;font-size:21px;font-variant-numeric:tabular-nums}
+.car-pie{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:8px}
+.car-bot{display:none;gap:8px}
+.car-bot button{width:46px;height:46px;padding:0;border-color:#fff;border-radius:50%;background:transparent;color:#fff;box-shadow:none}
+.car-bot button:hover{background:rgba(255,255,255,.14)}
+.videos .nota{color:#b9c2e0}
+.videos .redes{margin-top:26px;display:grid;gap:12px}
+.videos .redes p{font-weight:800;font-size:18px}
+.videos .chip{border-color:#fff;box-shadow:0 3px 0 #000}
+.videos :focus-visible,.pie :focus-visible,.hero :focus-visible,.cab :focus-visible{outline-color:var(--sol);box-shadow:0 0 0 7px var(--tinta)}
+
+/* ---------- la guía */
+.guia{background:var(--sol);padding-bottom:0;overflow:hidden}
+.guia-in{display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
+.guia p{margin-top:14px;font-size:17.5px;font-weight:600;max-width:30em}
+.pronto{display:inline-block;margin-top:22px;max-width:none;transform:rotate(-4deg);background:#fff;border:var(--borde);border-radius:10px;padding:6px 14px 5px;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.02em;box-shadow:0 4px 0 var(--tinta)}
+.guia-mono{justify-self:end;height:236px;width:auto;margin:-6px 6px -92px 0}
+
+/* ---------- marcas */
+.marcas{background:var(--mar)}
+.marcas-in{display:grid;gap:30px;grid-template-columns:minmax(0,1fr);align-items:center}
+.marcas p{margin-top:14px;font-size:17.5px;font-weight:600;max-width:31em}
+.marcas .boton{margin-top:22px}
+.cartel-caja{display:grid;justify-items:center}
+.cartel{width:100%;background:var(--autovia);color:#fff;border:4px solid #fff;border-radius:16px;padding:6px 18px;box-shadow:0 0 0 3px var(--autovia),0 9px 0 3px rgba(11,23,54,.28)}
+.cartel div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 14px;padding:13px 0}
+.cartel div+div{border-top:2px solid rgba(255,255,255,.38)}
+.cartel dt{flex:1 1 7.5em;min-width:0;font-weight:800;font-size:18px;line-height:1.15}
+.cartel dt span{display:block;margin-top:3px;font-weight:500;font-size:13.5px}
+.cartel dd{margin-left:auto;font-weight:900;font-size:clamp(23px,7.4vw,36px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cartel-patas{display:flex;gap:150px;height:26px}
+.cartel-patas i{width:9px;background:#5c6480;border-radius:0 0 3px 3px}
+.marcas .nota{margin-top:6px;font-weight:600;font-size:14px;text-align:center}
+
+/* ---------- pie */
+.pie{background:var(--tinta);color:#cdd5ee;padding:40px 16px 46px;font-size:14.5px;line-height:1.55}
+.pie-in{display:grid;gap:18px;max-width:1180px;margin:0 auto}
+.pie nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+.pie nav a{color:#fff;font-weight:800;font-size:16px;padding:8px 0}
+.pie p{max-width:66em}
+.pie b{color:#fff;font-weight:800}
+
+/* ---------- apoyar: los niveles van rotulados como señales (límite de velocidad y cartel azul de servicios) */
+.apoya{background:var(--carton);overflow:hidden}
+.apoya-mono{display:none}
+.sin-precios .disco{display:none}
+.sin-precios .niveles li{grid-template-columns:minmax(0,1fr)}
+.apoya .sub{margin-top:12px;max-width:33em;font-size:17.5px;font-weight:600}
+.niveles{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:20px;max-width:680px}
+.niveles li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;align-items:center}
+.disco{display:grid;place-items:center;align-content:center;width:78px;height:78px;border-radius:50%;background:#fff;border:9px solid var(--senal);font-weight:900;font-size:26px;line-height:1;box-shadow:0 4px 0 rgba(11,23,54,.22)}
+.disco small{display:block;font-size:12px;font-weight:800;margin-top:1px}
+.disco.azul{border-radius:14px;border:4px solid #fff;background:var(--autovia);color:#fff;box-shadow:0 0 0 3px var(--autovia),0 6px 0 3px rgba(11,23,54,.22)}
+.niveles h3{font-weight:900;font-size:19.5px;line-height:1.15;letter-spacing:-.005em}
+.niveles p{margin-top:5px;font-size:15.5px;line-height:1.45;color:#232b4b}
+.apoya .regla{margin-top:28px;padding-top:20px;border-top:var(--borde);max-width:680px;font-weight:800;font-size:17px;line-height:1.4}
+.apoya .acciones{margin-top:6px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.niveles .chip{margin-top:10px;background:var(--sol)}
+.marcas .botones{display:flex;flex-wrap:wrap;gap:0 12px}
+
+/* ---------- pantallas anchas */
+@media (min-width:560px){
+  .cab nav a:first-child{display:block}
+  .escena{margin:0;--H:290px;padding-top:128px}
+  .mesa{border-radius:22px;padding:18px 18px 24px;border:0;border-top:4px solid #f1c88c}
+  .pista{left:6px}
+  .reglas ul{grid-template-columns:1fr 1fr}
+  .guia-in{grid-template-columns:minmax(0,1fr) auto;align-items:end}
+  .guia-mono{height:300px;margin:0 30px -110px 0}
+  .guia .sec-in{padding-bottom:60px}
+}
+@media (min-width:940px){
+  .hero{padding:26px 16px 64px}
+  .hero-in{grid-template-columns:minmax(0,5fr) minmax(0,6fr);column-gap:54px;row-gap:22px;align-items:start;
+    grid-template-areas:"titulo escena" "panel escena" "busca escena" "ficha escena" "parte escena" "resto escena";grid-template-rows:auto auto auto auto auto 1fr}
+  .h-titulo{grid-area:titulo}.panel{grid-area:panel}.busca{grid-area:busca}.ficha{grid-area:ficha}.parte{grid-area:parte}
+  .escena{grid-area:escena;position:sticky;top:14px;--H:340px;padding-top:150px;--X:calc(100% - 130px)}
+  .titulo{--o:4px}
+  .titulo .t1{font-size:min(3.1vw,38px);font-size:min(7.9cqi,56px)}
+  .titulo .t2{font-size:min(4.8vw,58px);font-size:min(12cqi,86px)}
+  .entrada{font-size:18.5px;margin-top:22px}
+  .pista{font-size:16px;top:34px;width:calc(100% - 290px)}
+  .sello{font-size:18px;padding:7px 14px 5px}
+  .sec{padding:84px 24px}
+  .apoya .sec-in{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:48px;align-items:end}
+  .apoya-mono{display:block;height:430px;width:auto;margin:0 40px -104px 0}
+  .como-grid{grid-template-columns:minmax(0,372px) minmax(0,1fr);gap:56px;align-items:start}
+  .pasos{gap:22px}
+  .pasos li{grid-template-columns:122px minmax(0,1fr);gap:20px}
+  .pasos img{width:122px;height:122px}
+  .pasos h3{font-size:21px}
+  .pasos p{font-size:16.5px}
+  .car-caja{margin:30px 0 0}
+  .carrusel{padding:6px 0 16px;scroll-padding-left:0}
+  .car-bot{display:flex}
+  .guia{padding-bottom:0}
+  .marcas-in{grid-template-columns:minmax(0,1fr) minmax(0,470px);gap:64px}
+  .videos .redes{display:flex;align-items:center;gap:18px}
+}
+@supports not (aspect-ratio:1){#mapa{height:min(86vw,520px)}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .sello.pum{animation:none}
+  .boton,.chip{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="salto" href="#buscar">Ir al buscador de pueblos</a>
+<p class="demo" id="demo" hidden>Vista de prueba con datos inventados. <a href="#juego" id="demo-salir">Volver a los datos reales</a></p>
+
+<header class="cab">
+  <a class="logo" href="#juego" aria-label="LO QUE PASA: ir al principio"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a>
+  <nav aria-label="Secciones">
+    <a href="#como">Cómo se juega</a>
+    <a href="#videos">Vídeos</a>
+    <a href="#marcas">Marcas</a>
+    <a href="#apoya">Apoyar</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="juego">
+  <div class="hero-in">
+    <div class="h-titulo">
+      <h1 class="titulo"><span class="t1">El último</span> <span class="t2">pueblo en pie</span></h1>
+      <p class="entrada" id="entrada">Comenta tu pueblo y tu provincia. Cada día caen catástrofes sobre España y el último pueblo que quede en pie gana.</p>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="panel-cab">
+        <p class="p-estado" id="p-estado">Inscripciones abiertas</p>
+        <p class="p-texto" id="p-texto">Cierran el jueves 26 a las 18:00</p>
+      </div>
+      <div class="reloj" id="reloj" role="timer" aria-label="Tiempo que queda para apuntar tu pueblo">
+        <div><b id="r-d">–</b><span>días</span></div>
+        <div><b id="r-h">–</b><span>horas</span></div>
+        <div><b id="r-m">–</b><span>minutos</span></div>
+        <div><b id="r-s">–</b><span>segundos</span></div>
+      </div>
+    </div>
+
+    <form class="busca" id="buscar" role="search" autocomplete="off">
+      <h2><label for="q">Busca tu pueblo</label></h2>
+      <div class="campo">
+        <input id="q" name="q" type="text" inputmode="search" enterkeyhint="search" autocapitalize="words" autocomplete="off" autocorrect="off" spellcheck="false"
+          placeholder="Cargando los pueblos…" role="combobox" aria-expanded="false" aria-controls="q-lista" aria-autocomplete="list" disabled>
+        <button type="button" id="q-borrar" aria-label="Borrar la búsqueda" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+        <ul class="lista" id="q-lista" role="listbox" aria-label="Municipios" hidden></ul>
+      </div>
+      <p class="oculto" id="q-estado" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="escena" id="escena">
+      <img class="mono ver" data-p="abajo" style="--hc:184;--ty:1" src="media/m-abajo.webp" width="374" height="900" alt="" aria-hidden="true">
+      <img class="mono" data-p="movil" style="--hc:184.5;--ty:1" data-src="media/m-movil.webp" width="410" height="900" alt="" aria-hidden="true">
+      <img class="mono" data-p="hombros" style="--hc:339.5" data-src="media/m-hombros.webp" width="661" height="900" alt="" aria-hidden="true">
+      <img class="mono" data-p="fiesta" style="--hc:278.5;--ty:40;--f:1.115" data-src="media/m-fiesta.webp" width="550" height="900" alt="" aria-hidden="true">
+      <p class="pista" id="pista"><b>8.132</b> municipios, una casita cada uno. Toca el mapa o escribe el tuyo.</p>
+      <div class="mesa">
+        <div class="tablero">
+          <canvas id="mapa" role="img" aria-label="Mapa de España con una casita por cada municipio. Usa el buscador para encontrar el tuyo."></canvas>
+          <button type="button" class="chip" id="ver-todo" hidden>Ver toda España</button>
+          <p class="sello" id="sello" hidden></p>
+          <p class="tip" id="tip" hidden></p>
+          <p class="carga" id="carga">Cargando el mapa…</p>
+        </div>
+      </div>
+    </div>
+
+    <article class="ficha" id="ficha" aria-live="polite" hidden></article>
+
+    <section class="parte" id="parte" aria-labelledby="parte-t" hidden>
+      <h2 id="parte-t">Parte de catástrofes</h2>
+      <ol id="parte-lista"></ol>
+    </section>
+  </div>
+  <noscript><p class="entrada" style="margin:20px auto 0">El mapa y el buscador necesitan JavaScript. Actívalo y recarga la página.</p></noscript>
+</section>
+
+<section class="sec como" id="como">
+  <div class="sec-in">
+    <h2>Así se juega</h2>
+    <p class="sub">El primer vídeo pasó de los 30.000 comentarios en un día, entre Instagram y TikTok.</p>
+    <div class="como-grid">
+      <figure class="clip">
+        <div class="clip-caja">
+          <video id="clip" muted loop playsinline preload="none" width="720" height="1280" data-src="media/trailer.mp4" data-poster="media/trailer.webp" aria-label="Vídeo sin sonido: tsunamis, terremotos, volcanes y meteoritos caen sobre el tablero de España"></video>
+          <button type="button" class="chip" id="clip-btn">Reproducir</button>
+        </div>
+        <figcaption>El tablero del primer vídeo, sin sonido. Cada casita es un municipio.</figcaption>
+      </figure>
+      <ol class="pasos">
+        <li>
+          <div class="foto"><img src="media/paso-comenta.webp" width="384" height="384" loading="lazy" alt="El presentador, con el móvil en la mano"><b aria-hidden="true">1</b></div>
+          <div><h3>Comenta tu pueblo y tu provincia</h3><p>En el vídeo del juego, en TikTok, Instagram o YouTube. Con un comentario basta. <span id="paso-plazo">Tienes hasta el jueves 26 de noviembre a las 18:00.</span></p></div>
+        </li>
+        <li>
+          <div class="foto"><img src="media/paso-catastrofe.webp" width="384" height="384" loading="lazy" alt="Una ola gigante entra en el tablero"><b aria-hidden="true">2</b></div>
+          <div><h3>Cada día cae una catástrofe</h3><p>Tsunamis, terremotos, volcanes, meteoritos. Cada episodio borra del mapa un buen puñado de pueblos.</p></div>
+        </li>
+        <li>
+          <div class="foto"><img src="media/dado.webp" width="384" height="384" loading="lazy" alt="Un dado rueda sobre el mapa"><b aria-hidden="true">3</b></div>
+          <div><h3>Los pueblos caen al azar</h3><p>Un sorteo decide a quién le toca. Da igual lo grande que sea tu pueblo o cuánta gente lo haya comentado.</p></div>
+        </li>
+        <li>
+          <div class="foto"><img src="media/paso-gana.webp" width="384" height="384" loading="lazy" alt="Una copa dorada junto a la última casita en pie"><b aria-hidden="true">4</b></div>
+          <div><h3>El último en pie gana</h3><p>El premio es un vídeo dedicado al pueblo ganador. No hay dinero de por medio.</p></div>
+        </li>
+      </ol>
+    </div>
+    <div class="reglas">
+      <h3>Las reglas</h3>
+      <ul>
+        <li>Juegan los municipios: los 8.132 que hay en España.</li>
+        <li>Si vives en una aldea, una pedanía o una parroquia, juega el municipio al que pertenece.</li>
+        <li>Un pueblo comentado cien veces cuenta lo mismo que uno comentado una vez.</li>
+        <li>Valen los comentarios de TikTok, Instagram y YouTube hechos antes del cierre.</li>
+        <li>Cada día sale un episodio con los pueblos que caen.</li>
+        <li>Gana el último pueblo que quede en pie.</li>
+      </ul>
+      <a class="boton" href="#apoya" style="margin-top:26px">¿Quieres salir en un episodio?</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec videos" id="videos">
+  <div class="sec-in">
+    <h2>¿Sabías que…?</h2>
+    <p class="sub">Datos absurdos contados con muñecos en 3D. Estos son algunos de los más vistos.</p>
+    <div class="car-caja">
+      <div class="carrusel" id="carrusel" tabindex="0" role="region" aria-label="Vídeos más vistos. Usa las flechas para moverte.">
+        <figure><img src="media/v-minero.webp" width="450" height="800" loading="lazy" alt="Portada: Si eres alérgico a los gatos… y un camión minero de 623 t"><figcaption><b>1,3 M</b>reproducciones en TikTok</figcaption></figure>
+        <figure><img src="media/v-benidorm.webp" width="450" height="800" loading="lazy" alt="Portada: Crema factor 50… y un portacontenedores"><figcaption><b>827 mil</b>reproducciones en TikTok</figcaption></figure>
+        <figure><img src="media/v-skincare.webp" width="450" height="800" loading="lazy" alt="Portada: Para desmaquillarte… no uses una Kärcher de 180 bar"><figcaption><b>718 mil</b>reproducciones en Instagram</figcaption></figure>
+        <figure><img src="media/v-pueblos.webp" width="450" height="800" loading="lazy" alt="Portada: ¿Sobrevivirá tu pueblo? Comenta tu pueblo y entra"><figcaption><b>622 mil</b>reproducciones en Instagram</figcaption></figure>
+        <figure><img src="media/v-espaguetis.webp" width="450" height="800" loading="lazy" alt="Portada: Para comer espaguetis… no uses la carretilla más grande del mundo"><figcaption><b>367 mil</b>reproducciones en Instagram</figcaption></figure>
+        <figure><img src="media/v-eiffel.webp" width="450" height="800" loading="lazy" alt="Portada: Si eres de Bilbao… y te cae la Torre Eiffel"><figcaption><b>164 mil</b>reproducciones en Instagram</figcaption></figure>
+        <figure><img src="media/v-tanque.webp" width="450" height="800" loading="lazy" alt="Portada: Papel higiénico al revés… y un Leopard 2E de 63 t"><figcaption><b>90 mil</b>reproducciones en Instagram</figcaption></figure>
+        <figure><img src="media/v-nuez.webp" width="450" height="800" loading="lazy" alt="Portada: Para abrir una nuez… no uses una prensa de 80.000 t"><figcaption><b>89 mil</b>reproducciones en Instagram</figcaption></figure>
+      </div>
+    </div>
+    <div class="car-pie">
+      <p class="nota">Cifras a 25 de noviembre de 2026.</p>
+      <div class="car-bot">
+        <button type="button" class="chip" id="car-ant" aria-label="Vídeos anteriores"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button type="button" class="chip" id="car-sig" aria-label="Vídeos siguientes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="redes">
+      <p>Hay vídeos nuevos casi a diario en</p>
+      <div class="fila">
+        <a class="chip" data-red="tiktok" href="https://www.tiktok.com/@loquepasa.es">TikTok</a>
+        <a class="chip" data-red="instagram" href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
+        <a class="chip" data-red="youtube" href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec guia" id="guia">
+  <div class="sec-in guia-in">
+    <div>
+      <h2>La guía para hacer vídeos así</h2>
+      <p>Estoy escribiendo una guía con todo el proceso, paso a paso. Todavía no está a la venta: cuando salga, la encontrarás aquí.</p>
+      <p class="pronto">Muy pronto</p>
+    </div>
+    <img class="guia-mono" src="media/m-senala.webp" width="475" height="900" loading="lazy" alt="" aria-hidden="true">
+  </div>
+</section>
+
+<section class="sec marcas" id="marcas">
+  <div class="sec-in marcas-in">
+    <div>
+      <h2>¿Tienes una marca?</h2>
+      <p>Tu marca puede ser la protagonista del próximo vídeo. Vendas lo que vendas, le busco la comparación más absurda posible y la cuento con el humor de siempre.</p>
+      <p>El canal empezó el 11 de noviembre. Estas son las cifras de sus dos primeras semanas.</p>
+      <div class="botones"><a class="boton" href="https://www.instagram.com/loquepasahoy.es">Escríbeme por Instagram</a><a class="boton blanco" id="correo" hidden>Escríbeme por correo</a></div>
+    </div>
+    <div class="cartel-caja">
+      <dl class="cartel">
+        <div><dt>Instagram<span>reproducciones en 2 semanas</span></dt><dd>8.975.309</dd></div>
+        <div><dt>TikTok<span>visualizaciones en 7 días</span></dt><dd>4,2 M</dd></div>
+        <div><dt>YouTube<span>visualizaciones en 7 días</span></dt><dd>704,9 mil</dd></div>
+        <div><dt>El vídeo más visto<span>en Instagram</span></dt><dd>4,8 M</dd></div>
+      </dl>
+      <div class="cartel-patas" aria-hidden="true"><i></i><i></i></div>
+      <p class="nota">Cifras de las estadísticas de cada red a 25 de noviembre de 2026.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec apoya" id="apoya">
+  <div class="sec-in">
+    <div>
+    <h2>¿Quieres salir en un episodio?</h2>
+    <p class="sub">Apoya el canal y tu nombre aparece al final de un episodio del juego.</p>
+    <ul class="niveles">
+      <li><span class="disco">3<small>€</small></span><div><h3>Tu nombre</h3><p>Sale en la lista del final del episodio.</p><a class="chip pago" data-n="3" hidden>Salir por 3 €</a></div></li>
+      <li><span class="disco">10<small>€</small></span><div><h3>Tu nombre y tu pueblo, en grande</h3><p>«Gracias a Marta, de Tomelloso».</p><a class="chip pago" data-n="10" hidden>Salir por 10 €</a></div></li>
+      <li><span class="disco azul">30<small>€ o más</small></span><div><h3>Tu negocio o tu ayuntamiento</h3><p>«Episodio con el apoyo de…», con vuestro nombre en pantalla.</p><a class="chip pago" data-n="negocio" hidden>Escríbeme</a></div></li>
+    </ul>
+    <p class="regla">Apoyar no cambia el sorteo. Los pueblos caen al azar, también el tuyo.</p>
+    <div class="acciones"><p class="pronto" id="apoyar-pronto">Muy pronto</p></div>
+    </div>
+    <img class="apoya-mono" src="media/m-fiesta.webp" width="550" height="900" loading="lazy" alt="" aria-hidden="true">
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="pie-in">
+    <a class="logo" href="#juego" aria-label="LO QUE PASA: ir al principio"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a>
+    <nav aria-label="Redes">
+      <a href="https://www.tiktok.com/@loquepasa.es">TikTok</a>
+      <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
+      <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
+    </nav>
+    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP.</p>
+    <p><b>Mapa.</b> Obra derivada de Equipamiento Geográfico de Referencia Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> <a href="https://www.ign.es">ign.es</a>, a través del paquete es-atlas.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+'use strict';
+/* ====== El último pueblo en pie · mapa, buscador y estado del juego ======
+   Datos (los escribe web-src/datos.py):  data/mapa.json · data/pueblos.json
+   Estado del juego (se cambia a mano cada día, ver LEEME.md):  data/juego.json
+   Vistas de prueba, con datos inventados:  #demo-inscripcion · #demo-cerrado · #demo-listo · #demo-jugando · #demo-final */
+const $ = (id) => document.getElementById(id);
+const REDES = { tiktok: 'https://www.tiktok.com/@loquepasa.es', instagram: 'https://www.instagram.com/loquepasahoy.es', youtube: 'https://www.youtube.com/@loquepasa-hoy' };
+const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube' };
+// Correo para marcas y enlace para apoyar (Ko-fi o parecido). Vacíos: el botón del correo no sale y el de apoyar dice «Muy pronto».
+const CORREO = '';
+// Enlace de pago de cada nivel (Ko-fi, PayPal…). Vacío: ese botón no sale. El de negocios, si está vacío, lleva al correo o a Instagram.
+const PAGO = { 3: '', 10: '', negocio: '' };
+// Los precios de los niveles no se enseñan hasta que estén confirmados (true = se ven los discos con el precio).
+const PRECIOS_VISIBLES = false;
+const POR_DEFECTO = { fase: 'inscripcion', cierre: '2026-11-26T18:00:00+01:00', cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27' };
+const CALMA = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const miles = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const minus = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n) => (n === 1 ? 'cae ' : 'caen ') + miles(n);
+
+let PUEBLOS = [], PROV = [], IDX = new Map(), MAPA = null, REAL = null, JUEGO = null, EST = null;
+let sel = -1, faseVista = '';
+
+/* ---------- estado del juego */
+function prepara(j) {
+  const J = { fase: j.fase || 'inscripcion', cierre: j.cierre ? new Date(j.cierre).getTime() : 0, cierre_texto: j.cierre_texto || '', inicio_texto: j.inicio_texto || '',
+    videos: j.videos || {}, dias: Array.isArray(j.dias) ? j.dias : [], ganador: j.ganador ? String(j.ganador) : null, demo: !!j.demo };
+  J.apuntados = Array.isArray(j.apuntados) ? new Set(j.apuntados.map(String)) : null;
+  J.caidos = new Map();
+  for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
+  J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
+  return J;
+}
+function fase() {                       // las inscripciones se cierran solas al llegar la hora, aunque nadie toque juego.json
+  const f = JUEGO.fase;
+  if (f === 'inscripcion') return JUEGO.cierre && Date.now() >= JUEGO.cierre ? 'cerrado' : 'inscripcion';
+  if (f !== 'cerrado' && !JUEGO.apuntados) return 'cerrado';
+  return f;
+}
+function estado(c) {
+  const f = fase();
+  if (f === 'inscripcion') return 'puede';
+  if (f === 'cerrado') return 'contando';
+  if (!JUEGO.apuntados.has(c)) return 'nojuega';
+  if (f === 'listo') return 'apuntado';
+  if (f === 'final') return JUEGO.ganador === c ? 'ganador' : 'eliminado';
+  return JUEGO.caidos.has(c) ? 'eliminado' : 'enpie';
+}
+const enPie = () => { let n = 0; for (const c of JUEGO.apuntados) if (!JUEGO.caidos.has(c)) n++; return n; };
+
+function pintaPanel() {
+  const f = fase(), J = JUEGO, E = $('p-estado'), T = $('p-texto');
+  $('reloj').hidden = f !== 'inscripcion';
+  if (f === 'inscripcion') { E.textContent = 'Inscripciones abiertas'; T.textContent = 'Cierran ' + J.cierre_texto; }
+  else if (f === 'cerrado') { E.textContent = 'Inscripciones cerradas'; T.textContent = 'Estoy contando los comentarios. La lista de pueblos sale antes del primer episodio' + (J.inicio_texto ? ', ' + J.inicio_texto : '') + '.'; }
+  else if (f === 'listo') { E.textContent = (J.apuntados.size === 1 ? 'Juega ' : 'Juegan ') + pueblos(J.apuntados.size); T.textContent = J.inicio_texto ? 'El primer episodio sale ' + J.inicio_texto + '.' : 'El primer episodio está al caer.'; }
+  else if (f === 'jugando') { const u = J.dias[J.dias.length - 1];
+    const n = enPie(); E.textContent = 'Día ' + J.dia + ': ' + (n === 1 ? 'queda ' : 'quedan ') + pueblos(n) + ' en pie';
+    T.textContent = u ? (u.titulo || 'Catástrofe') + ': ' + caen((u.caidos || []).length) + '.' : 'Empezaron ' + miles(J.apuntados.size) + '.'; }
+  else { const g = IDX.get(J.ganador); E.textContent = g != null ? 'Ha ganado ' + PUEBLOS[g].n : 'El juego ha terminado';
+    T.textContent = 'Es el último pueblo en pie de los ' + miles(J.apuntados.size) + ' que jugaban.'; }
+  $('entrada').textContent = f === 'inscripcion' ? 'Comenta tu pueblo y tu provincia. Cada día caen catástrofes sobre España y el último pueblo que quede en pie gana.'
+    : 'Cada día caen catástrofes sobre España y los pueblos caen al azar. El último que quede en pie gana.';
+  $('paso-plazo').textContent = f === 'inscripcion' ? 'Tienes hasta ' + J.cierre_texto + '.' : 'Las inscripciones de esta edición ya están cerradas.';
+  const P = $('parte'), L = $('parte-lista');
+  P.hidden = !(J.dias.length && (f === 'jugando' || f === 'final'));
+  L.innerHTML = J.dias.slice().reverse().map((d) => `<li><b>${esc(d.dia)}</b><div>${esc(d.titulo || 'Catástrofe')}</div><span>${caen((d.caidos || []).length)}</span></li>`).join('');
+}
+function tic() {
+  const f = fase();
+  if (f !== faseVista) refresca();
+  if (f !== 'inscripcion') return;
+  const s = Math.max(0, Math.floor((JUEGO.cierre - Date.now()) / 1000)), p2 = (n) => String(n).padStart(2, '0');
+  const v = [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60], u = [['día', 'días'], ['hora', 'horas'], ['minuto', 'minutos'], ['segundo', 'segundos']];
+  ['r-d', 'r-h', 'r-m', 'r-s'].forEach((id, i) => { const b = $(id); b.textContent = i ? p2(v[i]) : v[i]; b.nextElementSibling.textContent = u[i][v[i] === 1 ? 0 : 1]; });
+}
+function refresca() {
+  faseVista = fase();
+  const f = faseVista;                  // 0 casita normal · 1 no juega · 2 eliminada · 3 ganadora
+  for (let i = 0; i < PUEBLOS.length; i++) { const e = f === 'inscripcion' || f === 'cerrado' ? '' : estado(PUEBLOS[i].c); EST[i] = e === 'nojuega' ? 1 : e === 'eliminado' ? 2 : e === 'ganador' ? 3 : 0; }
+  GAN = f === 'final' && JUEGO.ganador && IDX.has(JUEGO.ganador) ? IDX.get(JUEGO.ganador) : -1;
+  pintaPanel(); pintaFicha(false); tic(); pide();
+}
+
+/* ---------- mapa */
+const cv = $('mapa'), cx = cv.getContext('2d');
+const vista = { x: 0, y: 0, k: 1 };
+const CEL = 80; let COLS = 0, celdas = [];
+let W = 0, H = 0, DPR = 1, base = 1, anim = null, raf = 0, t0 = 0, entrando = false, GAN = -1, OLAS = [];
+const COL = [['#ffffff', '#ff2e4d'], ['#d9dde8', '#a2a9bd'], ['#2a2f3f', '#3b4155'], ['#ffffff', '#ffb300']];
+
+function montaMapa(m) {
+  const arcos = m.arcs.map((a) => { const p = new Float32Array(a.length); let x = 0, y = 0;
+    for (let i = 0; i < a.length; i += 2) { x = i ? x + a[i] : a[0]; y = i ? y + a[i + 1] : a[1]; p[i] = x; p[i + 1] = y; } return p; });
+  const tierra = new Path2D();
+  PROV = m.prov.map((p) => {
+    const path = new Path2D();
+    for (const pol of p.p) for (const anillo of pol) {
+      let primero = true;
+      for (const ai of anillo) { const a = arcos[ai < 0 ? ~ai : ai], n = a.length / 2;
+        for (let j = 0; j < n; j++) { const k = ai < 0 ? n - 1 - j : j; if (primero) { path.moveTo(a[2 * k], a[2 * k + 1]); primero = false; } else path.lineTo(a[2 * k], a[2 * k + 1]); } }
+      path.closePath();
+    }
+    tierra.addPath(path);
+    return { id: p.id, n: p.n, path, color: m.colores[p.r] || '#ffffff', k: p.n.split('/').map(norm) };
+  });
+  const lineas = [new Path2D(), new Path2D(), new Path2D()];      // costa · límite de provincia · límite de comunidad
+  arcos.forEach((a, i) => { const L = lineas[m.kind[i]] || lineas[1]; L.moveTo(a[0], a[1]); for (let j = 2; j < a.length; j += 2) L.lineTo(a[j], a[j + 1]); });
+  MAPA = { w: m.w, h: m.h, box: m.box, tierra, lineas };
+  vista.x = m.w / 2; vista.y = m.h / 2;
+  let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 120; i++) OLAS.push([rnd() * m.w, rnd() * m.h, 5 + rnd() * 4]);
+}
+function montaPueblos(p) {
+  COLS = Math.ceil(MAPA.w / CEL); celdas = [];
+  PUEBLOS = p.map((r, i) => { const k = norm(r[1]), t = { c: r[0], n: r[1], p: r[2], x: r[3], y: r[4], k, w: ' ' + k, ks: r[1].indexOf('/') > 0 ? r[1].split('/').map(norm) : null,
+      d: 120 + (r[3] / MAPA.w) * 760 + ((i * 7919) % 211) };
+    IDX.set(t.c, i); const c = Math.floor(t.y / CEL) * COLS + Math.floor(t.x / CEL); (celdas[c] || (celdas[c] = [])).push(i); return t; });
+  EST = new Uint8Array(PUEBLOS.length);
+}
+function cerca(gx, gy, max, salvo) {       // el pueblo más cercano a un punto de la rejilla (o -1)
+  const c0 = Math.floor(gx / CEL), r0 = Math.floor(gy / CEL), n = Math.ceil(max / CEL); let mejor = -1, bd = max * max;
+  for (let r = r0 - n; r <= r0 + n; r++) for (let c = c0 - n; c <= c0 + n; c++) { if (c < 0 || c >= COLS || r < 0) continue; const L = celdas[r * COLS + c]; if (!L) continue;
+    for (const i of L) { if (i === salvo) continue; const dx = PUEBLOS[i].x - gx, dy = PUEBLOS[i].y - gy, d = dx * dx + dy * dy; if (d < bd) { bd = d; mejor = i; } } }
+  return mejor;
+}
+function radioVecinos(i) {                  // distancia al sexto vecino: en Castilla están a un paso; en Extremadura, lejos
+  const t = PUEBLOS[i], c0 = Math.floor(t.x / CEL), r0 = Math.floor(t.y / CEL); let ds = [];
+  for (let n = 1; n <= 6 && ds.length < 7; n++) { ds = [];
+    for (let r = r0 - n; r <= r0 + n; r++) for (let c = c0 - n; c <= c0 + n; c++) { if (c < 0 || c >= COLS || r < 0) continue; const L = celdas[r * COLS + c]; if (!L) continue;
+      for (const j of L) if (j !== i) ds.push(Math.hypot(PUEBLOS[j].x - t.x, PUEBLOS[j].y - t.y)); } }
+  ds.sort((a, b) => a - b); return ds.length ? ds[Math.min(5, ds.length - 1)] : 200;
+}
+function mide() {
+  const r = cv.getBoundingClientRect(); if (!r.width) return false;
+  W = r.width; H = r.height; DPR = Math.min(3, window.devicePixelRatio || 1);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); base = Math.min(W / MAPA.w, H / MAPA.h); return true;
+}
+function casa(x, y, h, e) {                 // casita con detalle (cuando se ve de cerca)
+  const c = COL[e];
+  cx.fillStyle = 'rgba(11,23,54,.2)'; cx.beginPath(); cx.ellipse(x, y + h * 0.5, h * 0.56, h * 0.15, 0, 0, 6.3); cx.fill();
+  cx.lineJoin = 'round'; cx.lineWidth = Math.max(1, h * 0.085); cx.strokeStyle = '#0b1736';
+  if (e === 2) {                            // en ruinas: muros rotos, cascotes y un poco de humo
+    cx.fillStyle = c[0]; cx.beginPath(); cx.moveTo(x - h * 0.44, y + h * 0.5); cx.lineTo(x - h * 0.44, y - h * 0.06); cx.lineTo(x - h * 0.27, y + h * 0.12); cx.lineTo(x - h * 0.15, y - h * 0.02); cx.lineTo(x - h * 0.06, y + h * 0.31);
+    cx.lineTo(x + h * 0.14, y + h * 0.35); cx.lineTo(x + h * 0.22, y + h * 0.15); cx.lineTo(x + h * 0.44, y + h * 0.27); cx.lineTo(x + h * 0.44, y + h * 0.5); cx.closePath(); cx.fill();
+    cx.fillRect(x + h * 0.53, y + h * 0.37, h * 0.14, h * 0.13); cx.fillRect(x - h * 0.7, y + h * 0.4, h * 0.12, h * 0.1);
+    cx.fillStyle = 'rgba(255,255,255,.6)'; cx.beginPath(); cx.arc(x + h * 0.04, y - h * 0.26, h * 0.17, 0, 6.3); cx.fill(); cx.beginPath(); cx.arc(x + h * 0.24, y - h * 0.5, h * 0.12, 0, 6.3); cx.fill(); return;
+  }
+  cx.fillStyle = c[0]; cx.beginPath(); cx.rect(x - h * 0.4, y - h * 0.04, h * 0.8, h * 0.54); cx.fill(); cx.stroke();
+  cx.fillStyle = c[1]; cx.beginPath(); cx.moveTo(x - h * 0.58, y + h * 0.02); cx.lineTo(x, y - h * 0.52); cx.lineTo(x + h * 0.58, y + h * 0.02); cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = e === 1 ? '#8a91a6' : '#0b1736'; cx.fillRect(x - h * 0.1, y + h * 0.2, h * 0.2, h * 0.3);
+}
+function rotulo(txt, x, y, fuente, relleno, halo) { cx.font = fuente; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineJoin = 'round';
+  if (halo) { cx.strokeStyle = halo; cx.lineWidth = 3.5; cx.strokeText(txt, x, y); } cx.fillStyle = relleno; cx.fillText(txt, x, y); }
+function caja(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
+
+function pinta(ahora) {
+  if (!MAPA || !W) return;
+  const s = base * vista.k, ox = W / 2 - vista.x * s, oy = H / 2 - vista.y * s;
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const g = cx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#3acde8'); g.addColorStop(1, '#1492d4'); cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  cx.strokeStyle = 'rgba(255,255,255,.4)'; cx.lineCap = 'round'; cx.lineWidth = Math.max(1, Math.min(2.4, W / 300)); cx.beginPath();          // olas
+  const am = (base * MAPA.w / 360) * Math.min(2.6, 0.9 + vista.k * 0.1);
+  for (const o of OLAS) { const x = o[0] * s + ox, y = o[1] * s + oy, a = o[2] * am; if (x < -40 || x > W + 40 || y < -12 || y > H + 12) continue;
+    cx.moveTo(x - a, y); cx.quadraticCurveTo(x - a / 2, y - a * 0.5, x, y); cx.quadraticCurveTo(x + a / 2, y + a * 0.5, x + a, y); }
+  cx.stroke();
+  cx.setTransform(DPR * s, 0, 0, DPR * s, DPR * ox, DPR * oy);                     // en unidades de la rejilla
+  const b = MAPA.box; cx.fillStyle = 'rgba(255,255,255,.17)'; cx.strokeStyle = 'rgba(255,255,255,.9)'; cx.lineWidth = 2 / s; caja(b[0], b[1], b[2] - b[0], b[3] - b[1], 30); cx.fill(); cx.stroke();
+  const canto = Math.min(5, 2.4 + vista.k * 0.2) / s;                                // el tablero tiene grosor
+  cx.save(); cx.translate(0, canto * 1.9); cx.fillStyle = 'rgba(6,58,112,' + Math.max(0.1, 0.3 - vista.k * 0.02) + ')'; cx.fill(MAPA.tierra); cx.restore();
+  cx.save(); cx.translate(0, canto); cx.fillStyle = '#f2e0ad'; cx.fill(MAPA.tierra); cx.restore();
+  for (const p of PROV) { cx.fillStyle = p.color; cx.fill(p.path, 'evenodd'); }
+  cx.lineJoin = 'round'; cx.lineCap = 'round';
+  cx.strokeStyle = 'rgba(255,255,255,.55)'; cx.lineWidth = 1 / s; cx.stroke(MAPA.lineas[1]);
+  cx.strokeStyle = 'rgba(255,255,255,.95)'; cx.lineWidth = 1.7 / s; cx.stroke(MAPA.lineas[2]);
+  cx.strokeStyle = '#fff5d6'; cx.lineWidth = 1.6 / s; cx.stroke(MAPA.lineas[0]);
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0);                                             // casitas, en píxeles
+
+  const hs = Math.min(17, Math.max(1.3, base * MAPA.w / 225) * Math.pow(vista.k, 0.8)), te = entrando ? ahora - t0 : 1e9, N = PUEBLOS.length;
+  let senalSel = null;                                                               // la señal con el nombre del pueblo elegido (se pinta al final, pero reserva su sitio)
+  if (sel >= 0) { const t = PUEBLOS[sel], x = t.x * s + ox, y = t.y * s + oy, h = Math.max(13, hs * 1.55), f = '800 ' + (W > 500 ? 14 : 12.5) + 'px Montserrat, sans-serif';
+    let txt = t.n.toLocaleUpperCase('es'); if (txt.length > 28) txt = txt.slice(0, 27).trim() + '…';
+    cx.font = f; const w = Math.min(W - 12, cx.measureText(txt).width + 22); let by = y - h * 0.52 - 28 - 27 - 5; if (by < 6) by = y + h * 0.5 + 12;
+    senalSel = { x: Math.max(6, Math.min(W - w - 6, x - w / 2)), y: by, w, h: 27, txt, f, casa: [x - h * 1.3, y - h * 0.52 - 30, x + h * 1.3, y + h * 1.35] }; }
+  const crece = (i) => { if (!entrando) return 1; const u = (te - PUEBLOS[i].d) / 260; if (u <= 0) return 0; if (u >= 1) return 1; const v = u - 1; return 1 + 2.7 * v * v * v + 1.7 * v * v; };
+  if (hs < 5.2) {
+    for (let e = 0; e < 4; e++) for (let capa = 0; capa < 2; capa++) {              // por tandas de color: primero paredes, luego tejados
+      cx.fillStyle = COL[e][capa];
+      for (let i = 0; i < N; i++) { if (EST[i] !== e) continue; const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -6 || x > W + 6 || y < -6 || y > H + 6) continue;
+        const h = hs * crece(i) * (e === 3 ? 1.6 : 1); if (!h) continue;
+        if (capa) cx.fillRect(x - h / 2, y - h / 2, h, h * 0.55); else cx.fillRect(x - h / 2, y - h * 0.05, h, h * 0.55); }
+    }
+  } else {
+    const vis = []; for (let i = 0; i < N; i++) { const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -20 || x > W + 20 || y < -20 || y > H + 20 || i === sel) continue; vis.push([y, x, i]); }
+    vis.sort((a, b) => a[0] - b[0]);
+    for (const v of vis) { const h = hs * crece(v[2]); if (h) casa(v[1], v[0], h, EST[v[2]]); }
+    if (vista.k >= 5 && !anim) {                                                     // nombres de los vecinos, sin pisarse
+      const cxm = W / 2, cym = H / 2, puestos = [[0, H - 58, 172, H], [W * 0.36, 0, W, 50]]; if (senalSel) puestos.push([senalSel.x - 4, senalSel.y - 4, senalSel.x + senalSel.w + 4, senalSel.y + senalSel.h + 4], senalSel.casa);
+      const casas = vis.map((v) => [v[1] - hs * 0.62, v[0] - hs * 0.58, v[1] + hs * 0.62, v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
+      vis.sort((a, b) => Math.hypot(a[1] - cxm, a[0] - cym) - Math.hypot(b[1] - cxm, b[0] - cym));
+      const f = '700 ' + (W > 500 ? 12.5 : 11.5) + 'px Montserrat, sans-serif'; cx.font = f; let n = 0;
+      for (const v of vis) { if (n >= 16) break; const nombre = PUEBLOS[v[2]].n, tw = cx.measureText(nombre).width, x = v[1], y = v[0] + hs * 0.5 + 11;
+        const r = [x - tw / 2 - 3, y - 8, x + tw / 2 + 3, y + 8]; if (r[0] < 2 || r[2] > W - 2 || r[3] > H - 2) continue;
+        if (puestos.some((p) => r[0] < p[2] && r[2] > p[0] && r[1] < p[3] && r[3] > p[1]) || casas.some((p) => p[4] !== v[2] && r[0] < p[2] && r[2] > p[0] && r[1] < p[3] && r[3] > p[1])) continue;
+        puestos.push(r); rotulo(nombre, x, y, f, '#0b1736', 'rgba(255,255,255,.92)'); n++; }
+    }
+  }
+  for (const m of [GAN !== sel ? GAN : -1, sel]) {                               // el ganador y el pueblo elegido: anillo, casita grande y chincheta
+    if (m < 0) continue; const t = PUEBLOS[m], x = t.x * s + ox, y = t.y * s + oy, h = Math.max(13, hs * 1.55);
+    if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
+    cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12, 0, 6.3); cx.fillStyle = 'rgba(255,212,59,.5)'; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = '#fff'; cx.stroke();
+    cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12 + 2.5, 0, 6.3); cx.lineWidth = 1.5; cx.strokeStyle = '#0b1736'; cx.stroke();
+    casa(x, y, h, EST[m]);
+    if (m !== sel) continue;
+    const py = y - h * 0.52;
+    cx.strokeStyle = '#0b1736'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(x, py); cx.lineTo(x, py - 15); cx.stroke();
+    cx.beginPath(); cx.arc(x, py - 21, 7, 0, 6.3); cx.fillStyle = EST[m] === 2 ? '#ff2e4d' : '#ffd43b'; cx.fill(); cx.stroke();
+    cx.beginPath(); cx.arc(x - 2.2, py - 23.2, 2, 0, 6.3); cx.fillStyle = 'rgba(255,255,255,.85)'; cx.fill();
+    const R = senalSel; caja(R.x, R.y, R.w, R.h, 6); cx.fillStyle = '#fff'; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = EST[m] === 1 ? '#8f96ab' : '#d90f1e'; cx.stroke();
+    cx.save(); caja(R.x, R.y, R.w, R.h, 6); cx.clip(); rotulo(R.txt, R.x + R.w / 2, R.y + R.h / 2 + 1, R.f, '#101014'); cx.restore();
+  }
+}
+function pide() { if (!raf) raf = requestAnimationFrame(cuadro); }
+function cuadro(ahora) {
+  raf = 0; let sigue = false;
+  if (anim) { if (anim(ahora)) anim = null; else sigue = true; }
+  if (entrando) { if (ahora - t0 > 1500) entrando = false; else sigue = true; }
+  pinta(ahora); if (sigue) pide();
+}
+function vuela(x, y, k) {
+  $('ver-todo').hidden = k <= 1.01;
+  if (CALMA || !W) { anim = null; vista.x = x; vista.y = y; vista.k = k; pide(); return; }
+  const a = { x: vista.x, y: vista.y, k: vista.k }, T0 = performance.now(), la = Math.log(a.k), lb = Math.log(k), dist = Math.hypot(x - a.x, y - a.y);
+  const lt = Math.log(Math.max(1, MAPA.w / (dist * 1.7 + 1))), baja = lt < Math.min(la, lb) ? (la + lb) / 2 - lt : 0;   // si el destino no se ve, se aleja a medio vuelo
+  const ms = 620 + Math.min(480, dist / 6);
+  anim = (ahora) => { const u = Math.min(1, (ahora - T0) / ms), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+    vista.x = a.x + (x - a.x) * e; vista.y = a.y + (y - a.y) * e; vista.k = Math.exp(Math.max(Math.min(la, lb, lt), la + (lb - la) * e - Math.sin(Math.PI * u) * baja)); return u >= 1; };
+  pide();
+}
+
+/* ---------- el pueblo elegido */
+const SELLO = { puede: 'Puede entrar', contando: 'Contando', apuntado: 'Juega', nojuega: 'No juega', enpie: 'En pie', eliminado: 'Eliminado', ganador: 'Ganador' };
+const POSTURA = { puede: 'movil', contando: 'abajo', apuntado: 'fiesta', nojuega: 'hombros', enpie: 'fiesta', eliminado: 'abajo', ganador: 'fiesta' };
+const guardado = { lee() { try { return localStorage.getItem('lqp-pueblo'); } catch (e) { return null; } },
+  pon(c) { try { if (c) localStorage.setItem('lqp-pueblo', c); else localStorage.removeItem('lqp-pueblo'); return true; } catch (e) { return false; } } };
+function mono(p) { for (const m of document.querySelectorAll('.mono')) { const v = m.dataset.p === p; if (v && !m.getAttribute('src')) m.src = m.dataset.src; m.classList.toggle('ver', v); } }
+function chips(directos) { return '<div class="fila">' + Object.keys(REDES).map((r) => `<a class="chip" href="${esc((directos && JUEGO.videos[r]) || REDES[r])}">${RED_NOMBRE[r]}</a>`).join('') + '</div>'; }
+
+// si el texto de la pista no cabe encima de la mesa (pantallas estrechas o letra grande), la mesa baja lo que haga falta
+function encajaPista() { const e = $('escena'), p = $('pista'); e.style.paddingTop = ''; const base = parseFloat(getComputedStyle(e).paddingTop) || 0, hace = p.offsetTop + p.offsetHeight + 12; if (hace > base) e.style.paddingTop = hace + 'px'; }
+function pintaFicha(conGolpe) {
+  const F = $('ficha'), S = $('sello');
+  $('pista').innerHTML = sel < 0 ? '<b>8.132</b> municipios, una casita cada uno. Toca el mapa o escribe el tuyo.' : 'Toca otra casita para ver cómo va ese pueblo.';
+  encajaPista();
+  if (sel < 0) { F.hidden = true; S.hidden = true; mono('abajo'); return; }
+  const t = PUEBLOS[sel], pv = PROV[t.p].n, e = estado(t.c), J = JUEGO, N = J.apuntados ? J.apuntados.size : 0, T = esc(t.n);
+  let h = '', cuerpo = '';
+  if (e === 'puede') {
+    const directo = !!(J.videos.tiktok && J.videos.instagram && J.videos.youtube);
+    h = `${T} todavía puede entrar`;
+    cuerpo = `<p>Si alguien ya lo ha comentado, está dentro. Si no, hazlo tú: con un comentario basta.</p>
+      <div class="comenta"><output id="f-texto">${T}, ${esc(pv)}</output><button type="button" class="boton" id="f-copiar">Copiar</button></div>
+      <p>${directo ? 'Pégalo en el vídeo del juego:' : 'Pégalo en el vídeo «¿Sobrevivirá tu pueblo?», en la red que uses:'}</p>${chips(true)}`;
+  } else if (e === 'contando') {
+    h = 'Las inscripciones están cerradas';
+    cuerpo = `<p>Estoy contando los comentarios de las tres redes. Si alguien comentó ${T} antes del cierre, saldrá en la lista.${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
+  } else if (e === 'apuntado') {
+    h = `${T} juega`;
+    cuerpo = `<p>Está en la lista con otros ${pueblos(Math.max(0, N - 1))}.${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
+  } else if (e === 'nojuega') {
+    h = `${T} no juega esta vez`;
+    cuerpo = `<p>Nadie lo comentó antes del cierre. Habrá más ediciones: sigue el canal para enterarte de la próxima.</p>${chips(false)}`;
+  } else if (e === 'enpie') {
+    h = `${T} sigue en pie`;
+    cuerpo = `<p>${J.dia ? 'Ha aguantado ' + (J.dia === 1 ? 'el primer día' : J.dia + ' días') + ' de catástrofes. ' : ''}${enPie() === 1 ? 'Queda' : 'Quedan'} ${pueblos(enPie())} de los ${miles(N)} que empezaron.</p>`;
+  } else if (e === 'eliminado') {
+    const d = J.caidos.get(t.c);
+    h = `${T} ha caído`;
+    cuerpo = `<p>${d ? 'Cayó el día ' + esc(d.dia) + (d.titulo ? ' (' + esc(minus(d.titulo)) + ').' : '.') + (d.dia > 1 ? ' Aguantó ' + (d.dia === 2 ? 'un día' : (d.dia - 1) + ' días') + '.' : '') : 'No ha llegado al final.'}</p>`;
+  } else {
+    h = `${T} ha ganado`;
+    cuerpo = `<p>Es el último pueblo en pie de los ${miles(N)} que jugaban. El vídeo del premio sale en las tres redes.</p>${chips(false)}`;
+  }
+  const mio = guardado.lee() === t.c;
+  F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div><div class="senal-patas"><i></i><i></i></div></div>
+    <h2>${h}</h2>${cuerpo}<hr class="sep">
+    <div class="fila"><button type="button" class="boton blanco" id="f-guardar">${mio ? 'Dejar de guardarlo' : 'Guardar como mi pueblo'}</button>
+    <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button></div>
+    <p class="aviso" id="f-aviso" role="status"></p>`;
+  F.hidden = false;
+  S.textContent = SELLO[e]; S.dataset.e = e; S.hidden = false;
+  if (conGolpe) { S.classList.remove('pum'); void S.offsetWidth; S.classList.add('pum'); }
+  mono(POSTURA[e]);
+}
+async function copia(txt) { try { await navigator.clipboard.writeText(txt); return true; } catch (e) { return false; } }
+$('ficha').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('button'); if (!b || sel < 0) return;
+  const t = PUEBLOS[sel], aviso = (m) => { $('f-aviso').textContent = m; };
+  if (b.id === 'f-copiar') {
+    if (await copia($('f-texto').textContent)) { b.textContent = 'Copiado'; aviso('Comentario copiado. Ya puedes pegarlo en el vídeo.'); setTimeout(() => { b.textContent = 'Copiar'; }, 2500); }
+    else { const r = document.createRange(); r.selectNodeContents($('f-texto')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); aviso('No se ha podido copiar solo. El texto está seleccionado: cópialo tú.'); }
+  } else if (b.id === 'f-guardar') {
+    const mio = guardado.lee() === t.c;
+    if (!guardado.pon(mio ? null : t.c)) { aviso('Este navegador no deja guardar datos. Usa «' + $('f-compartir').textContent + '» y guarda el enlace.'); return; }
+    b.textContent = mio ? 'Guardar como mi pueblo' : 'Dejar de guardarlo';
+    aviso(mio ? 'Ya no está guardado.' : 'Guardado en este navegador. La próxima vez irás directo a ' + t.n + '.');
+  } else if (b.id === 'f-compartir') {
+    const url = location.href.split('#')[0] + '#pueblo-' + t.c, e = estado(t.c);
+    const texto = e === 'enpie' ? t.n + ' sigue en pie.' : e === 'eliminado' ? t.n + ' ha caído.' : e === 'ganador' ? t.n + ' ha ganado.' : e === 'puede' ? '¿Está apuntado ' + t.n + '? Con un comentario entra.' : t.n + ' en El último pueblo en pie.';
+    if (navigator.share) { try { await navigator.share({ title: 'El último pueblo en pie', text: texto, url }); return; } catch (err) { if (err && err.name === 'AbortError') return; } }
+    aviso(await copia(url) ? 'Enlace copiado.' : 'No se ha podido copiar. El enlace es ' + url);
+  }
+});
+
+function elige(i, desde) {
+  const t = PUEBLOS[i]; sel = i;
+  q.value = t.n; $('q-borrar').hidden = false; cierraLista();
+  const medio = Math.max(60, Math.min(250, radioVecinos(i) * 1.75));
+  vuela(t.x, t.y, Math.min(W, H * 1.15) / base / 2 / medio);
+  pintaFicha(true);
+  if (location.hash !== '#pueblo-' + t.c) location.hash = 'pueblo-' + t.c;
+  if (desde === 'busca' && matchMedia('(max-width: 939px)').matches) { q.blur(); scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); }
+}
+function suelta() {
+  sel = -1; q.value = ''; $('q-borrar').hidden = true; cierraLista(); pintaFicha(false); vuela(MAPA.w / 2, MAPA.h / 2, 1);
+  if (/^#pueblo-/.test(location.hash)) { try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; } }
+}
+$('ver-todo').addEventListener('click', () => vuela(MAPA.w / 2, MAPA.h / 2, 1));
+const aRejilla = (ev) => { const r = cv.getBoundingClientRect(), s = base * vista.k; return [(ev.clientX - r.left - W / 2) / s + vista.x, (ev.clientY - r.top - H / 2) / s + vista.y, s, ev.clientX - r.left, ev.clientY - r.top]; };
+cv.addEventListener('click', (ev) => { if (!MAPA || anim) return; const g = aRejilla(ev), i = cerca(g[0], g[1], 30 / g[2]); if (i >= 0) elige(i, 'mapa'); });
+cv.addEventListener('pointermove', (ev) => {
+  if (ev.pointerType !== 'mouse' || !MAPA) return; const g = aRejilla(ev), i = anim ? -1 : cerca(g[0], g[1], 13 / g[2]), tip = $('tip');
+  cv.style.cursor = i >= 0 ? 'pointer' : ''; tip.hidden = i < 0 || i === sel; if (tip.hidden) return;
+  tip.textContent = PUEBLOS[i].n + ' (' + PROV[PUEBLOS[i].p].n + ')';
+  const tw = tip.offsetWidth; tip.style.transform = `translate(${Math.max(4, Math.min(W - tw - 4, g[3] - tw / 2))}px, ${g[4] < 44 ? g[4] + 20 : g[4] - 38}px)`;
+});
+cv.addEventListener('pointerleave', () => { $('tip').hidden = true; });
+
+/* ---------- buscador */
+const q = $('q'), lista = $('q-lista');
+let ops = [], act = -1;
+function busca(v) {
+  const trozos = v.split(','), qn = norm(trozos[0]), qp = trozos.length > 1 ? norm(trozos.slice(1).join(' ')) : '';
+  if (!qn) return [];
+  const sal = [], esp = ' ' + qn;
+  for (let i = 0; i < PUEBLOS.length; i++) {
+    const t = PUEBLOS[i]; let n;
+    if (t.k === qn || (t.ks && t.ks.includes(qn))) n = 0;                             // nombre exacto (o una de sus dos lenguas)
+    else if (t.k.startsWith(qn) || (t.ks && t.ks.some((s) => s.startsWith(qn)))) n = 1;  // empieza así
+    else if (t.w.includes(esp)) n = 2;                                                // una palabra empieza así
+    else if (qn.length >= 4 && t.k.includes(qn)) n = 3;                               // lo contiene
+    else continue;
+    if (qp && !PROV[t.p].k.some((s) => s.startsWith(qp) || (' ' + s).includes(' ' + qp))) continue;
+    sal.push(n * 1e7 + Math.min(99, t.n.length) * 1e5 + i);
+  }
+  return sal.sort((a, b) => a - b).map((n) => n % 1e5);
+}
+function abreLista(res) {
+  ops = res.slice(0, 7); act = -1;
+  let html = ops.map((i, n) => `<li role="option" id="op-${n}" data-i="${i}" aria-selected="false">${esc(PUEBLOS[i].n)}<span>${esc(PROV[PUEBLOS[i].p].n)}</span></li>`).join('');
+  if (res.length > 7) html += `<li class="mas" role="presentation">Hay ${miles(res.length - 7)} más. Sigue escribiendo.</li>`;
+  if (!res.length) html = '<li class="nada" role="presentation">No encuentro ningún municipio con ese nombre. Si es una aldea o una pedanía, busca el municipio al que pertenece.</li>';
+  lista.innerHTML = html; lista.hidden = false; lista.scrollTop = 0; q.setAttribute('aria-expanded', 'true'); q.removeAttribute('aria-activedescendant');
+  $('q-estado').textContent = res.length ? (res.length === 1 ? '1 municipio' : miles(res.length) + ' municipios') : 'Sin resultados';
+  if (!res.length && sel < 0) mono('hombros'); else if (sel < 0) mono('abajo');
+}
+function cierraLista() { lista.hidden = true; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); act = -1; }
+function marca(n) {
+  if (!ops.length) return; act = (n + ops.length) % ops.length;
+  [...lista.querySelectorAll('[role=option]')].forEach((li, k) => { li.setAttribute('aria-selected', k === act ? 'true' : 'false'); if (k === act) li.scrollIntoView({ block: 'nearest' }); });
+  q.setAttribute('aria-activedescendant', 'op-' + act);
+}
+q.addEventListener('input', () => { $('q-borrar').hidden = !q.value; if (norm(q.value)) abreLista(busca(q.value)); else { cierraLista(); if (sel < 0) mono('abajo'); } });
+q.addEventListener('focus', () => { if (sel < 0 && norm(q.value)) abreLista(busca(q.value)); else if (sel >= 0) q.select(); });
+q.addEventListener('blur', () => { cierraLista(); if (sel >= 0) q.value = PUEBLOS[sel].n; });
+q.addEventListener('keydown', (ev) => {
+  const abierta = !lista.hidden;
+  if (ev.key === 'ArrowDown') { ev.preventDefault(); if (!abierta) { if (norm(q.value)) abreLista(busca(q.value)); } else marca(act + 1); }
+  else if (ev.key === 'ArrowUp') { ev.preventDefault(); if (abierta) marca(act < 0 ? ops.length - 1 : act - 1); }
+  else if (ev.key === 'Enter') { ev.preventDefault(); if (!abierta && norm(q.value)) abreLista(busca(q.value)); if (ops.length && !lista.hidden) elige(ops[Math.max(0, act)], 'busca'); }
+  else if (ev.key === 'Escape') { if (abierta) { ev.preventDefault(); cierraLista(); } else if (q.value) { ev.preventDefault(); suelta(); } }
+});
+lista.addEventListener('pointerdown', (ev) => ev.preventDefault());                   // que el campo no pierda el foco al tocar una opción
+lista.addEventListener('click', (ev) => { const li = ev.target.closest('[role=option]'); if (li) elige(+li.dataset.i, 'busca'); });
+$('buscar').addEventListener('submit', (ev) => ev.preventDefault());
+$('q-borrar').addEventListener('click', () => { suelta(); q.focus(); });
+
+/* ---------- vistas de prueba (datos inventados, solo para ver cómo quedará cada fase) */
+function demo(f) {
+  let a = 20261126; const rnd = () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const j = { demo: true, fase: f, cierre: new Date(Date.now() + (f === 'inscripcion' ? 26.5 : -1) * 3600e3).toISOString(), cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27', apuntados: null, dias: [], ganador: null };
+  if (f === 'listo' || f === 'jugando' || f === 'final') {
+    const ap = PUEBLOS.filter((t) => rnd() < 0.46 || t.c === '13082'); j.apuntados = ap.map((t) => t.c);
+    if (f !== 'listo') {
+      const focos = [['Tsunami en el Cantábrico', 1900, 300, 620], ['Terremoto en La Mancha', 2150, 1650, 520], ['Volcán en el Pirineo', 3000, 520, 560], ['Meteorito en el Guadalquivir', 1500, 2250, 600]];
+      const vivos = new Set(ap), dias = f === 'final' ? 4 : 3;
+      for (let d = 0; d < dias; d++) { const F = focos[d], caen = [];
+        for (const t of vivos) if (t.c !== '13082' && rnd() < (Math.hypot(t.x - F[1], t.y - F[2]) < F[3] ? 0.86 : 0.07)) caen.push(t);
+        caen.forEach((t) => vivos.delete(t)); j.dias.push({ dia: d + 1, titulo: F[0], caidos: caen.map((t) => t.c) }); }
+      if (f === 'final') { j.dias.push({ dia: 5, titulo: 'Lluvia de meteoritos', caidos: [...vivos].filter((t) => t.c !== '13082').map((t) => t.c) }); j.ganador = '13082'; }
+    }
+  }
+  JUEGO = prepara(j); $('demo').hidden = false; refresca();
+}
+$('demo-salir').addEventListener('click', () => { JUEGO = REAL; $('demo').hidden = true; refresca(); });
+function leeHash() {
+  const h = location.hash.slice(1); let m;
+  if ((m = /^pueblo-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null && i !== sel) elige(i, 'hash'); }
+  else if ((m = /^demo-(inscripcion|cerrado|listo|jugando|final)$/.exec(h))) demo(m[1]);
+}
+
+/* ---------- clip del tablero */
+const clip = $('clip'), cb = $('clip-btn'); let parado = CALMA || !!(navigator.connection && navigator.connection.saveData);
+function clipDale() { if (!clip.getAttribute('src')) clip.src = clip.dataset.src; const p = clip.play(); if (p) p.then(() => { cb.textContent = 'Pausar'; }).catch(() => { cb.textContent = 'Reproducir'; }); }
+cb.addEventListener('click', () => { if (clip.paused) { parado = false; clipDale(); } else { parado = true; clip.pause(); cb.textContent = 'Reproducir'; } });
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver((es, o) => { if (es.some((e) => e.isIntersecting)) { clip.poster = clip.dataset.poster; o.disconnect(); } }, { rootMargin: '700px 0px' }).observe(clip);
+  new IntersectionObserver((es) => { for (const e of es) { if (e.isIntersecting) { if (!parado) clipDale(); } else if (!clip.paused) { clip.pause(); cb.textContent = 'Reproducir'; } } }, { threshold: 0.3 }).observe(clip);
+} else clip.poster = clip.dataset.poster;
+
+/* ---------- carrusel de vídeos */
+const car = $('carrusel');
+const corre = (d) => { const f = car.querySelector('figure'); car.scrollBy({ left: d * (f.getBoundingClientRect().width + 14) * (car.clientWidth > 720 ? 2 : 1), behavior: CALMA ? 'auto' : 'smooth' }); };
+$('car-ant').addEventListener('click', () => corre(-1)); $('car-sig').addEventListener('click', () => corre(1));
+car.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowRight') { ev.preventDefault(); corre(1); } else if (ev.key === 'ArrowLeft') { ev.preventDefault(); corre(-1); } });
+
+/* ---------- arranque */
+const trae = (u, o) => fetch(u, o).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); });
+Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO)]).then(([m, p, j]) => {
+  montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j);
+  mide(); $('carga').hidden = true; q.disabled = false; q.placeholder = 'Tomelloso, Ribadeo…';
+  new ResizeObserver(() => { if (mide()) pide(); }).observe(cv);
+  entrando = !CALMA; t0 = performance.now();
+  refresca(); setInterval(tic, 1000);
+  if (document.fonts && document.fonts.load) document.fonts.load('800 13px Montserrat').then(pide, () => {});
+  addEventListener('hashchange', leeHash);
+  if (CORREO) { const c = $('correo'); c.href = 'mailto:' + CORREO; c.hidden = false; }
+  $('apoya').classList.toggle('sin-precios', !PRECIOS_VISIBLES);
+  for (const a of document.querySelectorAll('.pago')) { const n = a.dataset.n, u = PAGO[n] || (n === 'negocio' ? (CORREO ? 'mailto:' + CORREO : REDES.instagram) : ''); if (u) { a.href = u; a.hidden = false; } }
+  if (PAGO[3] || PAGO[10]) $('apoyar-pronto').hidden = true;
+  addEventListener('resize', encajaPista); if (document.fonts && document.fonts.ready) document.fonts.ready.then(encajaPista, () => {});
+  const ini = () => { leeHash(); if (sel < 0) { const g = IDX.get(guardado.lee()); if (g != null) elige(g, 'hash'); } };
+  if (CALMA) ini(); else setTimeout(ini, /^#pueblo-/.test(location.hash) || guardado.lee() ? 1150 : 0);
+  const posturas = () => { for (const mm of document.querySelectorAll('.mono[data-src]')) if (!mm.getAttribute('src')) mm.src = mm.dataset.src; };
+  q.addEventListener('focus', posturas, { once: true }); cv.addEventListener('pointerdown', posturas, { once: true });
+}).catch((e) => { $('carga').textContent = 'No se ha podido cargar el mapa. Comprueba la conexión y recarga la página.'; if (window.console) console.error(e); });
+})();
+</script>
+</body>
+</html>

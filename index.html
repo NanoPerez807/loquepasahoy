@@ -285,6 +285,7 @@ button,input{font:inherit;color:inherit}
 .ranking button:focus-visible{outline:3px solid var(--sol);outline-offset:3px;box-shadow:none}
 .ranking .vacio{padding:18px 0;font-weight:700;font-size:17px;line-height:1.35}
 .ranking-caja .nota{margin-top:6px;font-weight:600;text-align:center;max-width:30em}
+.niveles .ir-pago{text-wrap:balance}
 .marcas .botones{display:flex;flex-wrap:wrap;gap:0 12px}
 .senal-oro{display:inline-flex;align-items:center;gap:6px;margin-top:7px;background:var(--oro);border:2px solid var(--tinta);border-radius:7px;padding:3px 11px 2px 8px;font-weight:800;font-size:13.5px;line-height:1.3}
 .senal-oro svg{flex:none}
@@ -569,9 +570,9 @@ button,input{font:inherit;color:inherit}
       <p class="sub">Apoya el canal y la casita de tu pueblo se vuelve dorada en el mapa. El oro no salva: si cae, cae con estilo.</p>
       <ul class="niveles">
         <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
-          <button type="button" class="chip ir-pago" data-m="oro" hidden>Elige tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
+          <button type="button" class="chip ir-pago" data-m="oro" hidden>Haz de oro a tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
         <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro.</p>
-          <button type="button" class="chip ir-pago" data-m="vecino" hidden>Elige tu pueblo</button><p class="pronto mini" data-m="vecino">Muy pronto</p></div></li>
+          <button type="button" class="chip ir-pago" data-m="vecino" hidden>Hazte vecino de honor</button><p class="pronto mini" data-m="vecino">Muy pronto</p></div></li>
         <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…» y un cartel con vuestro nombre sobre vuestro pueblo en el mapa.</p>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>
@@ -967,8 +968,8 @@ function abrePago() {                        // lleva la vista y el foco al pane
   const r = p.getBoundingClientRect(); if (r.top < 8 || r.bottom > innerHeight - 8) scrollTo({ top: Math.max(0, r.top + scrollY - Math.max(14, Math.min(96, (innerHeight - r.height) / 2))), behavior: CALMA ? 'auto' : 'smooth' });
 }
 function pintaApoya() {                      // la sección «Haz de oro a tu pueblo»: botones de cada nivel y clasificación
-  const J = JUEGO, hay = sel >= 0 && estado(PUEBLOS[sel].c) !== 'nojuega';
-  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = hay ? (m === 'oro' ? 'Haz de oro a ' : 'Vecino de honor de ') + PUEBLOS[sel].n : 'Elige tu pueblo'; }
+  const J = JUEGO;
+  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : 'Hazte vecino de honor'; }   // generales: no nombran el pueblo que se esté mirando
   for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
   const top = RANK.slice(0, 10);
   $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = PROV[t.p].n;
@@ -1060,10 +1061,12 @@ $('ficha').addEventListener('input', (ev) => {   // el nombre del vecino de hono
   pagoNombre = limpiaNombre(ev.target.value); const o = $('f-nota'), a = $('f-pagar');
   if (o) o.textContent = notaPago(pagoModo, PUEBLOS[sel], pagoNombre); if (a) a.setAttribute('href', hrefPago()); if (!faltaNombre()) $('f-pago-aviso').textContent = '';
 });
-for (const b of document.querySelectorAll('.ir-pago')) b.addEventListener('click', () => {      // botones de la sección: con pueblo elegido abren su pago; sin pueblo, llevan al buscador
+for (const b of document.querySelectorAll('.ir-pago')) b.addEventListener('click', () => {      // botones de la sección: con «mi pueblo» guardado abren su pago; si no, llevan al buscador a elegirlo
   const m = b.dataset.m; if (!JUEGO || !JUEGO.pago[m]) return;
-  if (sel >= 0 && estado(PUEBLOS[sel].c) !== 'nojuega') { pagoModo = m; pintaFicha(false); abrePago(); return; }
-  pendiente = m; scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); q.focus({ preventScroll: true });
+  const g = IDX.get(guardado.lee()); pendiente = m;
+  if (g != null && estado(PUEBLOS[g].c) !== 'nojuega') { elige(g, 'mio'); return; }
+  scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); q.focus({ preventScroll: true });
+  if (sel >= 0) abreLista(busca(q.value));                                                       // el que se estaba mirando sale el primero: un toque si es el suyo, o escribe otro
 });
 $('ranking').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-i]'); if (b) elige(+b.dataset.i, 'ranking'); });
 

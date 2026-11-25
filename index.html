@@ -286,6 +286,7 @@ button,input{font:inherit;color:inherit}
 .ranking .vacio{padding:18px 0;font-weight:700;font-size:17px;line-height:1.35}
 .ranking-caja .nota{margin-top:6px;font-weight:600;text-align:center;max-width:30em}
 .niveles .ir-pago{text-wrap:balance}
+.niveles .ir-pago[data-m="tuneo"]{background:var(--sol)}
 .marcas .botones{display:flex;flex-wrap:wrap;gap:0 12px}
 .senal-oro{display:inline-flex;align-items:center;gap:6px;margin-top:7px;background:var(--oro);border:2px solid var(--tinta);border-radius:7px;padding:3px 11px 2px 8px;font-weight:800;font-size:13.5px;line-height:1.3}
 .senal-oro svg{flex:none}
@@ -318,6 +319,30 @@ button,input{font:inherit;color:inherit}
 .pago .comenta{max-width:none}
 .pago .comenta output{overflow-wrap:anywhere}
 .pago .aviso:empty{display:none}
+/* ---------- tuneos: la casita en su parcela (una maqueta pequeña) y la tienda de cosas, cada una puesta en su casita */
+.tuneo{display:grid;gap:12px;justify-items:start;width:100%;max-width:520px;min-width:0;background:#fff;border:var(--borde);border-radius:14px;padding:14px 14px 16px}
+.tuneo:focus{outline:0}
+.tuneo-cab{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;width:100%}
+.tuneo-casa{flex:none;width:132px;height:102px;background:radial-gradient(ellipse 70% 32% at 58% 80%,#e9cf86 0 98%,transparent 100%),#fbf0cf;border:2px solid var(--tinta);border-radius:12px}
+.tuneo-cab>div{flex:1 1 140px;min-width:0}
+.tuneo h3{font-weight:900;font-size:20px;line-height:1.15;text-wrap:balance}
+.ficha .tuneo-lleva{margin-top:5px;font-size:15px;line-height:1.4}
+.ficha .tuneo-votos{margin-top:3px;font-size:13.5px;color:#3f4768}
+.ficha .tuneo-sub{font-size:15px;font-weight:600}
+.cosas{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px;width:100%}
+.cosa{display:grid;justify-items:center;align-content:start;gap:1px;min-width:0;padding:5px 1px 7px;border:2px solid var(--tinta);border-radius:12px;background:#fff;color:var(--tinta);font-weight:800;font-size:12px;letter-spacing:-.015em;line-height:1.15;cursor:pointer;box-shadow:0 3px 0 var(--tinta);-webkit-tap-highlight-color:transparent;transition:transform .08s,box-shadow .08s}
+.cosa canvas{width:56px;height:46px}
+.cosa span{max-width:100%;white-space:nowrap}
+.cosa:hover{background:#fff6cf}
+.cosa:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tinta)}
+.cosa[aria-pressed="true"]{background:var(--sol);box-shadow:0 0 0 2px var(--tinta),0 3px 0 2px var(--tinta)}
+.tuneo-elegido{display:grid;gap:10px;width:100%}
+.ficha .tuneo-elegido p{font-size:15.5px}
+.tuneo-elegido .boton.largo{width:100%;min-height:52px;justify-content:space-between;gap:12px;padding:8px 12px 8px 18px}
+.boton.tuneo-abre{justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:8px 12px 8px 16px;font-size:15.5px;text-align:left}
+.boton.tuneo-abre span:first-child{min-width:0;overflow-wrap:anywhere}
+.ficha .tuneo-pista{font-size:14.5px;font-weight:600;color:#3f4768}
+.tuneo .aviso:empty{display:none}
 @media (max-width:339px){
   .niveles li{grid-template-columns:60px minmax(0,1fr);gap:12px}
   .disco{width:60px;height:60px;border-width:7px;font-size:21px}
@@ -326,7 +351,8 @@ button,input{font:inherit;color:inherit}
   .ranking{padding:4px 12px}
   .ranking b{font-size:23px}
   .comenta{grid-template-columns:minmax(0,1fr)}
-  .oro{padding:12px 10px 14px}
+  .oro,.tuneo{padding:12px 10px 14px}
+  .cosas{grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
   .oro .fila .boton{gap:8px;padding:8px 9px 8px 12px;font-size:15px}
   .precio{padding:4px 8px 3px;font-size:14px}
 }
@@ -491,7 +517,7 @@ button,input{font:inherit;color:inherit}
         <li>Cada día sale un episodio con los pueblos que caen.</li>
         <li>Gana el último pueblo que quede en pie.</li>
       </ul>
-      <a class="boton dorado" href="#apoya" style="margin-top:26px">Haz de oro a tu pueblo</a>
+      <a class="boton dorado" href="#apoya" style="margin-top:26px">Tunea tu pueblo por 1 €</a>
     </div>
   </div>
 </section>
@@ -566,9 +592,11 @@ button,input{font:inherit;color:inherit}
 <section class="sec apoya" id="apoya">
   <div class="sec-in apoya-in">
     <div>
-      <h2>Haz de oro a tu pueblo</h2>
-      <p class="sub">Apoya el canal y la casita de tu pueblo se vuelve dorada en el mapa. El oro no salva: si cae, cae con estilo.</p>
+      <h2>Tunea tu pueblo o hazlo de oro</h2>
+      <p class="sub">Apoyas el canal y tu pueblo luce en el mapa. Nada de esto le salva: si cae, cae con estilo.</p>
       <ul class="niveles">
+        <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, gafas de sol, luces, bigote, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida.</p>
+          <button type="button" class="chip ir-pago" data-m="tuneo" hidden>Tunea tu pueblo</button><p class="pronto mini" data-m="tuneo">Muy pronto</p></div></li>
         <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
           <button type="button" class="chip ir-pago" data-m="oro" hidden>Haz de oro a tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
         <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro.</p>
@@ -581,9 +609,10 @@ button,input{font:inherit;color:inherit}
       <details class="condiciones" id="condiciones">
         <summary>Condiciones de los apoyos</summary>
         <ul>
-          <li><b>Qué compras.</b> Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa y suma en la clasificación. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
-          <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios.</li>
-          <li><b>Plazos.</b> El oro aparece en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
+          <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa y suma en la clasificación. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
+          <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
+          <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña o paraguas (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador y vaca los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
+          <li><b>Plazos.</b> El oro y los tuneos aparecen en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
           <li><b>Nombres.</b> Hasta 30 caracteres. No se publican nombres ofensivos, marcas ni nombres de otras personas sin su permiso. Si el tuyo no se puede publicar, te escribimos para cambiarlo o te devolvemos el dinero.</li>
           <li><b>Pago.</b> Se hace en Stripe, que actúa como vendedor y te envía el justificante. Esta web no ve ni guarda tus datos de pago.</li>
           <li><b>Devoluciones.</b> Si cambias de idea antes de que tu apoyo salga en la web o en un vídeo, escríbenos y te devolvemos el dinero.</li>
@@ -609,7 +638,7 @@ button,input{font:inherit;color:inherit}
       <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
       <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
     </nav>
-    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP. Los apoyos se pagan en una página externa: aquí no se pide ni se guarda ningún dato de pago. A esa página solo viaja el pueblo que has elegido y, si lo escribes, el nombre para los agradecimientos.</p>
+    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP. Los apoyos se pagan en una página externa: aquí no se pide ni se guarda ningún dato de pago. A esa página solo viaja el pueblo que has elegido, lo que le pones si lo tuneas y, si lo escribes, el nombre para los agradecimientos.</p>
     <p><b>Apoyos.</b> <a href="#condiciones">Condiciones de los apoyos</a>. Contacto por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>.</p>
     <p><b>Mapa.</b> Obra derivada de Equipamiento Geográfico de Referencia Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> <a href="https://www.ign.es">ign.es</a>, a través del paquete es-atlas.</p>
   </div>
@@ -627,7 +656,23 @@ const REDES = { tiktok: 'https://www.tiktok.com/@loquepasa.es', instagram: 'http
 const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube' };
 // Pueblos de oro: los enlaces de pago, el correo y los apoyos de cada pueblo van en data/juego.json (pago, correo, apoyos, vecinos, negocios).
 // Aquí solo están los precios. La página no cobra ni manda nada: enseña el texto que hay que pegar en el mensaje del pago y enlaza a la página de pago.
-const PRECIO = { oro: 3, vecino: 10 };
+const PRECIO = { oro: 3, vecino: 10, tuneo: 1 };
+// ----- tuneos (1 € cada uno): cosas para la casita del pueblo. Cada tuneo es un voto. En la cabeza lleva lo más votado (si empatan, lo que va
+// antes en esta lista); lo demás lo lleva en cuanto tiene un voto. «alto»: lo que sube por encima del tejado (en alturas de casita).
+const COSAS = {
+  gorro: { c: 'Gorro', n: 'Gorro de Papá Noel', a: 'un gorro de Papá Noel', g: 'cabeza', alto: 0.5, d: 'Para caer con espíritu navideño.' },
+  luces: { c: 'Luces', n: 'Luces de Navidad', a: 'luces de Navidad', g: 'luces', d: 'Que se vea desde el espacio.' },
+  gafas: { c: 'Gafas', n: 'Gafas de sol', a: 'gafas de sol', g: 'gafas', d: 'Para mirar las catástrofes con estilo.' },
+  bigote: { c: 'Bigote', n: 'Bigote', a: 'bigote', g: 'bigote', d: 'Porque sí.' },
+  vaca: { c: 'Vaca', n: 'Vaca', a: 'una vaca', g: 'vaca', d: 'Toda casa de pueblo necesita una.' },
+  corona: { c: 'Corona', n: 'Corona', a: 'una corona', g: 'cabeza', alto: 0.36, d: 'Manda en el mapa. En el sorteo, no.' },
+  boina: { c: 'Boina', n: 'Boina', a: 'una boina', g: 'cabeza', alto: 0.22, d: 'La de toda la vida.' },
+  ciguena: { c: 'Cigüeña', n: 'Nido de cigüeña', a: 'un nido de cigüeña', g: 'cabeza', alto: 0.54, d: 'Vuelve cada año. El pueblo, ya veremos.' },
+  paraguas: { c: 'Paraguas', n: 'Paraguas antimeteoritos', a: 'un paraguas antimeteoritos', g: 'cabeza', alto: 0.84, d: 'No para meteoritos, pero queda mono.' },
+  flotador: { c: 'Flotador', n: 'Flotador antitsunamis', a: 'un flotador antitsunamis', g: 'flotador', d: 'Contra un tsunami no sirve. En la piscina, sí.' },
+};
+const ORDEN_COSAS = Object.keys(COSAS);
+const votosT = (n) => miles(n) + (n === 1 ? ' voto' : ' votos');
 const enlace = (u) => (typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/.test(u.trim()) ? u.trim() : '');
 const POR_DEFECTO = { fase: 'inscripcion', cierre: '2026-11-26T18:00:00+01:00', cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27' };
 const CALMA = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -640,6 +685,7 @@ const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n)
 let PUEBLOS = [], PROV = [], IDX = new Map(), MAPA = null, REAL = null, JUEGO = null, EST = null;
 let sel = -1, faseVista = '';
 let ORO = null, OROS = [], RANK = [], NEG = new Map();     // apoyos de oro por pueblo · índices de los dorados · clasificación · negocios por pueblo
+let tunea = false, tuneoCosa = '', LOOK = [], N_TUN = 0;  // tienda de tuneos abierta · cosa elegida · lo que lleva cada casita · cuántas van tuneadas
 let pagoModo = '', pagoNombre = '', pendiente = '';       // panel de pago abierto ('oro' | 'vecino') · nombre del vecino · modo elegido antes de tener pueblo
 
 /* ---------- estado del juego */
@@ -651,13 +697,18 @@ function prepara(j) {
   for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
   J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
   const pg = j.pago || {};
-  J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', negocio: '' } : { oro: enlace(pg.oro), vecino: enlace(pg.vecino), negocio: enlace(pg.negocio) };
+  J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', tuneo: 'demo{ref}', negocio: '' } : { oro: enlace(pg.oro), vecino: enlace(pg.vecino), tuneo: enlace(pg.tuneo), negocio: enlace(pg.negocio) };
+  if (J.pago.tuneo.indexOf('{ref}') < 0) J.pago.tuneo = '';          // sin {ref} no se sabría ni el pueblo ni la cosa: mejor «muy pronto»
   J.correo = typeof j.correo === 'string' && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(j.correo.trim()) ? j.correo.trim() : '';
   J.vecinos = new Map(); J.apoyos = new Map(); J.negocios = new Map();
   for (const c in j.vecinos || {}) { const v = j.vecinos[c]; if (Array.isArray(v) && v.length) J.vecinos.set(String(c), v.map(String)); }
   for (const c in j.apoyos || {}) { const n = Math.floor(+j.apoyos[c]); if (n > 0) J.apoyos.set(String(c), n); }
   for (const [c, v] of J.vecinos) J.apoyos.set(c, (J.apoyos.get(c) || 0) + v.length);       // cada vecino de honor suma un apoyo de oro
   for (const g of Array.isArray(j.negocios) ? j.negocios : []) { if (!g || !g.c || !g.n) continue; const c = String(g.c); if (!J.negocios.has(c)) J.negocios.set(c, []); J.negocios.get(c).push({ n: String(g.n), url: enlace(g.url) }); }
+  J.tuneos = new Map();                                                // código → { cosa: votos }
+  for (const c in j.tuneos || {}) { const o = j.tuneos[c], v = {}; let hay = false; if (!o || typeof o !== 'object') continue;
+    for (const k in o) { const n = Math.floor(+o[k]); if (COSAS[k] && n > 0) { v[k] = n; hay = true; } }
+    if (hay) J.tuneos.set(String(c), v); }
   return J;
 }
 function fase() {                       // las inscripciones se cierran solas al llegar la hora, aunque nadie toque juego.json
@@ -711,14 +762,17 @@ function refresca() {
   ORO.fill(0); OROS = []; NEG = new Map();
   for (const [c, n] of JUEGO.apoyos) { const i = IDX.get(c); if (i != null) { ORO[i] = Math.min(65535, n); OROS.push(i); } }
   for (const [c, L] of JUEGO.negocios) { const i = IDX.get(c); if (i != null) NEG.set(i, L); }
+  LOOK = new Array(PUEBLOS.length).fill(null); N_TUN = 0;
+  for (const [c, v] of JUEGO.tuneos) { const i = IDX.get(c); if (i != null) { LOOK[i] = viste(v); N_TUN++; } }
   RANK = OROS.slice().sort((a, b) => ORO[b] - ORO[a] || PUEBLOS[a].n.localeCompare(PUEBLOS[b].n, 'es'));
   if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
-  cv.setAttribute('aria-label', 'Mapa de España con una casita por cada municipio.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + ' Usa el buscador para encontrar el tuyo.');
+  if (tunea && !JUEGO.pago.tuneo) { tunea = false; tuneoCosa = ''; }
+  cv.setAttribute('aria-label', 'Mapa de España con una casita por cada municipio.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + (N_TUN ? ' Algunas van tuneadas, con gorro, gafas o hasta una vaca.' : '') + ' Usa el buscador para encontrar el tuyo.');
   pintaPanel(); pintaFicha(false); tic(); pide();
 }
 
 /* ---------- mapa */
-const cv = $('mapa'), cx = cv.getContext('2d');
+const cv = $('mapa'); let cx = cv.getContext('2d');      // «let»: las casitas de la ficha (tuneos) se pintan con estas mismas funciones en otro lienzo
 const vista = { x: 0, y: 0, k: 1 };
 const CEL = 80; let COLS = 0, celdas = [];
 let W = 0, H = 0, DPR = 1, base = 1, anim = null, raf = 0, t0 = 0, entrando = false, GAN = -1, OLAS = [];
@@ -798,6 +852,110 @@ function insignia(x, y, h, n) {             // cuántos apoyos de oro lleva (de 
   cx.beginPath(); cx.arc(bx, by, r, 0, 6.3); cx.fillStyle = '#0b1736'; cx.fill(); cx.lineWidth = 1.5; cx.strokeStyle = '#ffd43b'; cx.stroke();
   rotulo(t, bx, by + 0.5, '800 ' + (r * (t.length > 2 ? 0.82 : t.length > 1 ? 1 : 1.2)).toFixed(1) + 'px Montserrat, sans-serif', '#ffd43b');
 }
+// ----- tuneos. Medidas en alturas de casita (h), con el centro de la casita en (x, y): paredes de y-0,04h a y+0,5h, tejado hasta y-0,52h, puerta desde y+0,2h.
+const TINTA = '#0b1736';
+function viste(v) {                         // lo que lleva según los votos
+  const L = { cabeza: '' }; let max = 0;
+  for (const k of ORDEN_COSAS) { const n = v[k] || 0; if (!n) continue; if (COSAS[k].g === 'cabeza') { if (n > max) { max = n; L.cabeza = k; } } else L[k] = true; }
+  return L;
+}
+const conCosa = (L, k) => { const R = Object.assign({ cabeza: '' }, L || {}); if (k) { if (COSAS[k].g === 'cabeza') R.cabeza = k; else R[k] = true; } return R; };
+const sobre = (i, h) => { const L = LOOK[i]; return L && L.cabeza && EST[i] !== 2 ? COSAS[L.cabeza].alto * h : 0; };   // lo que asoma por encima del tejado
+function adorno(x, y, h, e, L, delante) {   // se pinta en dos veces: lo de detrás antes que la casita y lo de delante después
+  if (!L) return; const lw = Math.max(1, h * 0.075), ruina = e === 2;
+  cx.lineJoin = 'round'; cx.lineCap = 'round'; cx.strokeStyle = TINTA; cx.lineWidth = lw;
+  if (!delante) { if (L.flotador) flotador(x, y, h, lw, false); return; }
+  if (L.vaca) vaca(x, y, h, lw);
+  if (!ruina) { if (L.luces) luces(x, y, h, lw); if (L.gafas) gafas(x, y, h, lw); if (L.bigote) bigote(x, y, h, lw); }
+  if (L.flotador) flotador(x, y, h, lw, true);
+  if (L.cabeza) { const yy = ruina ? y + h * 0.44 : y; ({ gorro, corona, boina, ciguena, paraguas })[L.cabeza](x, yy, h, lw); }
+}
+function gorro(x, y, h) {
+  cx.fillStyle = '#e8283f'; cx.beginPath(); cx.moveTo(x - h * 0.24, y - h * 0.46); cx.quadraticCurveTo(x - h * 0.15, y - h * 0.88, x - h * 0.44, y - h * 0.93);
+  cx.quadraticCurveTo(x + h * 0.06, y - h * 1.04, x + h * 0.24, y - h * 0.46); cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = '#fff'; caja(x - h * 0.3, y - h * 0.56, h * 0.6, h * 0.17, h * 0.085); cx.fill(); cx.stroke();
+  cx.beginPath(); cx.arc(x - h * 0.45, y - h * 0.92, h * 0.1, 0, 6.3); cx.fill(); cx.stroke();
+}
+function corona(x, y, h) {
+  cx.fillStyle = '#ffd43b'; cx.beginPath(); cx.moveTo(x - h * 0.27, y - h * 0.4); cx.lineTo(x - h * 0.31, y - h * 0.72); cx.lineTo(x - h * 0.14, y - h * 0.57);
+  cx.lineTo(x, y - h * 0.83); cx.lineTo(x + h * 0.14, y - h * 0.57); cx.lineTo(x + h * 0.31, y - h * 0.72); cx.lineTo(x + h * 0.27, y - h * 0.4); cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = '#ff2e4d'; cx.beginPath(); cx.arc(x, y - h * 0.49, h * 0.06, 0, 6.3); cx.fill();
+  cx.fillStyle = '#fff'; for (const p of [[-0.31, -0.72], [0, -0.83], [0.31, -0.72]]) { cx.beginPath(); cx.arc(x + h * p[0], y + h * p[1], h * 0.05, 0, 6.3); cx.fill(); cx.stroke(); }
+}
+function boina(x, y, h) {
+  cx.fillStyle = '#28325e'; cx.beginPath(); cx.ellipse(x + h * 0.04, y - h * 0.53, h * 0.36, h * 0.13, -0.12, 0, 6.3); cx.fill(); cx.stroke();
+  cx.beginPath(); cx.moveTo(x + h * 0.03, y - h * 0.66); cx.lineTo(x + h * 0.07, y - h * 0.74); cx.stroke();
+}
+function ciguena(x, y, h, lw) {
+  cx.fillStyle = '#b4793a'; cx.beginPath(); cx.ellipse(x, y - h * 0.5, h * 0.33, h * 0.11, 0, 0, 6.3); cx.fill(); cx.stroke();
+  if (h >= 12) { cx.strokeStyle = 'rgba(11,23,54,.45)'; cx.lineWidth = Math.max(0.8, h * 0.03); cx.beginPath(); cx.moveTo(x - h * 0.22, y - h * 0.52); cx.lineTo(x + h * 0.12, y - h * 0.47); cx.moveTo(x - h * 0.08, y - h * 0.45); cx.lineTo(x + h * 0.24, y - h * 0.53); cx.stroke(); cx.strokeStyle = TINTA; cx.lineWidth = lw; }
+  cx.fillStyle = '#fff'; cx.beginPath(); cx.ellipse(x - h * 0.03, y - h * 0.69, h * 0.21, h * 0.12, -0.3, 0, 6.3); cx.fill(); cx.stroke();
+  cx.fillStyle = TINTA; cx.beginPath(); cx.ellipse(x - h * 0.16, y - h * 0.64, h * 0.11, h * 0.06, -0.3, 0, 6.3); cx.fill();
+  cx.lineWidth = lw + Math.max(1.6, h * 0.08); cx.beginPath(); cx.moveTo(x + h * 0.1, y - h * 0.74); cx.lineTo(x + h * 0.15, y - h * 0.95); cx.stroke();
+  cx.strokeStyle = '#fff'; cx.lineWidth = Math.max(1.2, h * 0.08); cx.stroke();
+  cx.strokeStyle = TINTA; cx.lineWidth = lw; cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(x + h * 0.16, y - h * 0.97, h * 0.07, 0, 6.3); cx.fill(); cx.stroke();
+  cx.lineWidth = lw + Math.max(1, h * 0.05); cx.beginPath(); cx.moveTo(x + h * 0.22, y - h * 0.97); cx.lineTo(x + h * 0.42, y - h * 0.9); cx.stroke();
+  cx.strokeStyle = '#ff7a1a'; cx.lineWidth = Math.max(1, h * 0.05); cx.stroke(); cx.strokeStyle = TINTA; cx.lineWidth = lw;
+  if (h >= 14) { cx.fillStyle = TINTA; cx.beginPath(); cx.arc(x + h * 0.17, y - h * 0.99, h * 0.017, 0, 6.3); cx.fill(); }
+}
+function paraguas(x, y, h) {
+  const cy = y - h * 0.8, r = h * 0.47;
+  cx.beginPath(); cx.moveTo(x, cy); cx.lineTo(x, y - h * 0.48); cx.stroke();
+  cx.fillStyle = '#ff2e4d'; cx.beginPath(); cx.arc(x, cy, r, Math.PI, 0);
+  for (let k = 0; k < 4; k++) { const a = x + r - k * r / 2; cx.quadraticCurveTo(a - r / 4, cy - r * 0.2, a - r / 2, cy); }
+  cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = '#fff'; cx.beginPath(); cx.moveTo(x, cy - r); cx.quadraticCurveTo(x - r * 0.3, cy - r * 0.55, x - r * 0.5, cy); cx.quadraticCurveTo(x - r * 0.25, cy - r * 0.2, x, cy); cx.closePath(); cx.fill(); cx.stroke();
+  cx.beginPath(); cx.moveTo(x, cy - r); cx.lineTo(x, cy - r - h * 0.09); cx.stroke();
+}
+function gafas(x, y, h, lw) {
+  cx.fillStyle = TINTA; caja(x - h * 0.37, y + h * 0.045, h * 0.32, h * 0.145, h * 0.065); cx.fill(); caja(x + h * 0.05, y + h * 0.045, h * 0.32, h * 0.145, h * 0.065); cx.fill();
+  cx.beginPath(); cx.moveTo(x - h * 0.07, y + h * 0.085); cx.lineTo(x + h * 0.07, y + h * 0.085); cx.stroke();
+  if (h >= 12) { cx.strokeStyle = 'rgba(255,255,255,.8)'; cx.lineWidth = Math.max(1, h * 0.03); cx.beginPath(); cx.moveTo(x - h * 0.31, y + h * 0.135); cx.lineTo(x - h * 0.22, y + h * 0.085); cx.moveTo(x + h * 0.11, y + h * 0.135); cx.lineTo(x + h * 0.2, y + h * 0.085); cx.stroke(); cx.strokeStyle = TINTA; cx.lineWidth = lw; }
+}
+function bigote(x, y, h) {
+  const m = y + h * 0.19; cx.fillStyle = '#5a3318'; cx.beginPath(); cx.moveTo(x, m - h * 0.02);
+  cx.bezierCurveTo(x - h * 0.08, m - h * 0.09, x - h * 0.24, m - h * 0.07, x - h * 0.31, m + h * 0.03); cx.bezierCurveTo(x - h * 0.22, m, x - h * 0.11, m + h * 0.07, x, m + h * 0.025);
+  cx.bezierCurveTo(x + h * 0.11, m + h * 0.07, x + h * 0.22, m, x + h * 0.31, m + h * 0.03); cx.bezierCurveTo(x + h * 0.24, m - h * 0.07, x + h * 0.08, m - h * 0.09, x, m - h * 0.02);
+  cx.closePath(); cx.fill(); cx.stroke();
+}
+function luces(x, y, h, lw) {
+  const A = [x - h * 0.6, y + h * 0.05], B = [x, y - h * 0.5], C = [x + h * 0.6, y + h * 0.05], cA = [x - h * 0.27, y - h * 0.15], cC = [x + h * 0.27, y - h * 0.15];
+  cx.strokeStyle = '#1d6b3a'; cx.lineWidth = Math.max(1, h * 0.035); cx.beginPath(); cx.moveTo(A[0], A[1]); cx.quadraticCurveTo(cA[0], cA[1], B[0], B[1]); cx.quadraticCurveTo(cC[0], cC[1], C[0], C[1]); cx.stroke();
+  const q = (p, c, r, t) => [(1 - t) * (1 - t) * p[0] + 2 * (1 - t) * t * c[0] + t * t * r[0], (1 - t) * (1 - t) * p[1] + 2 * (1 - t) * t * c[1] + t * t * r[1]];
+  const pts = []; for (const t of [0.2, 0.45, 0.7]) { pts.push(q(A, cA, B, t)); pts.push(q(B, cC, C, 1 - t)); }
+  const col = ['#ff2e4d', '#ffd43b', '#2fd47a', '#3a8bff', '#ff9a1f', '#d65bff'], r = Math.max(1.2, h * 0.055);
+  if (h >= 14) { cx.fillStyle = 'rgba(255,235,140,.45)'; for (const p of pts) { cx.beginPath(); cx.arc(p[0], p[1] + r, r * 2, 0, 6.3); cx.fill(); } }
+  cx.lineWidth = Math.max(0.8, h * 0.025); cx.strokeStyle = TINTA;
+  pts.forEach((p, k) => { cx.fillStyle = col[k % col.length]; cx.beginPath(); cx.arc(p[0], p[1] + r, r, 0, 6.3); cx.fill(); cx.stroke(); });
+  cx.lineWidth = lw;
+}
+function flotador(x, y, h, lw, delante) {
+  const cy = y + h * 0.45, rx = h * 0.62, ry = h * 0.17, g = Math.max(2, h * 0.13);
+  cx.beginPath(); cx.ellipse(x, cy, rx, ry, 0, delante ? 0 : Math.PI, delante ? Math.PI : 2 * Math.PI); cx.lineCap = 'butt';
+  cx.strokeStyle = TINTA; cx.lineWidth = g + 2 * Math.max(0.8, h * 0.045); cx.stroke();
+  cx.strokeStyle = '#fff'; cx.lineWidth = g; cx.stroke();
+  cx.setLineDash([h * 0.2, h * 0.2]); cx.strokeStyle = '#ff2e4d'; cx.stroke(); cx.setLineDash([]);
+  cx.lineCap = 'round'; cx.strokeStyle = TINTA; cx.lineWidth = lw;
+}
+function vaca(x, y, h, lw) {
+  const bx = x - h * 0.97, by = y + h * 0.31;
+  cx.fillStyle = 'rgba(11,23,54,.18)'; cx.beginPath(); cx.ellipse(bx - h * 0.04, y + h * 0.52, h * 0.32, h * 0.06, 0, 0, 6.3); cx.fill();
+  cx.lineWidth = Math.max(1, h * 0.065); for (const d of [-0.17, -0.07, 0.07, 0.16]) { cx.beginPath(); cx.moveTo(bx + h * d, by + h * 0.08); cx.lineTo(bx + h * d, by + h * 0.21); cx.stroke(); }
+  cx.lineWidth = Math.max(1, h * 0.04); cx.beginPath(); cx.moveTo(bx + h * 0.24, by - h * 0.05); cx.quadraticCurveTo(bx + h * 0.36, by - h * 0.01, bx + h * 0.31, by + h * 0.12); cx.stroke(); cx.lineWidth = lw;
+  cx.fillStyle = '#fff'; cx.beginPath(); cx.ellipse(bx, by, h * 0.26, h * 0.15, 0, 0, 6.3); cx.fill(); cx.stroke();
+  cx.fillStyle = TINTA; cx.beginPath(); cx.ellipse(bx + h * 0.08, by - h * 0.04, h * 0.08, h * 0.06, 0.4, 0, 6.3); cx.fill();
+  cx.beginPath(); cx.ellipse(bx - h * 0.11, by + h * 0.05, h * 0.055, h * 0.045, -0.3, 0, 6.3); cx.fill();
+  const hx = bx - h * 0.3, hy = by - h * 0.09;
+  cx.beginPath(); cx.moveTo(hx - h * 0.05, hy - h * 0.07); cx.lineTo(hx - h * 0.1, hy - h * 0.15); cx.moveTo(hx + h * 0.05, hy - h * 0.07); cx.lineTo(hx + h * 0.08, hy - h * 0.15); cx.stroke();
+  cx.fillStyle = '#fff'; cx.beginPath(); cx.ellipse(hx, hy, h * 0.11, h * 0.1, 0, 0, 6.3); cx.fill(); cx.stroke();
+  cx.fillStyle = '#ffb3c1'; cx.beginPath(); cx.ellipse(hx - h * 0.04, hy + h * 0.065, h * 0.08, h * 0.055, 0, 0, 6.3); cx.fill(); cx.stroke();
+  if (h >= 12) { cx.fillStyle = TINTA; cx.beginPath(); cx.arc(hx - h * 0.02, hy - h * 0.025, Math.max(0.8, h * 0.018), 0, 6.3); cx.fill(); }
+}
+function dibujaEn(c, w, h, fn) {             // pinta en un lienzo de la ficha con las mismas funciones que el mapa
+  const d = Math.min(3, window.devicePixelRatio || 1); c.width = Math.round(w * d); c.height = Math.round(h * d);
+  const g = c.getContext('2d'), antes = cx; cx = g; g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, w, h);
+  try { fn(); } finally { cx = antes; }
+}
 function rotulo(txt, x, y, fuente, relleno, halo) { cx.font = fuente; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineJoin = 'round';
   if (halo) { cx.strokeStyle = halo; cx.lineWidth = 3.5; cx.strokeText(txt, x, y); } cx.fillStyle = relleno; cx.fillText(txt, x, y); }
 const rotNeg = (L) => { const t = L[0].n + (L.length > 1 ? ' +' + (L.length - 1) : ''); return t.length > 24 ? t.slice(0, 23).trim() + '…' : t; };      // cartel azul del negocio que apoya a su pueblo
@@ -831,8 +989,8 @@ function pinta(ahora) {
   let senalSel = null; const fNeg = '700 ' + (W > 500 ? 12 : 11) + 'px Montserrat, sans-serif';    // la señal con el nombre del pueblo elegido (se pinta al final, pero reserva su sitio)
   if (sel >= 0) { const t = PUEBLOS[sel], x = t.x * s + ox, y = t.y * s + oy, h = Math.max(13, hs * 1.55), f = '800 ' + (W > 500 ? 14 : 12.5) + 'px Montserrat, sans-serif';
     let txt = t.n.toLocaleUpperCase('es'); if (txt.length > 28) txt = txt.slice(0, 27).trim() + '…';
-    cx.font = f; const w = Math.min(W - 12, cx.measureText(txt).width + 22); let by = y - h * 0.52 - 28 - 27 - 5; if (by < 6) by = y + h * 0.5 + 12;
-    senalSel = { x: Math.max(6, Math.min(W - w - 6, x - w / 2)), y: by, w, h: 27, txt, f, casa: [x - h * 1.3, y - h * 0.52 - 30, x + h * 1.3, y + h * 1.35] };
+    cx.font = f; const w = Math.min(W - 12, cx.measureText(txt).width + 22); const ex = sobre(sel, h); let by = y - h * 0.52 - ex - 28 - 27 - 5; if (by < 6) by = y + h * 0.5 + 12;
+    senalSel = { x: Math.max(6, Math.min(W - w - 6, x - w / 2)), y: by, w, h: 27, txt, f, casa: [x - h * (LOOK[sel] && LOOK[sel].vaca ? 1.5 : 1.3), y - h * 0.52 - ex - 30, x + h * 1.3, y + h * 1.35] };
     const L = NEG.get(sel); if (L) { const nt = rotNeg(L); cx.font = fNeg; const nw = cx.measureText(nt).width + 16, bajo = by > y ? by + 27 : y + h * 1.2 + 2;     // su negocio, debajo de la casita elegida
       senalSel.neg = { x: Math.max(4, Math.min(W - nw - 4, x - nw / 2)), y: bajo + 8, w: nw, txt: nt, px: x, y0: bajo }; } }
   const crece = (i) => { if (!entrando) return 1; const u = (te - PUEBLOS[i].d) / 260; if (u <= 0) return 0; if (u >= 1) return 1; const v = u - 1; return 1 + 2.7 * v * v * v + 1.7 * v * v; };
@@ -854,11 +1012,12 @@ function pinta(ahora) {
   } else {
     const vis = []; for (let i = 0; i < N; i++) { const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -20 || x > W + 20 || y < -20 || y > H + 20 || i === sel) continue; vis.push([y, x, i]); }
     vis.sort((a, b) => a[0] - b[0]);
-    for (const v of vis) { const o = ORO[v[2]], h = hs * crece(v[2]) * (o ? 1.18 : 1); if (h) casa(v[1], v[0], h, EST[v[2]], o); }
+    for (const v of vis) { const o = ORO[v[2]], h = hs * crece(v[2]) * (o ? 1.18 : 1); if (!h) continue; const L = h >= 7.5 ? LOOK[v[2]] : null;
+      if (L) adorno(v[1], v[0], h, EST[v[2]], L, false); casa(v[1], v[0], h, EST[v[2]], o); if (L) adorno(v[1], v[0], h, EST[v[2]], L, true); }
     if (hs >= 7.5 && !entrando) for (const v of vis) if (ORO[v[2]]) insignia(v[1], v[0], hs * 1.18, ORO[v[2]]);
     if (vista.k >= 5 && !anim) {                                                     // nombres de los vecinos, sin pisarse
       const cxm = W / 2, cym = H / 2, puestos = [[0, H - 58, 172, H], [W * 0.36, 0, W, 50]]; if (senalSel) { puestos.push([senalSel.x - 4, senalSel.y - 4, senalSel.x + senalSel.w + 4, senalSel.y + senalSel.h + 4], senalSel.casa); const g = senalSel.neg; if (g) puestos.push([g.x - 3, g.y - 9, g.x + g.w + 3, g.y + 24]); }
-      const casas = vis.map((v) => [v[1] - hs * 0.62, v[0] - hs * 0.58, v[1] + hs * 0.62, v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
+      const casas = vis.map((v) => [v[1] - hs * (LOOK[v[2]] && LOOK[v[2]].vaca ? 1.3 : 0.62), v[0] - hs * 0.58 - sobre(v[2], hs), v[1] + hs * 0.62, v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
       for (const v of vis) { const L = NEG.get(v[2]); if (!L) continue; const txt = rotNeg(L);                                        // carteles de los negocios: encima de su casita y, si ahí estorban, debajo
         cx.font = fNeg; const tw = cx.measureText(txt).width + 16, y1 = v[0] - hs * 0.6, y2 = v[0] + hs * 0.62;
         const lado = Math.max(0, tw / 2 - 13); let puesto = false;
@@ -879,9 +1038,9 @@ function pinta(ahora) {
     if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
     cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12, 0, 6.3); cx.fillStyle = 'rgba(255,212,59,.5)'; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = '#fff'; cx.stroke();
     cx.beginPath(); cx.arc(x, y + h * 0.08, h * 1.12 + 2.5, 0, 6.3); cx.lineWidth = 1.5; cx.strokeStyle = '#0b1736'; cx.stroke();
-    casa(x, y, h, EST[m], ORO[m]); if (ORO[m]) insignia(x, y, h, ORO[m]);
+    const L = LOOK[m]; if (L) adorno(x, y, h, EST[m], L, false); casa(x, y, h, EST[m], ORO[m]); if (L) adorno(x, y, h, EST[m], L, true); if (ORO[m]) insignia(x, y, h, ORO[m]);
     if (m !== sel) continue;
-    const py = y - h * 0.52;
+    const py = y - h * 0.52 - sobre(m, h);
     cx.strokeStyle = '#0b1736'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(x, py); cx.lineTo(x, py - 15); cx.stroke();
     cx.beginPath(); cx.arc(x, py - 21, 7, 0, 6.3); cx.fillStyle = EST[m] === 2 ? '#ff2e4d' : '#ffd43b'; cx.fill(); cx.stroke();
     cx.beginPath(); cx.arc(x - 2.2, py - 23.2, 2, 0, 6.3); cx.fillStyle = 'rgba(255,255,255,.85)'; cx.fill();
@@ -969,7 +1128,7 @@ function abrePago() {                        // lleva la vista y el foco al pane
 }
 function pintaApoya() {                      // la sección «Haz de oro a tu pueblo»: botones de cada nivel y clasificación
   const J = JUEGO;
-  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : 'Hazte vecino de honor'; }   // generales: no nombran el pueblo que se esté mirando
+  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : m === 'vecino' ? 'Hazte vecino de honor' : 'Tunea tu pueblo'; }   // generales: no nombran el pueblo que se esté mirando
   for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
   const top = RANK.slice(0, 10);
   $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = PROV[t.p].n;
@@ -979,6 +1138,61 @@ function pintaApoya() {                      // la sección «Haz de oro a tu pu
   const R = REAL || J, ne = $('negocio-escribe'), co = $('correo');                    // el contacto no cambia en las vistas de prueba
   ne.href = R.pago.negocio ? R.pago.negocio.split('{ref}').join('NEGOCIO') : R.correo ? 'mailto:' + R.correo + '?subject=' + encodeURIComponent('Cartel en el mapa') : REDES.instagram;
   if (R.correo) { co.href = 'mailto:' + R.correo; co.hidden = false; } else co.hidden = true;
+}
+function llevaTexto(L) {
+  if (!L) return 'Todavía no lleva nada.';
+  const P = (L.cabeza ? [L.cabeza] : []).concat(ORDEN_COSAS.filter((k) => COSAS[k].g !== 'cabeza' && L[k]));
+  return 'Lleva ' + enumera(P.map((k) => [COSAS[k].a, esc(COSAS[k].a)])) + '.';
+}
+function votoTexto(t, k) {                   // cómo está la votación de lo elegido
+  const v = JUEGO.tuneos.get(t.c) || {}, n = v[k] || 0, L = LOOK[sel];
+  if (COSAS[k].g !== 'cabeza') return n ? 'Ya lo lleva, con ' + votosT(n) + '. Cada uno más, más tuneado.' : 'Todavía no lo lleva: con 1 € se lo pones.';
+  const cur = L && L.cabeza;
+  if (cur && cur !== k) { const falta = v[cur] - n + 1; return 'Ahora lleva ' + COSAS[cur].a + ' en la cabeza, con ' + votosT(v[cur]) + '. Con ' + votosT(falta) + ' más de ' + COSAS[k].c.toLowerCase() + ', se lo cambias.'; }
+  if (cur === k) { const r = ORDEN_COSAS.filter((o) => o !== k && COSAS[o].g === 'cabeza' && v[o]).sort((a, b) => v[b] - v[a])[0];
+    return 'Ya lo lleva, con ' + votosT(n) + '.' + (r ? ' ' + COSAS[r].c + ' va detrás, con ' + votosT(v[r]) + '.' : ''); }
+  return 'Todavía no lleva nada en la cabeza: con 1 € se lo pones.';
+}
+const hrefTuneo = (t, k) => (JUEGO.demo ? '#juego' : JUEGO.pago.tuneo.split('{ref}').join('TUN-' + t.c + '-' + k));
+function tuneoFicha(t, e) {                  // el bloque de los tuneos: la casita con lo que lleva y, abierta, la tienda (1 € cada cosa)
+  const J = JUEGO, L = LOOK[sel], T = parte(t.n), puede = e !== 'nojuega' && !!J.pago.tuneo;
+  if (!L && !puede && e === 'nojuega') return '';
+  const v = J.tuneos.get(t.c) || {}, votos = ORDEN_COSAS.filter((k) => v[k]).sort((a, b) => v[b] - v[a]).map((k) => COSAS[k].c + ' ' + miles(v[k])), ver = tunea && puede ? conCosa(L, tuneoCosa) : L;
+  const desc = 'La casita de ' + t.n + '. ' + (tunea && tuneoCosa ? 'Así le queda con ' + COSAS[tuneoCosa].a + '. ' : '') + llevaTexto(L);
+  let h = `<div class="tuneo" id="f-tuneo" tabindex="-1" role="group" aria-labelledby="f-tuneo-t"><div class="tuneo-cab"><canvas class="tuneo-casa" id="f-tcasa" width="132" height="102" role="img" aria-label="${esc(desc)}"></canvas>
+    <div><h3 id="f-tuneo-t">${tunea && puede ? 'Tunea ' + T : 'La casita de ' + T}</h3><p class="tuneo-lleva">${L || (tunea && puede) || !puede ? llevaTexto(L) : 'Todavía no lleva nada. ¿Un gorro de Papá Noel? ¿Una vaca?'}</p>${votos.length && (tunea || votos.length > 1) ? `<p class="tuneo-votos">Votos: ${esc(votos.join(', '))}.</p>` : ''}</div></div>`;
+  if (!puede) return h + (e !== 'nojuega' && !J.pago.tuneo ? '<p class="pronto mini">Tuneos, muy pronto</p>' : '') + '</div>';
+  if (!tunea) return h + `<button type="button" class="boton tuneo-abre" id="f-tunea"><span>${L ? 'Tunéala más' : 'Tunea su casita'}</span><span class="precio">${PRECIO.tuneo} €</span></button></div>`;
+  h += `<p class="tuneo-sub">${PRECIO.tuneo} € cada cosa. Lleva lo que más se pida.</p><div class="cosas" role="group" aria-label="Qué le pones">`
+    + ORDEN_COSAS.map((k) => `<button type="button" class="cosa" data-k="${k}" aria-pressed="${tuneoCosa === k}"><canvas width="56" height="46" aria-hidden="true"></canvas><span>${COSAS[k].c}</span></button>`).join('') + '</div>';
+  if (tuneoCosa) { const C = COSAS[tuneoCosa];
+    h += `<div class="tuneo-elegido"><p><b>${C.n}</b> para ${T}. ${esc(C.d)} ${esc(votoTexto(t, tuneoCosa))}</p>
+      <a class="boton largo" id="f-tpagar" target="_blank" rel="noopener" href="${esc(hrefTuneo(t, tuneoCosa))}"><span>Ir a pagar</span><span class="precio">${PRECIO.tuneo} €</span></a></div>`; }
+  else h += '<p class="tuneo-pista">Toca una cosa para ver cómo le queda.</p>';
+  return h + `<p class="oro-letra">En la página de pago eliges cuántos: cada uno es un voto. Solo decorativo: no cambia el sorteo. Aparece en el mapa en menos de 24 horas. Solo para mayores de 18 años.</p>
+    <p class="aviso" id="f-tuneo-aviso" role="status"></p><button type="button" class="chip" id="f-tuneo-cerrar">Ahora no</button></div>`;
+}
+function encuadre(L, o, w, alto, max) {     // tamaño y sitio de una casita para que quepa entera con lo que lleva (en px del lienzo)
+  const a = L && L.cabeza ? COSAS[L.cabeza].alto : 0, arriba = 0.56 + Math.max(a, o ? 0.15 : 0), izq = L && L.vaca ? 1.44 : L && L.flotador ? 0.74 : 0.62;
+  const der = o ? 0.84 : L && L.flotador ? 0.74 : 0.62, abajo = L && L.flotador ? 0.72 : 0.6, h = Math.min(max, (w - 10) / (izq + der), (alto - 8) / (arriba + abajo));
+  return { h, x: 5 + izq * h + (w - 10 - (izq + der) * h) / 2, y: 4 + arriba * h + (alto - 8 - (arriba + abajo) * h) / 2 };
+}
+function pintaTuneos() {                     // pinta la casita del pueblo (con lo elegido puesto, si se está eligiendo) y la de cada cosa de la tienda
+  const c = $('f-tcasa'); if (!c || sel < 0) return;
+  const t = PUEBLOS[sel], puede = estado(t.c) !== 'nojuega' && !!JUEGO.pago.tuneo, L = tunea && puede ? conCosa(LOOK[sel], tuneoCosa) : LOOK[sel], e = EST[sel], o = ORO[sel];
+  dibujaEn(c, 132, 102, () => { const { x, y, h } = encuadre(L, o, 132, 102, 54); if (L) adorno(x, y, h, e, L, false); casa(x, y, h, e, o); if (L) adorno(x, y, h, e, L, true); });
+  for (const b of document.querySelectorAll('#f-tuneo .cosa')) { const k = b.dataset.k, M = conCosa(null, k);
+    dibujaEn(b.querySelector('canvas'), 56, 46, () => { const { x, y, h } = encuadre(M, 0, 56, 46, 30); adorno(x, y, h, 0, M, false); casa(x, y, h, 0, 0); adorno(x, y, h, 0, M, true); }); }
+}
+function abreTuneo() {                       // lleva la vista y el foco a la tienda recién abierta
+  const p = $('f-tuneo'); if (!p) return; p.focus({ preventScroll: true });
+  const r = p.getBoundingClientRect(); if (r.top < 8 || r.top > innerHeight * 0.45) scrollTo({ top: Math.max(0, r.top + scrollY - 14), behavior: CALMA ? 'auto' : 'smooth' });
+}
+function repintaTuneo(k) {                   // al elegir una cosa solo cambia el bloque de los tuneos: el foco se queda en el botón tocado
+  const v = $('f-tuneo'); if (!v || sel < 0) return; const t = PUEBLOS[sel];
+  v.outerHTML = tuneoFicha(t, estado(t.c)); pintaTuneos();
+  const b = document.querySelector('#f-tuneo .cosa[data-k="' + k + '"]'); if (b) b.focus({ preventScroll: true });
+  const p = $('f-tpagar'); if (p) { const r = p.getBoundingClientRect(); if (r.bottom > innerHeight - 8) scrollBy({ top: r.bottom - innerHeight + 20, behavior: CALMA ? 'auto' : 'smooth' }); }
 }
 function pintaFicha(conGolpe) {
   const F = $('ficha'), S = $('sello');
@@ -1016,18 +1230,18 @@ function pintaFicha(conGolpe) {
   }
   const mio = guardado.lee() === t.c;
   F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div>${ORO[sel] ? `<div class="senal-oro">${DESTELLO}Pueblo de oro</div>` : ''}<div class="senal-patas"><i></i><i></i></div></div>
-    <h2>${h}</h2>${cuerpo}${oroFicha(t, e)}<hr class="sep">
+    <h2>${h}</h2>${cuerpo}${tuneoFicha(t, e)}${oroFicha(t, e)}<hr class="sep">
     <div class="fila"><button type="button" class="boton blanco" id="f-guardar">${mio ? 'Dejar de guardarlo' : 'Guardar como mi pueblo'}</button>
     <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button></div>
     <p class="aviso" id="f-aviso" role="status"></p>`;
-  F.hidden = false;
+  F.hidden = false; pintaTuneos();
   S.textContent = SELLO[e]; S.dataset.e = e; S.hidden = false;
   if (conGolpe) { S.classList.remove('pum'); void S.offsetWidth; S.classList.add('pum'); }
   mono(POSTURA[e]);
 }
 async function copia(txt) { try { await navigator.clipboard.writeText(txt); return true; } catch (e) { return false; } }
 $('ficha').addEventListener('click', async (ev) => {
-  const b = ev.target.closest('button, #f-pagar'); if (!b || sel < 0) return;
+  const b = ev.target.closest('button, #f-pagar, #f-tpagar'); if (!b || sel < 0) return;
   const t = PUEBLOS[sel], aviso = (m) => { $('f-aviso').textContent = m; }, avisoPago = (m) => { $('f-pago-aviso').textContent = m; };
   const pideNombre = () => { avisoPago('Escribe primero el nombre que quieres que salga, con letras o números.'); $('f-nombre').focus(); };
   if (b.id === 'f-oro' || b.id === 'f-vecino') { pagoModo = b.id === 'f-oro' ? 'oro' : 'vecino'; pintaFicha(false); abrePago(); }
@@ -1036,6 +1250,12 @@ $('ficha').addEventListener('click', async (ev) => {
     if (faltaNombre() && conRef(pagoModo)) { ev.preventDefault(); pideNombre(); }
     else if (JUEGO.demo) { ev.preventDefault(); avisoPago('Vista de prueba: aquí se abriría la página de pago con la referencia ' + refPago(pagoModo, t, pagoNombre) + '.'); }
     else avisoPago('La página de pago se abre aparte. Cuando termines, el oro aparece aquí en menos de 24 horas.');
+  } else if (b.id === 'f-tunea') { tunea = true; tuneoCosa = ''; pintaFicha(false); abreTuneo(); }
+  else if (b.id === 'f-tuneo-cerrar') { tunea = false; tuneoCosa = ''; pintaFicha(false); if ($('f-tunea')) $('f-tunea').focus({ preventScroll: true }); }
+  else if (b.classList.contains('cosa')) { tuneoCosa = b.dataset.k; repintaTuneo(tuneoCosa); }
+  else if (b.id === 'f-tpagar') {
+    if (JUEGO.demo) { ev.preventDefault(); $('f-tuneo-aviso').textContent = 'Vista de prueba: aquí se abriría la página de pago con la referencia TUN-' + t.c + '-' + tuneoCosa + '.'; }
+    else $('f-tuneo-aviso').textContent = 'La página de pago se abre aparte. Cuando termines, aparece en el mapa en menos de 24 horas.';
   } else if (b.id === 'f-nota-copiar') {
     if (faltaNombre()) { pideNombre(); return; }
     if (await copia($('f-nota').textContent)) { b.textContent = 'Copiado'; avisoPago('Texto copiado. Pégalo en el mensaje del pago.'); setTimeout(() => { b.textContent = 'Copiar'; }, 2500); }
@@ -1071,19 +1291,21 @@ for (const b of document.querySelectorAll('.ir-pago')) b.addEventListener('click
 $('ranking').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-i]'); if (b) elige(+b.dataset.i, 'ranking'); });
 
 function elige(i, desde) {
-  const t = PUEBLOS[i]; sel = i;
-  pagoModo = pendiente && JUEGO.pago[pendiente] && estado(t.c) !== 'nojuega' ? pendiente : ''; pendiente = '';
+  const t = PUEBLOS[i]; sel = i; const quiere = pendiente, vale = estado(t.c) !== 'nojuega'; pendiente = '';
+  pagoModo = quiere && quiere !== 'tuneo' && JUEGO.pago[quiere] && vale ? quiere : '';
+  tunea = quiere === 'tuneo' && !!JUEGO.pago.tuneo && vale; tuneoCosa = '';
   q.value = t.n; $('q-borrar').hidden = false; cierraLista();
   const medio = Math.max(60, Math.min(250, radioVecinos(i) * 1.75));
   vuela(t.x, t.y, Math.min(W, H * 1.15) / base / 2 / medio);
   pintaFicha(true);
   if (location.hash !== '#pueblo-' + t.c) location.hash = 'pueblo-' + t.c;
   if (pagoModo) { q.blur(); abrePago(); }
+  else if (tunea) { q.blur(); abreTuneo(); }
   else if (desde === 'ranking') { const d = matchMedia('(max-width: 939px)').matches ? $('buscar') : $('juego'); scrollTo({ top: Math.max(0, d.getBoundingClientRect().top + scrollY - 10), behavior: CALMA ? 'auto' : 'smooth' }); $('ficha').focus({ preventScroll: true }); }
   else if (desde === 'busca' && matchMedia('(max-width: 939px)').matches) { q.blur(); scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); }
 }
 function suelta() {
-  sel = -1; pagoModo = pendiente = ''; q.value = ''; $('q-borrar').hidden = true; cierraLista(); pintaFicha(false); vuela(MAPA.w / 2, MAPA.h / 2, 1);
+  sel = -1; pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; q.value = ''; $('q-borrar').hidden = true; cierraLista(); pintaFicha(false); vuela(MAPA.w / 2, MAPA.h / 2, 1);
   if (/^#pueblo-/.test(location.hash)) { try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; } }
 }
 $('ver-todo').addEventListener('click', () => vuela(MAPA.w / 2, MAPA.h / 2, 1));
@@ -1164,12 +1386,15 @@ function demo(f) {
       if (f === 'final') { j.dias.push({ dia: 5, titulo: 'Lluvia de meteoritos', caidos: [...vivos].filter((t) => t.c !== '13082').map((t) => t.c) }); j.ganador = '13082'; }
     }
   }
-  JUEGO = prepara(j); pagoModo = pendiente = ''; $('demo').hidden = false; refresca();
+  j.tuneos = { 13082: { gorro: 4, gafas: 2, vaca: 1, corona: 3 }, 13005: { corona: 5, luces: 2, bigote: 1 }, 27051: { ciguena: 3, flotador: 1 }, 22130: { boina: 2, gafas: 1 },
+    41095: { paraguas: 2, luces: 1 }, '03031': { flotador: 2, gafas: 1, gorro: 1 }, 24008: { luces: 3, gorro: 2 }, 13019: { gorro: 1, vaca: 1 }, 31232: { bigote: 2, boina: 1 }, '02081': { vaca: 2, luces: 1 } };
+  JUEGO = prepara(j); pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = false; refresca();
 }
-$('demo-salir').addEventListener('click', () => { JUEGO = REAL; pagoModo = pendiente = ''; $('demo').hidden = true; refresca(); });
+$('demo-salir').addEventListener('click', () => { JUEGO = REAL; pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = true; refresca(); });
 function leeHash() {
   const h = location.hash.slice(1); let m;
   if ((m = /^pueblo-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null && i !== sel) elige(i, 'hash'); }
+  else if ((m = /^tunea-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null) { pendiente = 'tuneo'; elige(i, 'hash'); } }     // enlace directo a la tienda de un pueblo
   else if ((m = /^demo-(inscripcion|cerrado|listo|jugando|final)$/.exec(h))) demo(m[1]);
 }
 

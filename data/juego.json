@@ -3,11 +3,19 @@
   "cierre": "2026-11-26T18:00:00+01:00",
   "cierre_texto": "el jueves 26 a las 18:00",
   "inicio_texto": "el viernes 27",
-  "videos": { "tiktok": "", "instagram": "", "youtube": "" },
+  "videos": {
+    "tiktok": "",
+    "instagram": "",
+    "youtube": ""
+  },
   "apuntados": null,
   "dias": [],
   "ganador": null,
-  "pago": { "oro": "", "vecino": "", "negocio": "" },
+  "pago": {
+    "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}",
+    "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}",
+    "negocio": ""
+  },
   "correo": "",
   "apoyos": {},
   "vecinos": {},

@@ -689,7 +689,7 @@ let tunea = false, tuneoCosa = '', LOOK = [], N_TUN = 0;  // tienda de tuneos ab
 let pagoModo = '', pagoNombre = '', pendiente = '';       // panel de pago abierto ('oro' | 'vecino') · nombre del vecino · modo elegido antes de tener pueblo
 
 /* ---------- estado del juego */
-function prepara(j) {
+function prepara(j, k) {                 // j = juego.json (estado y lo apuntado a mano) · k = cobros.json (lo que apunta solo el robot de cobros)
   const J = { fase: j.fase || 'inscripcion', cierre: j.cierre ? new Date(j.cierre).getTime() : 0, cierre_texto: j.cierre_texto || '', inicio_texto: j.inicio_texto || '',
     videos: j.videos || {}, dias: Array.isArray(j.dias) ? j.dias : [], ganador: j.ganador ? String(j.ganador) : null, demo: !!j.demo };
   J.apuntados = Array.isArray(j.apuntados) ? new Set(j.apuntados.map(String)) : null;
@@ -701,13 +701,14 @@ function prepara(j) {
   if (J.pago.tuneo.indexOf('{ref}') < 0) J.pago.tuneo = '';          // sin {ref} no se sabría ni el pueblo ni la cosa: mejor «muy pronto»
   J.correo = typeof j.correo === 'string' && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(j.correo.trim()) ? j.correo.trim() : '';
   J.vecinos = new Map(); J.apoyos = new Map(); J.negocios = new Map();
-  for (const c in j.vecinos || {}) { const v = j.vecinos[c]; if (Array.isArray(v) && v.length) J.vecinos.set(String(c), v.map(String)); }
-  for (const c in j.apoyos || {}) { const n = Math.floor(+j.apoyos[c]); if (n > 0) J.apoyos.set(String(c), n); }
+  for (const f of [j, k || {}]) {
+    for (const c in f.vecinos || {}) { const v = f.vecinos[c]; if (Array.isArray(v) && v.length) J.vecinos.set(String(c), (J.vecinos.get(String(c)) || []).concat(v.map(String))); }
+    for (const c in f.apoyos || {}) { const n = Math.floor(+f.apoyos[c]); if (n > 0) J.apoyos.set(String(c), (J.apoyos.get(String(c)) || 0) + n); } }
   for (const [c, v] of J.vecinos) J.apoyos.set(c, (J.apoyos.get(c) || 0) + v.length);       // cada vecino de honor suma un apoyo de oro
   for (const g of Array.isArray(j.negocios) ? j.negocios : []) { if (!g || !g.c || !g.n) continue; const c = String(g.c); if (!J.negocios.has(c)) J.negocios.set(c, []); J.negocios.get(c).push({ n: String(g.n), url: enlace(g.url) }); }
   J.tuneos = new Map();                                                // código → { cosa: votos }
-  for (const c in j.tuneos || {}) { const o = j.tuneos[c], v = {}; let hay = false; if (!o || typeof o !== 'object') continue;
-    for (const k in o) { const n = Math.floor(+o[k]); if (COSAS[k] && n > 0) { v[k] = n; hay = true; } }
+  for (const f of [j, k || {}]) for (const c in f.tuneos || {}) { const o = f.tuneos[c], v = J.tuneos.get(String(c)) || {}; let hay = false; if (!o || typeof o !== 'object') continue;
+    for (const x in o) { const n = Math.floor(+o[x]); if (COSAS[x] && n > 0) { v[x] = (v[x] || 0) + n; hay = true; } }
     if (hay) J.tuneos.set(String(c), v); }
   return J;
 }
@@ -1110,7 +1111,8 @@ function oroFicha(t, e) {                    // el bloque dorado de la ficha: cu
     h += `<p class="oro-estado"><b>${n === 1 ? '1 apoyo' : miles(n) + ' apoyos'} de oro.</b> ${pos === 0 ? (RANK.length > 1 ? 'Ahora mismo es el que más tiene de España.' : 'De momento es el único de España.')
       : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + (ORO[sube] - n + 1) + ' más adelanta a ' + esc(PUEBLOS[sube].n) : '') + '.'}${e === 'eliminado' ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
   if (vec) { const L = vec.slice(0, 8).map((v) => [v, esc(v)]);
-    h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${vec.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vec.length - 8) + ' más' : enumera(L)}.</p>`; }
+    const txt = vec.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vec.length - 8) + ' más' : enumera(L);
+    h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${txt}${/[.!?…]$/.test(txt) ? '' : '.'}</p>`; }
   if (neg) h += `<p class="oro-linea">Con el apoyo de ${enumera(neg.map((g) => [g.n, g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.n)}</a>` : '<b>' + esc(g.n) + '</b>']))}.</p>`;
   if (ofrece) {
     if (pagoModo && J.pago[pagoModo]) h += pagoHTML(t, e);
@@ -1415,8 +1417,8 @@ car.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowRight') { ev.prev
 
 /* ---------- arranque */
 const trae = (u, o) => fetch(u, o).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); });
-Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO)]).then(([m, p, j]) => {
-  montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j);
+Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO), trae('data/cobros.json', { cache: 'no-cache' }).catch(() => null)]).then(([m, p, j, k]) => {
+  montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j, k);
   mide(); $('carga').hidden = true; q.disabled = false; q.placeholder = 'Tomelloso, Ribadeo…';
   new ResizeObserver(() => { if (mide()) pide(); }).observe(cv);
   entrando = !CALMA; t0 = performance.now();

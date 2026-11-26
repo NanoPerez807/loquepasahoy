@@ -137,6 +137,21 @@
    "c": "24098000400",
    "n": 1,
    "nombre": "La Quimera de Pardavé"
+  },
+  {
+   "h": "21e4113d1fa0bfbfb8fd699b",
+   "creado": 1795717192,
+   "t": "VEC",
+   "c": "42195",
+   "n": 1,
+   "nombre": "Ivan Vallejo (El Titi)"
+  },
+  {
+   "h": "43984602f3adb76b36751fb4",
+   "creado": 1795717262,
+   "t": "ORO",
+   "c": "42195",
+   "n": 1
   }
  ]
 }

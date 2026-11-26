@@ -82,12 +82,13 @@ button,input{font:inherit;color:inherit}
 .cab nav{display:flex}
 .cab nav a{color:#fff;font-weight:700;font-size:14.5px;text-decoration:none;padding:11px 10px;border-radius:10px}
 .cab nav a:hover{background:rgba(255,255,255,.16)}
-.cab nav a:first-child{display:none}
+.cab nav a:first-child,.cab nav a:nth-child(4){display:none}     /* en el móvil: Ranking, Vídeos y Apoyar */
 .logo span{white-space:nowrap}
 @media (max-width:429px){.cab nav a{padding:11px 7px}.logo span{font-size:14px}}
-@media (max-width:389px){.logo span{display:none}}
+@media (max-width:409px){.logo span{display:none}}
 @media (max-width:359px){.logo{gap:8px}.cab nav a{padding:11px 6px;font-size:13.5px}.reloj span{font-size:10.5px}}
-@media (max-width:289px){.cab nav a:nth-child(2){display:none}}
+@media (max-width:339px){.cab nav a:nth-child(3){display:none}}
+@media (min-width:680px){.cab nav a:first-child,.cab nav a:nth-child(4){display:block}}
 
 /* ---------- el juego */
 .hero{padding:10px 16px 34px}
@@ -249,6 +250,72 @@ button,input{font:inherit;color:inherit}
 .pie p{max-width:66em}
 .pie b{color:#fff;font-weight:800}
 
+/* ---------- ranking: el podio son hitos kilométricos (cuerpo blanco y cabeza roja, como los de las carreteras nacionales) con la casita
+   de cada pueblo encima tal y como se ve en el mapa; el n.º 1 lleva la cabeza dorada y corona. Del 4.º en adelante, el cartel azul de distancias. */
+.rk{background:radial-gradient(120% 62% at 50% 0,#7466f4 0,var(--suelo) 46%,var(--suelo-2) 100%);color:#fff}
+.rk-in{display:grid;gap:30px}
+.rk-in>*{min-width:0}
+.rk .sub{margin-top:12px;max-width:36em;font-size:17.5px;font-weight:600;color:#ebe8ff}
+.rk-tabs{display:flex;width:max-content;max-width:100%;margin:0 auto 24px;padding:4px;gap:2px;background:var(--tinta);border-radius:999px}
+.rk-tabs button{min-height:42px;padding:0 clamp(10px,3.4vw,18px);border:0;border-radius:999px;background:none;color:#fff;font-weight:800;font-size:clamp(13.5px,3.9vw,15.5px);cursor:pointer;white-space:nowrap}
+.rk-tabs button[aria-selected="true"]{background:var(--sol);color:var(--tinta)}
+.rk-tabs button:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:none}
+@media (hover:hover){.rk-tabs button[aria-selected="false"]:hover{background:rgba(255,255,255,.16)}}
+.rk-tabs .corto{display:none}
+@media (max-width:359px){.rk-tabs button{padding:0 7px;font-size:12.5px}.rk-tabs .largo{display:none}.rk-tabs .corto{display:inline}}
+.podio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:clamp(6px,2.4vw,16px);max-width:540px;margin:0 auto}
+.podio>li:nth-child(1){order:2}.podio>li:nth-child(3){order:3}
+.podio .vacio{grid-column:1/-1;padding:30px 0;text-align:center;font-weight:700}
+.hito>button,.hito>a{display:flex;flex-direction:column;align-items:center;width:100%;padding:0;border:0;background:none;color:var(--tinta);font:inherit;text-decoration:none;cursor:pointer}
+.hito canvas,.hito .sin-casa{width:100%;max-width:132px;aspect-ratio:118/92;height:auto}
+.hito .sin-casa{display:grid;place-items:end center;padding-bottom:8px;font-weight:900;font-size:34px;line-height:1;color:rgba(255,255,255,.5)}
+.hito-cap{display:grid;place-items:center;width:100%;height:clamp(40px,11vw,50px);background:var(--senal);color:#fff;border:3px solid var(--tinta);border-bottom:0;border-radius:999px 999px 0 0;font-weight:900;font-size:clamp(22px,6.4vw,30px);line-height:1;font-variant-numeric:tabular-nums}
+.hito[data-pos="1"] .hito-cap{background:var(--brillo);color:var(--tinta)}
+.hito-cuerpo{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;min-height:var(--alto);padding:10px clamp(3px,1.5vw,10px) 12px;background:#fff;border:3px solid var(--tinta);border-top:0;border-radius:0 0 5px 5px;text-align:center;box-shadow:0 7px 0 rgba(11,23,54,.4)}
+.hito[data-pos="1"]{--alto:clamp(136px,40vw,170px)}.hito[data-pos="2"]{--alto:clamp(104px,30vw,128px)}.hito[data-pos="3"]{--alto:clamp(86px,24vw,104px)}
+.hito-nom{max-width:100%;font-weight:900;font-size:clamp(12.5px,3.8vw,17px);line-height:1.12;overflow-wrap:anywhere;hyphens:auto;text-wrap:balance}
+.hito-sub{max-width:100%;font-weight:600;font-size:clamp(10.5px,3.1vw,13px);line-height:1.2;color:#3a4366;overflow-wrap:anywhere}
+.hito-pts{margin-top:auto;padding-top:6px;font-weight:700;font-size:clamp(10.5px,3vw,12.5px);line-height:1.1}
+.hito-pts b{display:block;font-weight:900;font-size:clamp(23px,7vw,34px);line-height:1;font-variant-numeric:tabular-nums}
+.hito.libre .hito-cap{background:#d4d7e6;color:#5c6480}
+.hito.libre .hito-cuerpo{background:#eef0f6;color:#3a4366}
+@media (hover:hover){.hito>button:hover .hito-nom,.hito>a:hover .hito-nom{text-decoration:underline;text-underline-offset:3px}}
+.hito>button:focus-visible,.hito>a:focus-visible{outline:3px solid var(--sol);outline-offset:4px;border-radius:8px;box-shadow:none}
+.podio-suelo{height:16px;max-width:600px;margin:7px auto 0;border-radius:4px;background:#2d3142 linear-gradient(90deg,#fff 0 22px,transparent 22px 44px) 0 50%/44px 3px repeat-x}
+.rk .ranking{width:100%;margin-top:24px}
+.rk .ranking small b{font-size:inherit;color:inherit;font-weight:800}
+#rk-mas{display:block;margin:16px auto 0}
+.rk-lado{display:grid;gap:26px;align-content:start}
+.tu{display:grid;gap:10px;justify-items:start;background:#fff;color:var(--tinta);border:var(--borde);border-radius:16px;padding:16px 16px 18px;box-shadow:0 7px 0 rgba(11,23,54,.35)}
+.tu>*{max-width:100%}
+.tu h3{font-weight:900;font-size:22px;line-height:1.12;overflow-wrap:anywhere}
+.tu h3 small{display:block;margin-top:3px;font-weight:600;font-size:14px}
+.tu p{font-size:15.5px;line-height:1.42}
+.tu p b{font-weight:900}
+.tu .tu-niv{display:grid;gap:6px;width:100%}
+.barra{height:14px;border:2px solid var(--tinta);border-radius:999px;background:#eef0f6;overflow:hidden}
+.barra i{display:block;height:100%;min-width:4px;background:var(--brillo)}
+.tu .fila{margin-top:4px}
+.tu .boton{min-height:46px;padding:8px 16px;line-height:1.2;text-align:center;text-decoration:none}
+.boton.wa{background:#3ddc84}
+.rk-caja h3{font-weight:900;font-size:19px;margin-bottom:8px}
+.feed li+li{border-top:2px solid rgba(255,255,255,.2)}
+.feed button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;width:100%;padding:9px 0;border:0;border-radius:6px;background:none;color:#fff;text-align:left;font:inherit;cursor:pointer}
+.feed .f-q{font-weight:800;font-size:15.5px;line-height:1.25;overflow-wrap:anywhere}
+.feed .f-q small{font-weight:600;font-size:13px;color:#d7d3ff}
+.feed .f-que{font-size:14px;line-height:1.3;color:#ebe8ff}
+.feed time{font-size:12.5px;color:#c9c4ff}
+.feed .f-mas{grid-row:1/4;grid-column:2;align-self:center;font-weight:900;font-size:21px;color:var(--oro);font-variant-numeric:tabular-nums}
+.feed button:focus-visible{outline:3px solid var(--sol);outline-offset:2px;box-shadow:none}
+@media (hover:hover){.feed button:hover .f-q{text-decoration:underline;text-underline-offset:3px}}
+.feed .vacio,.niv .vacio{padding:6px 0;font-weight:600}
+.niv{display:grid;gap:7px}
+.niv li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;font-weight:800;font-size:15px}
+.niv .disco{width:44px;height:44px;border-width:5px;font-size:15px;color:var(--tinta);box-shadow:none}
+.niv li>small{font-weight:600;font-size:13px;color:#d7d3ff;text-align:right}
+.niv li.tuyo>span:nth-child(2)::after{content:' · el tuyo';font-weight:600;color:var(--sol)}
+.rk-regla{font-weight:800;font-size:15.5px;line-height:1.4}
+
 /* ---------- pueblos de oro: los precios van en señales (disco de límite y cartel azul de servicios), la clasificación en un
    cartel de distancias (pueblo y cifra, como los kilómetros) y el pueblo dorado lleva su placa bajo la señal de entrada */
 .apoya{background:var(--carton)}
@@ -272,8 +339,11 @@ button,input{font:inherit;color:inherit}
 .apoya .condiciones ul{margin:10px 0 0;padding-left:1.15em}
 .apoya .condiciones li{margin:7px 0}
 .apoya .condiciones a{color:inherit;font-weight:700}
-.ranking-caja{display:grid;justify-items:center;align-content:start}
-.ranking-caja h3{justify-self:start;font-weight:900;font-size:24px;letter-spacing:-.01em;margin-bottom:16px}
+.ap-rk{display:grid;justify-items:center;align-content:start}
+.ap-rk-cartel{display:grid;gap:10px;justify-items:start;width:100%;padding:18px 20px 20px;background:var(--autovia);color:#fff;border:4px solid #fff;border-radius:16px;box-shadow:0 0 0 3px var(--autovia),0 9px 0 3px rgba(11,23,54,.28)}
+.ap-rk-cartel h3{font-weight:900;font-size:22px;line-height:1.15}
+.ap-rk-cartel p{font-weight:600;font-size:16px;line-height:1.4}
+.ap-rk-cartel .chip{color:var(--tinta);text-decoration:none;display:inline-flex;align-items:center}
 .ranking{width:100%;padding:6px 18px;background:var(--autovia);color:#fff;border:4px solid #fff;border-radius:16px;box-shadow:0 0 0 3px var(--autovia),0 9px 0 3px rgba(11,23,54,.28)}
 .ranking li+li{border-top:2px solid rgba(255,255,255,.38)}
 .ranking button{display:grid;grid-template-columns:1.5em minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:56px;padding:9px 0;border:0;border-radius:8px;background:none;color:inherit;text-align:left;cursor:pointer}
@@ -284,7 +354,6 @@ button,input{font:inherit;color:inherit}
 .ranking button:hover .r-p{text-decoration:underline;text-underline-offset:3px}
 .ranking button:focus-visible{outline:3px solid var(--sol);outline-offset:3px;box-shadow:none}
 .ranking .vacio{padding:18px 0;font-weight:700;font-size:17px;line-height:1.35}
-.ranking-caja .nota{margin-top:6px;font-weight:600;text-align:center;max-width:30em}
 .niveles .ir-pago{text-wrap:balance}
 .niveles .ir-pago[data-m="tuneo"]{background:var(--sol)}
 .marcas .botones{display:flex;flex-wrap:wrap;gap:0 12px}
@@ -359,7 +428,6 @@ button,input{font:inherit;color:inherit}
 
 /* ---------- pantallas anchas */
 @media (min-width:560px){
-  .cab nav a:first-child{display:block}
   .escena{margin:0;--H:290px;padding-top:128px}
   .mesa{border-radius:22px;padding:18px 18px 24px;border:0;border-top:4px solid #f1c88c}
   .pista{left:6px}
@@ -382,6 +450,9 @@ button,input{font:inherit;color:inherit}
   .sello{font-size:18px;padding:7px 14px 5px}
   .sec{padding:84px 24px}
   .apoya-in{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:64px;align-items:start}
+  .rk-in{grid-template-columns:minmax(0,1fr) minmax(0,400px);column-gap:64px;row-gap:34px;align-items:start}
+  .rk-cab{grid-column:1/-1}
+  .podio{max-width:600px}
   .como-grid{grid-template-columns:minmax(0,372px) minmax(0,1fr);gap:56px;align-items:start}
   .pasos{gap:22px}
   .pasos li{grid-template-columns:122px minmax(0,1fr);gap:20px}
@@ -411,6 +482,7 @@ button,input{font:inherit;color:inherit}
   <a class="logo" href="#juego" aria-label="LO QUE PASA: ir al principio"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a>
   <nav aria-label="Secciones">
     <a href="#como">Cómo se juega</a>
+    <a href="#ranking">Ranking</a>
     <a href="#videos">Vídeos</a>
     <a href="#marcas">Marcas</a>
     <a href="#apoya">Apoyar</a>
@@ -474,6 +546,32 @@ button,input{font:inherit;color:inherit}
     </section>
   </div>
   <noscript><p class="entrada" style="margin:20px auto 0">El mapa y el buscador necesitan JavaScript. Actívalo y recarga la página.</p></noscript>
+</section>
+
+<section class="sec rk" id="ranking" aria-labelledby="rk-t">
+  <div class="sec-in rk-in">
+    <div class="rk-cab">
+      <h2 id="rk-t">El ranking de los pueblos</h2>
+      <p class="sub">Cada euro es un punto: un tuneo suma 1, un apoyo de oro 3 y un vecino de honor 10. El n.º 1 sale con corona en los episodios.</p>
+    </div>
+    <div class="rk-tabla">
+      <div class="rk-tabs" role="tablist" aria-label="Ranking de">
+        <button type="button" role="tab" id="rk-t-pueblos" data-v="pueblos" aria-selected="true" aria-controls="rk-panel">Pueblos</button><button type="button" role="tab" id="rk-t-provincias" data-v="provincias" aria-selected="false" aria-controls="rk-panel" tabindex="-1">Provincias</button><button type="button" role="tab" id="rk-t-comunidades" data-v="comunidades" aria-selected="false" aria-controls="rk-panel" tabindex="-1" aria-label="Comunidades"><span class="largo">Comunidades</span><span class="corto" aria-hidden="true">CC. AA.</span></button>
+      </div>
+      <div class="rk-panel" id="rk-panel" role="tabpanel" aria-labelledby="rk-t-pueblos">
+        <ol class="podio" id="podio"><li class="vacio">Cargando el ranking…</li></ol>
+        <div class="podio-suelo" aria-hidden="true"></div>
+        <ol class="ranking" id="rk-lista" hidden></ol>
+        <button type="button" class="chip" id="rk-mas" aria-controls="rk-lista" aria-expanded="false" hidden>Ver más</button>
+      </div>
+    </div>
+    <div class="rk-lado">
+      <article class="tu" id="tu" aria-live="polite"></article>
+      <section class="rk-caja" aria-labelledby="rk-feed-t"><h3 id="rk-feed-t">Últimos apoyos</h3><ol class="feed" id="rk-feed"></ol></section>
+      <section class="rk-caja" aria-labelledby="rk-niv-t"><h3 id="rk-niv-t">Niveles de casita</h3><ol class="niv" id="rk-niv"></ol></section>
+      <p class="rk-regla">Los puntos no salvan a nadie: el sorteo es igual para todos.</p>
+    </div>
+  </div>
 </section>
 
 <section class="sec como" id="como">
@@ -599,13 +697,13 @@ button,input{font:inherit;color:inherit}
       <h2>Tunea tu pueblo o hazlo de oro</h2>
       <p class="sub">Apoyas el canal y tu pueblo luce en el mapa. Nada de esto le salva: si cae, cae con estilo.</p>
       <ul class="niveles">
-        <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, gafas de sol, luces, bigote, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida.</p>
+        <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, gafas de sol, luces, bigote, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida. Suma 1 punto en el ranking.</p>
           <button type="button" class="chip ir-pago" data-m="tuneo" hidden>Tunea tu pueblo</button><p class="pronto mini" data-m="tuneo">Muy pronto</p></div></li>
-        <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
+        <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo, 3 puntos en el ranking. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
           <button type="button" class="chip ir-pago" data-m="oro" hidden>Haz de oro a tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
-        <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro.</p>
+        <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro y 10 puntos en el ranking.</p>
           <button type="button" class="chip ir-pago" data-m="vecino" hidden>Hazte vecino de honor</button><p class="pronto mini" data-m="vecino">Muy pronto</p></div></li>
-        <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…» y un cartel con vuestro nombre sobre vuestro pueblo en el mapa.</p>
+        <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…», un cartel con vuestro nombre sobre vuestro pueblo en el mapa y 50 puntos en el ranking.</p>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>
       <p class="regla">Apoyar no cambia el sorteo. Los pueblos caen al azar, también el tuyo.</p>
@@ -613,7 +711,8 @@ button,input{font:inherit;color:inherit}
       <details class="condiciones" id="condiciones">
         <summary>Condiciones de los apoyos</summary>
         <ul>
-          <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa y suma en la clasificación. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
+          <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
+          <li><b>Ranking.</b> Cada euro es un punto para el pueblo que eliges: tuneo 1, pueblo de oro 3, vecino de honor 10 y negocio 50. A igualdad de puntos, va delante el que llegó antes. El ranking no cambia el sorteo ni tiene premios: el n.º 1 sale con corona en los episodios.</li>
           <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
           <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña o paraguas (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador y vaca los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
           <li><b>Plazos.</b> El oro y los tuneos aparecen en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
@@ -624,11 +723,13 @@ button,input{font:inherit;color:inherit}
         </ul>
       </details>
     </div>
-    <div class="ranking-caja">
-      <h3 id="ranking-t">Los pueblos de oro</h3>
-      <ol class="ranking" id="ranking" aria-labelledby="ranking-t"><li class="vacio">Todavía no hay ninguno. El tuyo puede ser el primero.</li></ol>
+    <div class="ap-rk">
+      <div class="ap-rk-cartel">
+        <h3>¿Cómo va tu pueblo?</h3>
+        <p id="ap-rk-txt">Cada euro es un punto en el ranking de los pueblos.</p>
+        <a class="chip" href="#ranking">Ver el ranking</a>
+      </div>
       <div class="cartel-patas" aria-hidden="true"><i></i><i></i></div>
-      <p class="nota" id="ranking-nota">Los diez pueblos con más apoyos de oro.</p>
     </div>
   </div>
 </section>
@@ -661,6 +762,11 @@ const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube
 // Pueblos de oro: los enlaces de pago, el correo y los apoyos de cada pueblo van en data/juego.json (pago, correo, apoyos, vecinos, negocios).
 // Aquí solo están los precios. La página no cobra ni manda nada: enseña el texto que hay que pegar en el mensaje del pago y enlaza a la página de pago.
 const PRECIO = { oro: 3, vecino: 10, tuneo: 1 };
+// Ranking: 1 € = 1 punto. Niveles de casita según los puntos. Comunidades por su código del INE (el campo «r» de cada provincia en mapa.json).
+const PTS = { tuneo: 1, oro: 3, vecino: 10, negocio: 50 };
+const NIVELES = [[1, 'Casita'], [3, 'Casa con huerto'], [10, 'Casa con piscina'], [25, 'Chalet'], [50, 'Mansión'], [100, 'Palacio'], [250, 'Castillo']];
+const COMUN = { '01': 'Andalucía', '02': 'Aragón', '03': 'Asturias', '04': 'Illes Balears', '05': 'Canarias', '06': 'Cantabria', '07': 'Castilla y León', '08': 'Castilla-La Mancha', '09': 'Cataluña',
+  10: 'Comunitat Valenciana', 11: 'Extremadura', 12: 'Galicia', 13: 'Comunidad de Madrid', 14: 'Región de Murcia', 15: 'Navarra', 16: 'País Vasco', 17: 'La Rioja', 18: 'Ceuta', 19: 'Melilla' };
 // ----- tuneos (1 € cada uno): cosas para la casita del pueblo. Cada tuneo es un voto. En la cabeza lleva lo más votado (si empatan, lo que va
 // antes en esta lista); lo demás lo lleva en cuanto tiene un voto. «alto»: lo que sube por encima del tejado (en alturas de casita).
 const COSAS = {
@@ -684,18 +790,20 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const miles = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const norm = (s) => s.normalize('NFKC').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();   // NFKC: «𝐿𝑒𝑔𝑎𝑧𝑝𝑖» = «Legazpi»
 const minus = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+const puntosT = (n) => miles(n) + (n === 1 ? ' punto' : ' puntos'), nivelDe = (p) => { let k = -1; for (let i = 0; i < NIVELES.length; i++) if (p >= NIVELES[i][0]) k = i; return k; };
 const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n) => (n === 1 ? 'cae ' : 'caen ') + miles(n), apoyosT = (n) => (n === 1 ? '1 apoyo' : miles(n) + ' apoyos');
 
 let PUEBLOS = [], PROV = [], IDX = new Map(), MAPA = null, REAL = null, JUEGO = null, EST = null;
 let N_MUN = 0, TOTAL = 0, ALDEAS = 'cargando', ESPERA = null, T_ALDEAS = 0;   // municipios · cuántos juegan en total · aldeas: cargando | ok | error · lo que espera a que lleguen · cuándo llegaron
 const TODOS = { has: (c) => IDX.has(String(c)), get size() { return TOTAL || PUEBLOS.length; } };     // «apuntados»: "todos" en juego.json = juega todo el mapa
 let sel = -1, faseVista = '';
-let ORO = null, OROS = [], RANK = [], NEG = new Map();     // apoyos de oro por pueblo · índices de los dorados · clasificación · negocios por pueblo
+let ORO = null, OROS = [], NEG = new Map();               // apoyos de oro por pueblo · índices de los dorados · negocios por pueblo
+let PUN = new Uint32Array(0), PRANK = [], PPOS = new Map(), RPROV = [], RCCAA = [], rkVista = 'pueblos', rkMas = false;   // puntos · ranking de pueblos y su puesto · provincias · comunidades
 let tunea = false, tuneoCosa = '', LOOK = [], N_TUN = 0;  // tienda de tuneos abierta · cosa elegida · lo que lleva cada casita · cuántas van tuneadas
 let pagoModo = '', pagoNombre = '', pendiente = '';       // panel de pago abierto ('oro' | 'vecino') · nombre del vecino · modo elegido antes de tener pueblo
 
 /* ---------- estado del juego */
-function prepara(j, k) {                 // j = juego.json (estado y lo apuntado a mano) · k = cobros.json (lo que apunta solo el robot de cobros)
+function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado a mano) · k = cobros.json (lo que apunta solo el robot de cobros) · l = su libro (cobros-libro.json)
   const J = { fase: j.fase || 'inscripcion', cierre: j.cierre ? new Date(j.cierre).getTime() : 0, cierre_texto: j.cierre_texto || '', inicio_texto: j.inicio_texto || '',
     videos: j.videos || {}, dias: Array.isArray(j.dias) ? j.dias : [], ganador: j.ganador ? String(j.ganador) : null, demo: !!j.demo };
   J.todos = j.apuntados === 'todos';
@@ -717,6 +825,27 @@ function prepara(j, k) {                 // j = juego.json (estado y lo apuntado
   for (const f of [j, k || {}]) for (const c in f.tuneos || {}) { const o = f.tuneos[c], v = J.tuneos.get(String(c)) || {}; let hay = false; if (!o || typeof o !== 'object') continue;
     for (const x in o) { const n = Math.floor(+o[x]); if (COSAS[x] && n > 0) { v[x] = (v[x] || 0) + n; hay = true; } }
     if (hay) J.tuneos.set(String(c), v); }
+  // Ranking: lo apuntado a mano en juego.json más cada pago del libro del robot (el libro no lleva datos de nadie: solo el pueblo, lo comprado y la
+  // hora). Sin libro vale lo sumado en cobros.json (ahí un vecino de honor sin nombre revisado cuenta como un apoyo de oro). «desde»: el primer pago de
+  // cada pueblo, para desempatar (va delante el que llegó antes). «feed»: los últimos apoyos.
+  J.puntos = new Map(); J.desde = new Map(); J.feed = [];
+  const suma = (c, n, s) => { c = String(c); n = Math.floor(+n) || 0; if (n > 0) J.puntos.set(c, (J.puntos.get(c) || 0) + n); if (s > 0 && !(J.desde.get(c) <= s)) J.desde.set(c, s); };
+  const de = (f, neg) => {
+    for (const c in f.apoyos || {}) suma(c, PTS.oro * Math.floor(+f.apoyos[c]));
+    for (const c in f.vecinos || {}) if (Array.isArray(f.vecinos[c])) suma(c, PTS.vecino * f.vecinos[c].length);
+    for (const c in f.tuneos || {}) { const o = f.tuneos[c]; if (o && typeof o === 'object') for (const x in o) if (COSAS[x]) suma(c, PTS.tuneo * Math.floor(+o[x])); }
+    if (neg) for (const g of Array.isArray(f.negocios) ? f.negocios : []) if (g && g.c) suma(g.c, PTS.negocio); };
+  de(j, true);
+  const TIPO = { ORO: 'oro', VEC: 'vecino', TUN: 'tuneo' }, P = l && Array.isArray(l.pagos) ? l.pagos : null;
+  if (P) for (const p of P) {
+    if (!p || p.devuelto) continue;
+    const ya = p.t === 'YA', t = TIPO[ya ? p.era : p.t], c = String(p.c || ''), n = Math.max(1, Math.floor(+p.n || 1)), s = Math.floor(+p.creado || 0);
+    if (!t || !/^(\d{5}|\d{11})$/.test(c) || (t === 'tuneo' && !COSAS[p.k])) continue;
+    suma(c, ya ? 0 : PTS[t] * n, s);                                     // los «YA» se apuntaron a mano en juego.json: del libro solo sale la hora
+    if (s) J.feed.push({ c, t, n, k: p.k, s }); }
+  else if (k) de(k, false);
+  if (J.demo && Array.isArray(j.recientes)) J.feed = j.recientes.slice();
+  J.feed.sort((a, b) => b.s - a.s); J.feed.length = Math.min(J.feed.length, 40);
   return J;
 }
 function fase() {                       // las inscripciones se cierran solas al llegar la hora, aunque nadie toque juego.json
@@ -764,6 +893,16 @@ function tic() {
   const v = [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60], u = [['día', 'días'], ['hora', 'horas'], ['minuto', 'minutos'], ['segundo', 'segundos']];
   ['r-d', 'r-h', 'r-m', 'r-s'].forEach((id, i) => { const b = $(id); b.textContent = i ? p2(v[i]) : v[i]; b.nextElementSibling.textContent = u[i][v[i] === 1 ? 0 : 1]; });
 }
+function ranking() {                    // puntos de cada casita, su puesto y lo sumado por provincias y comunidades
+  PUN = new Uint32Array(PUEBLOS.length); const L = [], D = JUEGO.desde, ant = (i) => D.get(PUEBLOS[i].c) || Infinity;
+  for (const [c, n] of JUEGO.puntos) { const i = IDX.get(c); if (i != null) { PUN[i] = Math.min(4e9, n); L.push(i); } }
+  PRANK = L.sort((a, b) => PUN[b] - PUN[a] || ant(a) - ant(b) || PUEBLOS[a].n.localeCompare(PUEBLOS[b].n, 'es'));
+  PPOS = new Map(PRANK.map((i, k) => [i, k]));
+  const pv = new Map(), ca = new Map(), mete = (M, k, n, i) => { let o = M.get(k); if (!o) M.set(k, o = { k, n, pts: 0, pue: 0, mejor: i }); o.pts += PUN[i]; o.pue++; };
+  for (const i of PRANK) { const t = PUEBLOS[i], r = PROV[t.p].r; mete(pv, t.p, PROV[t.p].n, i); mete(ca, r, COMUN[r] || PROV[t.p].n, i); }   // en orden: el primero de cada una es su mejor pueblo
+  const orden = (a, b) => b.pts - a.pts || PPOS.get(a.mejor) - PPOS.get(b.mejor);
+  RPROV = [...pv.values()].sort(orden); RCCAA = [...ca.values()].sort(orden);
+}
 function refresca() {
   faseVista = fase();
   const f = faseVista;                  // 0 casita normal · 1 no juega · 2 eliminada · 3 ganadora
@@ -774,7 +913,7 @@ function refresca() {
   for (const [c, L] of JUEGO.negocios) { const i = IDX.get(c); if (i != null) NEG.set(i, L); }
   LOOK = new Array(PUEBLOS.length).fill(null); N_TUN = 0;
   for (const [c, v] of JUEGO.tuneos) { const i = IDX.get(c); if (i != null) { LOOK[i] = viste(v); N_TUN++; } }
-  RANK = OROS.slice().sort((a, b) => ORO[b] - ORO[a] || PUEBLOS[a].n.localeCompare(PUEBLOS[b].n, 'es'));
+  ranking();
   if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
   if (tunea && !JUEGO.pago.tuneo) { tunea = false; tuneoCosa = ''; }
   cv.setAttribute('aria-label', 'Mapa de España con una casita por cada pueblo, aldea, pedanía o parroquia.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + (N_TUN ? ' Algunas van tuneadas, con gorro, gafas o hasta una vaca.' : '') + ' Usa el buscador para encontrar el tuyo.');
@@ -803,7 +942,7 @@ function montaMapa(m) {
       path.closePath();
     }
     tierra.addPath(path);
-    return { id: p.id, n: p.n, path, color: m.colores[p.r] || '#ffffff', k: p.n.split('/').map(norm).concat(EXO[p.id] || [], [norm(p.n)]) };
+    return { id: p.id, n: p.n, r: p.r, path, color: m.colores[p.r] || '#ffffff', k: p.n.split('/').map(norm).concat(EXO[p.id] || [], [norm(p.n)]) };
   });
   const lineas = [new Path2D(), new Path2D(), new Path2D()];      // costa · límite de provincia · límite de comunidad
   arcos.forEach((a, i) => { const L = lineas[m.kind[i]] || lineas[1]; L.moveTo(a[0], a[1]); for (let j = 2; j < a.length; j += 2) L.lineTo(a[j], a[j + 1]); });
@@ -1178,9 +1317,11 @@ function pagoHTML(t, e) {                    // el panel de pago, dentro del blo
 function oroFicha(t, e) {                    // el bloque dorado de la ficha: cuántos apoyos lleva, quién lo apoya y cómo sumarle uno
   const J = JUEGO, n = ORO[sel], T = parte(t.n), vec = J.vecinos.get(t.c), neg = NEG.get(sel), ofrece = e !== 'nojuega';   // al que no juega no se le vende oro
   let h = '';
-  if (n) { const pos = RANK.indexOf(sel), sube = pos > 0 ? RANK[pos - 1] : -1;
-    h += `<p class="oro-estado"><b>${n === 1 ? '1 apoyo' : miles(n) + ' apoyos'} de oro.</b> ${pos === 0 ? (RANK.length > 1 ? 'Ahora mismo es el que más tiene de España.' : 'De momento es el único de España.')
-      : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + (ORO[sube] - n + 1) + ' más adelanta a ' + esc(PUEBLOS[sube].n) : '') + '.'}${e === 'eliminado' ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
+  const pt = PUN[sel], pos = PPOS.get(sel), kn = nivelDe(pt);
+  if (pt) { const a = pos > 0 ? PRANK[pos - 1] : -1;
+    h += `<p class="oro-estado"><b>${puntosT(pt)} en el ranking</b> (${minus(NIVELES[kn][1])}). ${pos === 0 ? (PRANK.length > 1 ? 'Va el n.º 1 de España: si nadie le pasa, sale con corona en los episodios.' : 'Es el único con puntos: de momento, el n.º 1 de España.')
+      : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + miles(PUN[a] - pt + 1) + ' € adelanta a ' + esc(PUEBLOS[a].n) : '') + '.'}${n ? ' Lleva ' + apoyosT(n) + ' de oro.' : ''}${e === 'eliminado' && n ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
+  else if (ofrece && (J.pago.oro || J.pago.tuneo || J.pago.vecino)) h += `<p class="oro-estado"><b>Sin puntos todavía.</b> Con 1 € entra en el ranking${PRANK.length ? ', en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1 de España'}.</p>`;
   if (vec) { const L = vec.slice(0, 8).map((v) => [v, esc(v)]);
     const txt = vec.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vec.length - 8) + ' más' : enumera(L);
     h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${txt}${/[.!?…]$/.test(txt) ? '' : '.'}</p>`; }
@@ -1203,14 +1344,77 @@ function pintaApoya() {                      // la sección «Haz de oro a tu pu
   const J = JUEGO;
   for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : m === 'vecino' ? 'Hazte vecino de honor' : 'Tunea tu pueblo'; }   // generales: no nombran el pueblo que se esté mirando
   for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
-  const top = RANK.slice(0, 10);
-  $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = donde(t);
-    return `<li><button type="button" data-i="${i}" aria-label="${k + 1}.º: ${esc(t.n)} (${esc(pv)}), ${apoyosT(ORO[i])} de oro. Ver en el mapa"><span class="r-n">${k + 1}</span><span class="r-p">${parte(t.n)}<small>${esc(pv)}${EST[i] === 2 ? ' · caído con estilo' : ''}</small></span><b>${ORO[i] > 9999 ? '9999+' : miles(ORO[i])}</b></button></li>`; }).join('')
-    : '<li class="vacio">Todavía no hay ninguno. El tuyo puede ser el primero.</li>';
-  $('ranking-nota').textContent = !RANK.length ? 'Los diez pueblos con más apoyos de oro.' : RANK.length > 10 ? 'Los diez con más apoyos de oro, de ' + miles(RANK.length) + ' pueblos dorados. Toca uno para verlo en el mapa.' : 'Los pueblos con más apoyos de oro. Toca uno para verlo en el mapa.';
+  const p1 = PRANK[0];
+  $('ap-rk-txt').textContent = p1 == null ? 'Cada euro es un punto en el ranking de los pueblos. Todavía no hay ninguno: el primero se pone el n.º 1.'
+    : PUEBLOS[p1].n + ' va el n.º 1 de España con ' + puntosT(PUN[p1]) + '. Cada euro es un punto: ¿lo alcanza el tuyo?';
+  pintaRanking();
   const R = REAL || J, ne = $('negocio-escribe'), co = $('correo');                    // el contacto no cambia en las vistas de prueba
   ne.href = R.pago.negocio ? R.pago.negocio.split('{ref}').join('NEGOCIO') : R.correo ? 'mailto:' + R.correo + '?subject=' + encodeURIComponent('Cartel en el mapa') : REDES.instagram;
   if (R.correo) { co.href = 'mailto:' + R.correo; co.hidden = false; } else co.hidden = true;
+}
+/* ---------- ranking */
+function waTexto(i) {                         // lo que se manda por WhatsApp para pedir apoyo a un pueblo
+  const t = PUEBLOS[i], pt = PUN[i], pos = PPOS.get(i), url = location.href.split('#')[0] + '#pueblo-' + t.c;
+  if (!pt) return '¿Metemos a ' + t.n + ' en el ranking de El último pueblo en pie? Con 1 € ya entra' + (PRANK.length ? ' en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1') + '. Súmale puntos aquí: ' + url;
+  if (pos === 0) return '¡' + t.n + ' va el n.º 1 de España en El último pueblo en pie, con ' + puntosT(pt) + '! Si nadie le pasa, sale con corona en los episodios. Que no nos adelanten: ' + url;
+  const a = PRANK[pos - 1];
+  return '¡Vamos, ' + t.n + '! Va el ' + (pos + 1) + '.º de España en El último pueblo en pie, con ' + puntosT(pt) + ', y con ' + miles(PUN[a] - pt + 1) + ' € adelanta a ' + PUEBLOS[a].n + '. Súmale puntos aquí: ' + url;
+}
+const waHref = (i) => 'https://wa.me/?text=' + encodeURIComponent(waTexto(i));
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function hace(s) { const d = Math.max(0, Date.now() / 1000 - s), h = Math.round(d / 3600), f = new Date(s * 1000);
+  return d < 90 ? 'ahora mismo' : d < 3570 ? 'hace ' + Math.round(d / 60) + ' min' : d < 84600 ? 'hace ' + h + (h === 1 ? ' hora' : ' horas') : d < 172800 ? 'ayer' : 'el ' + f.getDate() + ' de ' + MESES[f.getMonth()]; }
+function casitaRk(c, i, corona) {             // la casita de un pueblo como está en el mapa (el n.º 1, con corona en la cabeza)
+  const M = corona ? conCosa(LOOK[i], 'corona') : LOOK[i], e = EST[i], o = ORO[i];
+  dibujaEn(c, 118, 92, () => { const { x, y, h } = encuadre(M, o, 118, 92, 46); if (M) adorno(x, y, h, e, M, false); casa(x, y, h, e, o); if (M) adorno(x, y, h, e, M, true); });
+}
+function pintaRanking() {
+  const V = rkVista, pue = V === 'pueblos', fem = !pue, o_ = fem ? '.ª' : '.º';
+  for (const b of document.querySelectorAll('.rk-tabs [role="tab"]')) { const s = b.dataset.v === V; b.setAttribute('aria-selected', String(s)); b.tabIndex = s ? 0 : -1; if (s) $('rk-panel').setAttribute('aria-labelledby', b.id); }
+  const filas = pue ? PRANK.map((i) => ({ i, n: PUEBLOS[i].n, sub: donde(PUEBLOS[i]), pts: PUN[i], niv: nivelDe(PUN[i]) }))
+    : (V === 'provincias' ? RPROV : RCCAA).map((o) => ({ i: o.mejor, n: o.n, sub: o.pue === 1 ? PUEBLOS[o.mejor].n : pueblos(o.pue), pts: o.pts, mejor: PUEBLOS[o.mejor].n }));
+  const etiqueta = (f, k) => `${k + 1}${o_}: ${esc(f.n)}${pue ? ' (' + esc(f.sub) + ')' : ''}, ${puntosT(f.pts)}. ${pue ? 'Ver en el mapa' : 'Ver su mejor pueblo, ' + esc(f.mejor)}`;
+  let h = '';
+  for (let k = 0; k < 3; k++) { const f = filas[k];
+    h += f ? `<li class="hito" data-pos="${k + 1}"><button type="button" data-i="${f.i}" aria-label="${etiqueta(f, k)}"><canvas width="118" height="92" aria-hidden="true"></canvas><span class="hito-cap" aria-hidden="true">${k + 1}</span>`
+      + `<span class="hito-cuerpo" aria-hidden="true"><span class="hito-nom">${parte(f.n)}</span><span class="hito-sub">${parte(f.sub)}</span><span class="hito-pts"><b>${miles(f.pts)}</b>${f.pts === 1 ? 'punto' : 'puntos'}</span></span></button></li>`
+      : `<li class="hito libre" data-pos="${k + 1}"><a href="#buscar" class="rk-buscar" aria-label="Puesto ${k + 1}, libre. Busca tu pueblo"><span class="sin-casa" aria-hidden="true">?</span><span class="hito-cap" aria-hidden="true">${k + 1}</span>`
+      + `<span class="hito-cuerpo" aria-hidden="true"><span class="hito-nom">Libre</span><span class="hito-sub">${pue ? '¿El tuyo?' : '¿La tuya?'}</span></span></a></li>`; }
+  $('podio').innerHTML = h;
+  for (const b of document.querySelectorAll('#podio button[data-i]')) casitaRk(b.querySelector('canvas'), +b.dataset.i, pue && b.parentNode.dataset.pos === '1');
+  const resto = filas.slice(3, rkMas ? 50 : 10), L = $('rk-lista');
+  L.hidden = !resto.length; L.setAttribute('start', '4');
+  L.innerHTML = resto.map((f, k) => `<li><button type="button" data-i="${f.i}" aria-label="${etiqueta(f, k + 3)}"><span class="r-n" aria-hidden="true">${k + 4}</span><span class="r-p" aria-hidden="true">${parte(f.n)}<small>${parte(f.sub)}${pue && f.niv >= 0 ? ' · ' + minus(NIVELES[f.niv][1]) : ''}${pue && EST[f.i] === 2 ? ' · caído con estilo' : ''}</small></span><b aria-hidden="true">${miles(f.pts)}</b></button></li>`).join('');
+  const M = $('rk-mas'); M.hidden = filas.length <= 10; M.textContent = rkMas ? 'Ver menos' : 'Ver los ' + Math.min(50, filas.length) + ' primeros'; M.setAttribute('aria-expanded', String(rkMas));
+  pintaTu(); pintaFeed(); pintaNiveles();
+}
+function pintaTu() {                           // la tarjeta de tu pueblo (el guardado o, si no hay, el que estás mirando): puesto, cuánto le falta, nivel y WhatsApp
+  const g = IDX.get(guardado.lee()), i = g != null ? g : sel, T = $('tu');
+  if (i == null || i < 0) { T.innerHTML = '<h3>¿Y tu pueblo?</h3><p>Búscalo en el mapa y guárdalo como tu pueblo: aquí verás en qué puesto va y cuánto le falta para adelantar al de delante.</p><div class="fila"><a class="boton" href="#buscar">Buscar mi pueblo</a></div>'; return; }
+  const t = PUEBLOS[i], pt = PUN[i], pos = PPOS.get(i), n = PRANK.length, kn = nivelDe(pt), sig = NIVELES[kn + 1], ofrece = estado(t.c) !== 'nojuega';
+  let h = `<h3>${g === i ? 'Tu pueblo: ' : ''}${parte(t.n)}<small>${parte(donde(t))}</small></h3>`;
+  if (pt) { h += `<p>Va el <b>${pos + 1}.º de España</b> con <b>${puntosT(pt)}</b>.</p>`;
+    if (pos === 0) h += `<p>${n > 1 ? 'Le saca ' + puntosT(pt - PUN[PRANK[1]]) + ' a ' + esc(PUEBLOS[PRANK[1]].n) + '. ' : ''}Si nadie le pasa, sale con corona en los episodios.</p>`;
+    else { const a = PRANK[pos - 1]; h += `<p>Con <b>${miles(PUN[a] - pt + 1)} €</b> adelanta a ${esc(PUEBLOS[a].n)}${pos === 1 ? ' y se pone el n.º 1' : ''}.</p>`; } }
+  else h += `<p>Sin puntos todavía. Con <b>1 €</b> entra en el ranking${n ? ', en el puesto ' + miles(n + 1) : ' y se pone el n.º 1 de España'}.</p>`;
+  h += `<div class="tu-niv"><p>${kn >= 0 ? 'Su casita es <b>' + minus(NIVELES[kn][1]) + '</b>. ' : ''}${sig ? 'Con ' + puntosT(sig[0] - pt) + ' más, ' + minus(sig[1]) + '.' : 'Es un castillo: el nivel más alto.'}</p>`
+    + `<div class="barra" aria-hidden="true"><i style="width:${sig ? Math.round(100 * pt / sig[0]) : 100}%"></i></div></div>`;
+  const pp = RPROV.findIndex((o) => o.k === t.p), r = PROV[t.p].r, pc = RCCAA.findIndex((o) => o.k === r);
+  if (pp >= 0) h += `<p>${esc(PROV[t.p].n)} va la ${pp + 1}.ª de ${RPROV.length === 1 ? 'la única provincia con puntos' : miles(RPROV.length) + ' provincias'}${pc >= 0 && COMUN[r] && RCCAA.length > 1 ? ', y ' + esc(COMUN[r]) + ' la ' + (pc + 1) + '.ª de ' + RCCAA.length + ' comunidades' : ''}.</p>`;
+  if (ofrece && (JUEGO.pago.oro || JUEGO.pago.tuneo || JUEGO.pago.vecino)) h += `<div class="fila"><button type="button" class="boton dorado" data-i="${i}">Súmale puntos</button>${JUEGO.demo ? '' : `<a class="boton wa" href="${esc(waHref(i))}" target="_blank" rel="noopener">Pide apoyo por WhatsApp</a>`}</div>`;
+  T.innerHTML = h;
+}
+function pintaFeed() {
+  const F = JUEGO.feed.filter((e) => IDX.has(e.c)).slice(0, 8);
+  $('rk-feed').innerHTML = F.length ? F.map((e) => { const i = IDX.get(e.c), t = PUEBLOS[i];
+    const que = e.t === 'tuneo' ? 'Le ponen ' + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor') : 'Recibe ' + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
+    return `<li><button type="button" data-i="${i}"><span class="f-q">${parte(t.n)} <small>${parte(donde(t))}</small></span><span class="f-que">${que}</span><time datetime="${new Date(e.s * 1000).toISOString()}">${hace(e.s)}</time><span class="f-mas" aria-label="${puntosT(PTS[e.t] * e.n)} más">+${miles(PTS[e.t] * e.n)}</span></button></li>`; }).join('')
+    : '<li class="vacio">Todavía no hay apoyos. El primero se pone el n.º 1.</li>';
+}
+function pintaNiveles() {
+  const c = NIVELES.map(() => 0); for (const i of PRANK) c[nivelDe(PUN[i])]++;
+  const g = IDX.get(guardado.lee()), mio = g != null ? nivelDe(PUN[g]) : -2;
+  $('rk-niv').innerHTML = NIVELES.map(([p, n], k) => `<li${k === mio ? ' class="tuyo"' : ''}><span class="disco" aria-hidden="true">${p}</span><span>${n}<span class="oculto">, desde ${puntosT(p)}</span></span><small>${c[k] ? pueblos(c[k]) : ''}</small></li>`).join('');
 }
 function llevaTexto(L) {
   if (!L) return 'Todavía no lleva nada.';
@@ -1305,7 +1509,7 @@ function pintaFicha(conGolpe) {
   F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div>${ORO[sel] ? `<div class="senal-oro">${DESTELLO}Pueblo de oro</div>` : ''}<div class="senal-patas"><i></i><i></i></div></div>
     <h2>${h}</h2>${cuerpo}${tuneoFicha(t, e)}${oroFicha(t, e)}<hr class="sep">
     <div class="fila"><button type="button" class="boton blanco" id="f-guardar">${mio ? 'Dejar de guardarlo' : 'Guardar como mi pueblo'}</button>
-    <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button></div>
+    <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button>${e !== 'nojuega' && !JUEGO.demo ? `<a class="boton wa" href="${esc(waHref(sel))}" target="_blank" rel="noopener">Pide apoyo por WhatsApp</a>` : ''}</div>
     <p class="aviso" id="f-aviso" role="status"></p>`;
   F.hidden = false; pintaTuneos();
   S.textContent = SELLO[e]; S.dataset.e = e; S.hidden = false;
@@ -1340,7 +1544,7 @@ $('ficha').addEventListener('click', async (ev) => {
     const mio = guardado.lee() === t.c;
     if (!guardado.pon(mio ? null : t.c)) { aviso('Este navegador no deja guardar datos. Usa «' + $('f-compartir').textContent + '» y guarda el enlace.'); return; }
     b.textContent = mio ? 'Guardar como mi pueblo' : 'Dejar de guardarlo';
-    aviso(mio ? 'Ya no está guardado.' : 'Guardado en este navegador. La próxima vez irás directo a ' + t.n + '.');
+    aviso(mio ? 'Ya no está guardado.' : 'Guardado en este navegador. La próxima vez irás directo a ' + t.n + '.'); pintaTu(); pintaNiveles();
   } else if (b.id === 'f-compartir') {
     const url = location.href.split('#')[0] + '#pueblo-' + t.c, e = estado(t.c);
     const texto = e === 'enpie' ? t.n + ' sigue en pie.' : e === 'eliminado' ? t.n + ' ha caído.' : e === 'ganador' ? t.n + ' ha ganado.' : e === 'puede' ? '¿Está apuntado ' + t.n + '? Con un comentario entra.' : t.n + ' en El último pueblo en pie.';
@@ -1361,7 +1565,19 @@ for (const b of document.querySelectorAll('.ir-pago')) b.addEventListener('click
   scrollTo({ top: $('buscar').getBoundingClientRect().top + scrollY - 10, behavior: CALMA ? 'auto' : 'smooth' }); q.focus({ preventScroll: true });
   if (sel >= 0) abreLista(busca(q.value));                                                       // el que se estaba mirando sale el primero: un toque si es el suyo, o escribe otro
 });
-$('ranking').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-i]'); if (b) elige(+b.dataset.i, 'ranking'); });
+const vaBuscar = () => { scrollTo({ top: Math.max(0, $('buscar').getBoundingClientRect().top + scrollY - 10), behavior: CALMA ? 'auto' : 'smooth' }); q.focus({ preventScroll: true }); };
+$('ranking').addEventListener('click', (ev) => {
+  const tab = ev.target.closest('[role="tab"]'); if (tab) { if (rkVista !== tab.dataset.v) { rkVista = tab.dataset.v; rkMas = false; pintaRanking(); } return; }
+  if (ev.target.closest('#rk-mas')) { rkMas = !rkMas; pintaRanking(); if (!rkMas) $('rk-panel').scrollIntoView({ block: 'nearest', behavior: CALMA ? 'auto' : 'smooth' }); return; }
+  const b = ev.target.closest('button[data-i]'); if (b) { elige(+b.dataset.i, 'ranking'); return; }
+  if (ev.target.closest('a[href="#buscar"]')) { ev.preventDefault(); vaBuscar(); }
+});
+$('ranking').addEventListener('keydown', (ev) => {              // pestañas: flechas, Inicio y Fin
+  const tab = ev.target.closest('[role="tab"]'); if (!tab || !/^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) return;
+  ev.preventDefault(); const T = [...document.querySelectorAll('.rk-tabs [role="tab"]')], i = T.indexOf(tab);
+  const n = ev.key === 'Home' ? 0 : ev.key === 'End' ? T.length - 1 : (i + (ev.key === 'ArrowRight' ? 1 : -1) + T.length) % T.length;
+  rkVista = T[n].dataset.v; rkMas = false; pintaRanking(); T[n].focus();
+});
 
 function elige(i, desde) {
   const t = PUEBLOS[i]; sel = i; const quiere = pendiente, vale = estado(t.c) !== 'nojuega'; pendiente = '';
@@ -1387,7 +1603,7 @@ cv.addEventListener('click', (ev) => { if (!MAPA || anim) return; const g = aRej
 cv.addEventListener('pointermove', (ev) => {
   if (ev.pointerType !== 'mouse' || !MAPA) return; const g = aRejilla(ev), i = anim ? -1 : cerca(g[0], g[1], 13 / g[2]), tip = $('tip');
   cv.style.cursor = i >= 0 ? 'pointer' : ''; tip.hidden = i < 0 || i === sel; if (tip.hidden) return;
-  tip.textContent = PUEBLOS[i].n + ' (' + donde(PUEBLOS[i]) + ')' + (ORO[i] ? ' · ' + apoyosT(ORO[i]) + ' de oro' : '');
+  tip.textContent = PUEBLOS[i].n + ' (' + donde(PUEBLOS[i]) + ')' + (PUN[i] ? ' · ' + puntosT(PUN[i]) : '');
   const tw = tip.offsetWidth; tip.style.transform = `translate(${Math.max(4, Math.min(W - tw - 4, g[3] - tw / 2))}px, ${g[4] < 44 ? g[4] + 20 : g[4] - 38}px)`;
 });
 cv.addEventListener('pointerleave', () => { $('tip').hidden = true; });
@@ -1550,6 +1766,9 @@ function demo(f) {
   }
   j.tuneos = { 13082: { gorro: 4, gafas: 2, vaca: 1, corona: 3 }, 13005: { corona: 5, luces: 2, bigote: 1 }, 27051: { ciguena: 3, flotador: 1 }, 22130: { boina: 2, gafas: 1 },
     41095: { paraguas: 2, luces: 1 }, '03031': { flotador: 2, gafas: 1, gorro: 1 }, 24008: { luces: 3, gorro: 2 }, 13019: { gorro: 1, vaca: 1 }, 31232: { bigote: 2, boina: 1 }, '02081': { vaca: 2, luces: 1 } };
+  const ya = Date.now() / 1000;
+  j.recientes = [['13082', 'vecino', 1, '', 0.3], ['27051', 'tuneo', 1, 'ciguena', 1.2], ['13005', 'oro', 2, '', 3], ['41095', 'tuneo', 1, 'paraguas', 5.5], ['03031', 'oro', 1, '', 27], ['22130', 'tuneo', 2, 'boina', 51]]
+    .map(([c, t, n, k, h]) => ({ c, t, n, k, s: Math.round(ya - h * 3600) }));
   JUEGO = prepara(j); pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = false; refresca();
 }
 $('demo-salir').addEventListener('click', () => { JUEGO = REAL; pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = true; refresca(); });
@@ -1577,8 +1796,9 @@ car.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowRight') { ev.prev
 
 /* ---------- arranque */
 const trae = (u, o) => fetch(u, o).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); });
-Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO), trae('data/cobros.json', { cache: 'no-cache' }).catch(() => null)]).then(([m, p, j, k]) => {
-  montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j, k);
+Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO), trae('data/cobros.json', { cache: 'no-cache' }).catch(() => null),
+  trae('data/cobros-libro.json', { cache: 'no-cache' }).catch(() => null)]).then(([m, p, j, k, l]) => {
+  montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j, k, l);
   mide(); $('carga').hidden = true; q.disabled = false; q.placeholder = 'Tomelloso, Lébor, Anca…';
   new ResizeObserver(() => { if (mide()) pide(); }).observe(cv);
   entrando = !CALMA; t0 = performance.now();

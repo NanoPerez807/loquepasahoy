@@ -3,27 +3,47 @@
   {
    "h": "a697b0cccd9e6dff3d4290be",
    "t": "YA",
-   "nota": "apuntado a mano en juego.json"
+   "nota": "apuntado a mano en juego.json",
+   "era": "ORO",
+   "c": "16244",
+   "n": 1,
+   "creado": 1795632981
   },
   {
    "h": "f3d2c664767a564e02965861",
    "t": "YA",
-   "nota": "apuntado a mano en juego.json"
+   "nota": "apuntado a mano en juego.json",
+   "era": "VEC",
+   "c": "30039",
+   "n": 1,
+   "creado": 1795634123
   },
   {
    "h": "8e3bd897e9c89640ed09d1db",
    "t": "YA",
-   "nota": "apuntado a mano en juego.json"
+   "nota": "apuntado a mano en juego.json",
+   "era": "ORO",
+   "c": "03114",
+   "n": 1,
+   "creado": 1795634961
   },
   {
    "h": "08724e104d25f1f310d95060",
    "t": "YA",
-   "nota": "apuntado a mano en juego.json"
+   "nota": "apuntado a mano en juego.json",
+   "era": "ORO",
+   "c": "12139",
+   "n": 1,
+   "creado": 1795638149
   },
   {
    "h": "80dce11af79b3ea9151d6ef7",
    "t": "YA",
-   "nota": "apuntado a mano en juego.json"
+   "nota": "apuntado a mano en juego.json",
+   "era": "ORO",
+   "c": "23095",
+   "n": 1,
+   "creado": 1795646035
   },
   {
    "h": "6f4e587d3ab4fa3f6b96e21f",
@@ -46,7 +66,7 @@
    "t": "VEC",
    "c": "03066",
    "n": 1,
-   "revisar": true
+   "nombre": "Sr Cremades"
   }
  ]
 }

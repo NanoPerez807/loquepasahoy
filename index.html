@@ -444,7 +444,7 @@ button,input{font:inherit;color:inherit}
         <input id="q" name="q" type="text" inputmode="search" enterkeyhint="search" autocapitalize="words" autocomplete="off" autocorrect="off" spellcheck="false"
           placeholder="Cargando los pueblos…" role="combobox" aria-expanded="false" aria-controls="q-lista" aria-autocomplete="list" disabled>
         <button type="button" id="q-borrar" aria-label="Borrar la búsqueda" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
-        <ul class="lista" id="q-lista" role="listbox" aria-label="Municipios" hidden></ul>
+        <ul class="lista" id="q-lista" role="listbox" aria-label="Pueblos" hidden></ul>
       </div>
       <p class="oculto" id="q-estado" role="status" aria-live="polite"></p>
     </form>
@@ -454,10 +454,10 @@ button,input{font:inherit;color:inherit}
       <img class="mono" data-p="movil" style="--hc:184.5;--ty:1" data-src="media/m-movil.webp" width="410" height="900" alt="" aria-hidden="true">
       <img class="mono" data-p="hombros" style="--hc:339.5" data-src="media/m-hombros.webp" width="661" height="900" alt="" aria-hidden="true">
       <img class="mono" data-p="fiesta" style="--hc:278.5;--ty:40;--f:1.115" data-src="media/m-fiesta.webp" width="550" height="900" alt="" aria-hidden="true">
-      <p class="pista" id="pista"><b>8.132</b> municipios, una casita cada uno. Toca el mapa o escribe el tuyo.</p>
+      <p class="pista" id="pista"><b>69.058</b> pueblos, aldeas y parroquias, una casita cada uno. Toca el mapa o escribe el tuyo.</p>
       <div class="mesa">
         <div class="tablero">
-          <canvas id="mapa" role="img" aria-label="Mapa de España con una casita por cada municipio. Usa el buscador para encontrar el tuyo."></canvas>
+          <canvas id="mapa" role="img" aria-label="Mapa de España con una casita por cada pueblo, aldea, pedanía o parroquia. Usa el buscador para encontrar el tuyo."></canvas>
           <button type="button" class="chip" id="ver-todo" hidden>Ver toda España</button>
           <p class="sello" id="sello" hidden></p>
           <p class="tip" id="tip" hidden></p>
@@ -510,8 +510,8 @@ button,input{font:inherit;color:inherit}
     <div class="reglas">
       <h3>Las reglas</h3>
       <ul>
-        <li>Juegan los municipios: los 8.132 que hay en España.</li>
-        <li>Si vives en una aldea, una pedanía o una parroquia, juega el municipio al que pertenece.</li>
+        <li>Juegan todos los pueblos de España: <span data-total>69.058</span>. Los 8.132 municipios y cada aldea, pedanía, parroquia, lugar o barrio con nombre propio del nomenclátor oficial, aunque tenga cuatro casas.</li>
+        <li>Cada uno juega por su cuenta: si tu aldea está en el mapa, juega ella, no su municipio.</li>
         <li>Un pueblo comentado cien veces cuenta lo mismo que uno comentado una vez.</li>
         <li>Valen los comentarios de TikTok, Instagram y YouTube hechos antes del cierre.</li>
         <li>Cada día sale un episodio con los pueblos que caen.</li>
@@ -644,7 +644,7 @@ button,input{font:inherit;color:inherit}
     </nav>
     <p><b>Privacidad.</b> Esta página no usa cookies ni analítica, y lo que escribes en el buscador no sale de tu dispositivo. Si pulsas «Guardar como mi pueblo», se guarda solo en este navegador. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP. Los apoyos se pagan en una página externa: aquí no se pide ni se guarda ningún dato de pago. A esa página solo viaja el pueblo que has elegido, lo que le pones si lo tuneas y, si lo escribes, el nombre para los agradecimientos.</p>
     <p><b>Apoyos.</b> <a href="#condiciones">Condiciones de los apoyos</a>. Contacto por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>.</p>
-    <p><b>Mapa.</b> Obra derivada de Equipamiento Geográfico de Referencia Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> <a href="https://www.ign.es">ign.es</a>, a través del paquete es-atlas.</p>
+    <p><b>Mapa.</b> Obra derivada de Equipamiento Geográfico de Referencia Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> <a href="https://www.ign.es">ign.es</a>, a través del paquete es-atlas. Pueblos, aldeas y parroquias: Nomenclátor Geográfico de Municipios y Entidades de Población (2026), © Instituto Geográfico Nacional, <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a>.</p>
   </div>
 </footer>
 
@@ -682,11 +682,13 @@ const POR_DEFECTO = { fase: 'inscripcion', cierre: '2026-11-26T18:00:00+01:00', 
 const CALMA = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const miles = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const norm = (s) => s.normalize('NFKC').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();   // NFKC: «𝐿𝑒𝑔𝑎𝑧𝑝𝑖» = «Legazpi»
 const minus = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 const pueblos = (n) => miles(n) + (n === 1 ? ' pueblo' : ' pueblos'), caen = (n) => (n === 1 ? 'cae ' : 'caen ') + miles(n), apoyosT = (n) => (n === 1 ? '1 apoyo' : miles(n) + ' apoyos');
 
 let PUEBLOS = [], PROV = [], IDX = new Map(), MAPA = null, REAL = null, JUEGO = null, EST = null;
+let N_MUN = 0, TOTAL = 0, ALDEAS = 'cargando', ESPERA = null, T_ALDEAS = 0;   // municipios · cuántos juegan en total · aldeas: cargando | ok | error · lo que espera a que lleguen · cuándo llegaron
+const TODOS = { has: (c) => IDX.has(String(c)), get size() { return TOTAL || PUEBLOS.length; } };     // «apuntados»: "todos" en juego.json = juega todo el mapa
 let sel = -1, faseVista = '';
 let ORO = null, OROS = [], RANK = [], NEG = new Map();     // apoyos de oro por pueblo · índices de los dorados · clasificación · negocios por pueblo
 let tunea = false, tuneoCosa = '', LOOK = [], N_TUN = 0;  // tienda de tuneos abierta · cosa elegida · lo que lleva cada casita · cuántas van tuneadas
@@ -696,7 +698,8 @@ let pagoModo = '', pagoNombre = '', pendiente = '';       // panel de pago abier
 function prepara(j, k) {                 // j = juego.json (estado y lo apuntado a mano) · k = cobros.json (lo que apunta solo el robot de cobros)
   const J = { fase: j.fase || 'inscripcion', cierre: j.cierre ? new Date(j.cierre).getTime() : 0, cierre_texto: j.cierre_texto || '', inicio_texto: j.inicio_texto || '',
     videos: j.videos || {}, dias: Array.isArray(j.dias) ? j.dias : [], ganador: j.ganador ? String(j.ganador) : null, demo: !!j.demo };
-  J.apuntados = Array.isArray(j.apuntados) ? new Set(j.apuntados.map(String)) : null;
+  J.todos = j.apuntados === 'todos';
+  J.apuntados = J.todos ? TODOS : Array.isArray(j.apuntados) ? new Set(j.apuntados.map(String)) : null;
   J.caidos = new Map();
   for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
   J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
@@ -731,16 +734,18 @@ function estado(c) {
   if (f === 'final') return JUEGO.ganador === c ? 'ganador' : 'eliminado';
   return JUEGO.caidos.has(c) ? 'eliminado' : 'enpie';
 }
-const enPie = () => { let n = 0; for (const c of JUEGO.apuntados) if (!JUEGO.caidos.has(c)) n++; return n; };
+const enPie = () => { if (JUEGO.todos) return Math.max(0, JUEGO.apuntados.size - JUEGO.caidos.size); let n = 0; for (const c of JUEGO.apuntados) if (!JUEGO.caidos.has(c)) n++; return n; };
+const sinCifra = () => JUEGO.todos && !TOTAL;                     // juegan todos, pero las aldeas todavía no han llegado: mejor no dar una cifra a medias
+const donde = (t) => (t.a ? PUEBLOS[t.m].n + ' · ' : '') + PROV[t.p].n;   // «Totana · Murcia» para una aldea; «Murcia» para un municipio
 
 function pintaPanel() {
   const f = fase(), J = JUEGO, E = $('p-estado'), T = $('p-texto');
   $('reloj').hidden = f !== 'inscripcion';
   if (f === 'inscripcion') { E.textContent = 'Inscripciones abiertas'; T.textContent = 'Cierran ' + J.cierre_texto; }
   else if (f === 'cerrado') { E.textContent = 'Inscripciones cerradas'; T.textContent = 'Estoy contando los comentarios. La lista de pueblos sale antes del primer episodio' + (J.inicio_texto ? ', ' + J.inicio_texto : '') + '.'; }
-  else if (f === 'listo') { E.textContent = (J.apuntados.size === 1 ? 'Juega ' : 'Juegan ') + pueblos(J.apuntados.size); T.textContent = J.inicio_texto ? 'El primer episodio sale ' + J.inicio_texto + '.' : 'El primer episodio está al caer.'; }
+  else if (f === 'listo') { E.textContent = sinCifra() ? 'Juegan todos los pueblos de España' : (J.apuntados.size === 1 ? 'Juega ' : 'Juegan ') + pueblos(J.apuntados.size); T.textContent = J.inicio_texto ? 'El primer episodio sale ' + J.inicio_texto + '.' : 'El primer episodio está al caer.'; }
   else if (f === 'jugando') { const u = J.dias[J.dias.length - 1];
-    const n = enPie(); E.textContent = 'Día ' + J.dia + ': ' + (n === 1 ? 'queda ' : 'quedan ') + pueblos(n) + ' en pie';
+    const n = enPie(); E.textContent = 'Día ' + J.dia + (sinCifra() ? '' : ': ' + (n === 1 ? 'queda ' : 'quedan ') + pueblos(n) + ' en pie');
     T.textContent = u ? (u.titulo || 'Catástrofe') + ': ' + caen((u.caidos || []).length) + '.' : 'Empezaron ' + miles(J.apuntados.size) + '.'; }
   else { const g = IDX.get(J.ganador); E.textContent = g != null ? 'Ha ganado ' + PUEBLOS[g].n : 'El juego ha terminado';
     T.textContent = 'Es el último pueblo en pie de los ' + miles(J.apuntados.size) + ' que jugaban.'; }
@@ -772,7 +777,7 @@ function refresca() {
   RANK = OROS.slice().sort((a, b) => ORO[b] - ORO[a] || PUEBLOS[a].n.localeCompare(PUEBLOS[b].n, 'es'));
   if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
   if (tunea && !JUEGO.pago.tuneo) { tunea = false; tuneoCosa = ''; }
-  cv.setAttribute('aria-label', 'Mapa de España con una casita por cada municipio.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + (N_TUN ? ' Algunas van tuneadas, con gorro, gafas o hasta una vaca.' : '') + ' Usa el buscador para encontrar el tuyo.');
+  cv.setAttribute('aria-label', 'Mapa de España con una casita por cada pueblo, aldea, pedanía o parroquia.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + (N_TUN ? ' Algunas van tuneadas, con gorro, gafas o hasta una vaca.' : '') + ' Usa el buscador para encontrar el tuyo.');
   pintaPanel(); pintaFicha(false); tic(); pide();
 }
 
@@ -780,6 +785,7 @@ function refresca() {
 const cv = $('mapa'); let cx = cv.getContext('2d');      // «let»: las casitas de la ficha (tuneos) se pintan con estas mismas funciones en otro lienzo
 const vista = { x: 0, y: 0, k: 1 };
 const CEL = 80; let COLS = 0, celdas = [];
+let VX = new Float32Array(0), VY = new Float32Array(0), VIS = new Int32Array(0), CAPA = null, CAPA_D = null, CAPA_U = null;   // posiciones en pantalla, visibles y la capa de píxeles
 let W = 0, H = 0, DPR = 1, base = 1, anim = null, raf = 0, t0 = 0, entrando = false, GAN = -1, OLAS = [];
 const COL = [['#ffffff', '#ff2e4d'], ['#d9dde8', '#a2a9bd'], ['#2a2f3f', '#3b4155'], ['#ffffff', '#ffb300']];
 const COL_ORO = [['#ffd43b', '#f5a300'], ['#d9a520', '#96700f']];     // pueblo de oro: en pie · caído (ruinas doradas)
@@ -797,7 +803,7 @@ function montaMapa(m) {
       path.closePath();
     }
     tierra.addPath(path);
-    return { id: p.id, n: p.n, path, color: m.colores[p.r] || '#ffffff', k: p.n.split('/').map(norm) };
+    return { id: p.id, n: p.n, path, color: m.colores[p.r] || '#ffffff', k: p.n.split('/').map(norm).concat(EXO[p.id] || [], [norm(p.n)]) };
   });
   const lineas = [new Path2D(), new Path2D(), new Path2D()];      // costa · límite de provincia · límite de comunidad
   arcos.forEach((a, i) => { const L = lineas[m.kind[i]] || lineas[1]; L.moveTo(a[0], a[1]); for (let j = 2; j < a.length; j += 2) L.lineTo(a[j], a[j + 1]); });
@@ -806,13 +812,53 @@ function montaMapa(m) {
   let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
   for (let i = 0; i < 120; i++) OLAS.push([rnd() * m.w, rnd() * m.h, 5 + rnd() * 4]);
 }
+// ----- búsqueda tolerante: sin tildes, mayúsculas, guiones, apóstrofos ni espacios («sansebastiandelosreyes»); otros nombres y parroquias
+const ARTICULOS = new Set(['el', 'la', 'los', 'las', 'lo', 'o', 'a', 'os', 'as', 'es', 'sa', 'ses', 'so', 'sos', 'els', 'l', 'les', 'ets']);
+function variantes(n) {                     // «Anca (San Pedro)» → «San Pedro de Anca»; «O Castro (San Mamede)» → «San Mamede do Castro» y «San Mamede de O Castro»
+  const m = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(n); if (!m) return [];
+  const x = m[1], s = m[2], out = [s + ' de ' + x, x];
+  const a = /^(o|a|os|as|el|la|los|las|lo)\s+(.+)$/i.exec(x);
+  if (a) { const con = { o: 'do', a: 'da', os: 'dos', as: 'das', el: 'del' }[a[1].toLowerCase()]; if (con) out.push(s + ' ' + con + ' ' + a[2]); out.push(s + ' de ' + a[2], a[2]); }
+  return out;
+}
+function claves(t, otros) {                 // lo que se compara al buscar
+  const al = [...variantes(t.n)]; for (const o of otros || []) al.push(o, ...variantes(o));
+  t.al = al.length ? [...new Set(al.map(norm))].filter((v) => v && v !== t.k) : null;
+  t.alc = t.al ? t.al.map((v) => v.replace(/ /g, '')) : null;
+  t.b = t.kc + (t.ks ? '|' + t.ks.join('|').replace(/ /g, '') : '') + (t.alc ? '|' + t.alc.join('|') : '');
+  t.kr = una(t.kc); t.alr = t.alc ? t.alc.map(una) : null; t.br = una(t.b);
+}
+function nuevo(c, n, p, x, y, i, m, tipo) {
+  const k = norm(n), t = { c, n, p, x, y, k, w: ' ' + k, kc: k.replace(/ /g, ''), ks: n.indexOf('/') > 0 ? n.split('/').map(norm) : null, a: m >= 0 ? 1 : 0, m, tipo,
+    d: 120 + (x / MAPA.w) * 760 + ((i * 7919) % 211) };
+  claves(t, null); return t;
+}
+function enRejilla(i) { const t = PUEBLOS[i], c = Math.floor(t.y / CEL) * COLS + Math.floor(t.x / CEL); (celdas[c] || (celdas[c] = [])).push(i); }
 function montaPueblos(p) {
   COLS = Math.ceil(MAPA.w / CEL); celdas = [];
-  PUEBLOS = p.map((r, i) => { const k = norm(r[1]), t = { c: r[0], n: r[1], p: r[2], x: r[3], y: r[4], k, w: ' ' + k, ks: r[1].indexOf('/') > 0 ? r[1].split('/').map(norm) : null,
-      d: 120 + (r[3] / MAPA.w) * 760 + ((i * 7919) % 211) };
-    IDX.set(t.c, i); const c = Math.floor(t.y / CEL) * COLS + Math.floor(t.x / CEL); (celdas[c] || (celdas[c] = [])).push(i); return t; });
+  PUEBLOS = p.map((r, i) => { const t = nuevo(r[0], r[1], r[2], r[3], r[4], i, -1, 'm'); IDX.set(t.c, i); return t; });
+  N_MUN = PUEBLOS.length; for (let i = 0; i < N_MUN; i++) enRejilla(i);
   EST = new Uint8Array(PUEBLOS.length); ORO = new Uint16Array(PUEBLOS.length);
 }
+function sumaAldeas(A) {                    // data/aldeas.json (lo escribe web-src/aldeas.py): el resto de pueblos, por municipios, en diferencias
+  const nom = A.nom.split('|'); let i = 0;
+  for (let k = 0; k < A.mun.length && k < N_MUN; k++) { const n = A.mun[k], M = PUEBLOS[k]; let suf = 0;
+    for (let r = 0; r < n; r++, i++) {
+      suf = r ? suf + A.cod[i] : A.cod[i]; const s6 = String(suf).padStart(6, '0'), j = PUEBLOS.length;
+      const t = nuevo(M.c + s6, nom[i], M.p, M.x + A.x[i] / 10, M.y + A.y[i] / 10, j, k, s6.slice(2) === '0000' ? 'c' : s6.slice(4) === '00' ? 's' : 'n');
+      PUEBLOS.push(t); IDX.set(t.c, j); enRejilla(j); } }
+  for (const e in A.ali || {}) { const t = PUEBLOS[N_MUN + +e]; if (t) claves(t, A.ali[e].split('|')); }
+  for (const e in A.mali || {}) { const t = PUEBLOS[+e]; if (t) claves(t, A.mali[e].split('|')); }
+  for (const [c, L] of Object.entries(APODOS)) { const g = IDX.get(c); if (g != null) claves(PUEBLOS[g], (PUEBLOS[g].al || []).concat(L)); }
+  TOTAL = A.total || PUEBLOS.length; ALDEAS = 'ok'; T_ALDEAS = performance.now(); MUNK = null;
+  EST = new Uint8Array(PUEBLOS.length); ORO = new Uint16Array(PUEBLOS.length); VX = new Float32Array(PUEBLOS.length); VY = new Float32Array(PUEBLOS.length); VIS = new Int32Array(PUEBLOS.length);
+  for (const e of document.querySelectorAll('[data-total]')) e.textContent = miles(TOTAL);
+  refresca();
+  if (ESPERA && sel < 0) { const g = IDX.get(ESPERA.c); if (g != null) { if (ESPERA.tunea) pendiente = 'tuneo'; elige(g, 'hash'); } }
+  ESPERA = null;
+  if (!lista.hidden && document.activeElement === q && norm(q.value)) abreLista(busca(q.value));
+}
+const APODOS = { 28134: ['Sanse'] };       // nombres que la gente escribe de verdad (también los trae aldeas.json)
 function cerca(gx, gy, max, salvo) {       // el pueblo más cercano a un punto de la rejilla (o -1)
   const c0 = Math.floor(gx / CEL), r0 = Math.floor(gy / CEL), n = Math.ceil(max / CEL); let mejor = -1, bd = max * max;
   for (let r = r0 - n; r <= r0 + n; r++) for (let c = c0 - n; c <= c0 + n; c++) { if (c < 0 || c >= COLS || r < 0) continue; const L = celdas[r * COLS + c]; if (!L) continue;
@@ -968,6 +1014,29 @@ function cartelNeg(x, y, w, txt, f, px, y0, y1) { cx.strokeStyle = '#5c6480'; cx
   caja(x, y, w, 21, 5); cx.fillStyle = '#0a56b0'; cx.fill(); cx.lineWidth = 2; cx.strokeStyle = '#fff'; cx.stroke(); rotulo(txt, x + w / 2, y + 11, f, '#fff'); }
 function caja(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
 
+const abgr = (h) => { const n = parseInt(h.slice(1), 16); return (0xff000000 | ((n & 0xff) << 16) | (n & 0xff00) | (n >> 16)) >>> 0; };
+const COL32 = [['#ffffff', '#ff2e4d'], ['#d9dde8', '#a2a9bd'], ['#2a2f3f', '#3b4155'], ['#ffffff', '#ffb300']].map((c) => c.map(abgr));
+function pixeles(nv, hs, crece) {           // muchas casitas a la vez (lejos, o media España a la vista): cuadraditos de pared y tejado, píxel a píxel
+  const w = cv.width, h = cv.height;
+  if (!CAPA || CAPA.width !== w || CAPA.height !== h) { CAPA = document.createElement('canvas'); CAPA.width = w; CAPA.height = h; CAPA_D = CAPA.getContext('2d').createImageData(w, h); CAPA_U = new Uint32Array(CAPA_D.data.buffer); }
+  const U = CAPA_U; U.fill(0);
+  let va = 0; for (let n = 0; n < nv; n++) if (PUEBLOS[VIS[n]].a) va++;
+  const hueco = Math.sqrt(W * H / Math.max(1, va)) * 0.92;                // las aldeas, como mucho del tamaño del hueco que les toca (si no, se pisan)
+  const aparece = ALDEAS === 'ok' ? Math.min(1, (performance.now() - T_ALDEAS) / 420) : 0;
+  const dm = hs * DPR, da = Math.min(hs * 0.82, hueco) * DPR * aparece;
+  for (let pas = 0; pas < 2; pas++) {        // primero las aldeas y encima los municipios
+    for (let n = 0; n < nv; n++) { const i = VIS[n], t = PUEBLOS[i]; if (t.a !== (pas ? 0 : 1) || ORO[i] || i === sel || i === GAN) continue;
+      const e = EST[i], d = Math.round((t.a ? da : dm) * (e === 3 ? 1.6 : 1) * crece(i)); if (d < 1) continue;
+      const c = COL32[e], x0 = Math.round(VX[i] * DPR - d / 2), y0 = Math.round(VY[i] * DPR - d / 2), techo = d < 2 ? 0 : Math.ceil(d * 0.52);
+      const xa = Math.max(0, x0), xb = Math.min(w, x0 + d);
+      if (xb <= xa) continue;
+      for (let yy = Math.max(0, y0), yb = Math.min(h, y0 + d); yy < yb; yy++) U.fill(yy - y0 < techo ? c[1] : c[0], yy * w + xa, yy * w + xb);
+    }
+  }
+  CAPA.getContext('2d').putImageData(CAPA_D, 0, 0);
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.drawImage(CAPA, 0, 0); cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (aparece < 1) pide();
+}
 function pinta(ahora) {
   if (!MAPA || !W) return;
   const s = base * vista.k, ox = W / 2 - vista.x * s, oy = H / 2 - vista.y * s;
@@ -999,13 +1068,11 @@ function pinta(ahora) {
     const L = NEG.get(sel); if (L) { const nt = rotNeg(L); cx.font = fNeg; const nw = cx.measureText(nt).width + 16, bajo = by > y ? by + 27 : y + h * 1.2 + 2;     // su negocio, debajo de la casita elegida
       senalSel.neg = { x: Math.max(4, Math.min(W - nw - 4, x - nw / 2)), y: bajo + 8, w: nw, txt: nt, px: x, y0: bajo }; } }
   const crece = (i) => { if (!entrando) return 1; const u = (te - PUEBLOS[i].d) / 260; if (u <= 0) return 0; if (u >= 1) return 1; const v = u - 1; return 1 + 2.7 * v * v * v + 1.7 * v * v; };
-  if (hs < 5.2) {
-    for (let e = 0; e < 4; e++) for (let capa = 0; capa < 2; capa++) {              // por tandas de color: primero paredes, luego tejados
-      cx.fillStyle = COL[e][capa];
-      for (let i = 0; i < N; i++) { if (EST[i] !== e) continue; const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -6 || x > W + 6 || y < -6 || y > H + 6) continue;
-        const h = hs * crece(i) * (e === 3 ? 1.6 : 1); if (!h) continue;
-        if (capa) cx.fillRect(x - h / 2, y - h / 2, h, h * 0.55); else cx.fillRect(x - h / 2, y - h * 0.05, h, h * 0.55); }
-    }
+  if (VX.length < N) { VX = new Float32Array(N); VY = new Float32Array(N); VIS = new Int32Array(N); }
+  let nv = 0; const mg = Math.max(20, hs * 2);
+  for (let i = 0; i < N; i++) { const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -mg || x > W + mg || y < -mg || y > H + mg) continue; VX[i] = x; VY[i] = y; VIS[nv++] = i; }
+  if (hs < 5.2 || nv > 1400) {                                                       // lejos o con media España a la vista: píxeles
+    pixeles(nv, hs, crece);
     if (OROS.length) {                                                               // los pueblos de oro van encima, más grandes y con contorno: se tienen que ver desde lejos
       const g = Math.max(4.6, hs * 1.9);
       for (const i of OROS) { if (i === sel || i === GAN) continue; const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -8 || x > W + 8 || y < -8 || y > H + 8) continue;
@@ -1015,9 +1082,9 @@ function pinta(ahora) {
         cx.fillStyle = c[0]; cx.fillRect(x - h / 2, y - h / 2, h, h); cx.fillStyle = c[1]; cx.fillRect(x - h / 2, y - h / 2, h, h * 0.4); }
     }
   } else {
-    const vis = []; for (let i = 0; i < N; i++) { const t = PUEBLOS[i], x = t.x * s + ox, y = t.y * s + oy; if (x < -20 || x > W + 20 || y < -20 || y > H + 20 || i === sel) continue; vis.push([y, x, i]); }
+    const vis = []; for (let n = 0; n < nv; n++) { const i = VIS[n]; if (i !== sel) vis.push([VY[i], VX[i], i]); }
     vis.sort((a, b) => a[0] - b[0]);
-    for (const v of vis) { const o = ORO[v[2]], h = hs * crece(v[2]) * (o ? 1.18 : 1); if (!h) continue; const L = h >= 7.5 ? LOOK[v[2]] : null;
+    for (const v of vis) { const o = ORO[v[2]], h = hs * crece(v[2]) * (o ? 1.18 : PUEBLOS[v[2]].a ? 0.84 : 1); if (!h) continue; const L = h >= 7.5 ? LOOK[v[2]] : null;
       if (L) adorno(v[1], v[0], h, EST[v[2]], L, false); casa(v[1], v[0], h, EST[v[2]], o); if (L) adorno(v[1], v[0], h, EST[v[2]], L, true); }
     if (hs >= 7.5 && !entrando) for (const v of vis) if (ORO[v[2]]) insignia(v[1], v[0], hs * 1.18, ORO[v[2]]);
     if (vista.k >= 5 && !anim) {                                                     // nombres de los vecinos, sin pisarse
@@ -1137,7 +1204,7 @@ function pintaApoya() {                      // la sección «Haz de oro a tu pu
   for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : m === 'vecino' ? 'Hazte vecino de honor' : 'Tunea tu pueblo'; }   // generales: no nombran el pueblo que se esté mirando
   for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
   const top = RANK.slice(0, 10);
-  $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = PROV[t.p].n;
+  $('ranking').innerHTML = top.length ? top.map((i, k) => { const t = PUEBLOS[i], pv = donde(t);
     return `<li><button type="button" data-i="${i}" aria-label="${k + 1}.º: ${esc(t.n)} (${esc(pv)}), ${apoyosT(ORO[i])} de oro. Ver en el mapa"><span class="r-n">${k + 1}</span><span class="r-p">${parte(t.n)}<small>${esc(pv)}${EST[i] === 2 ? ' · caído con estilo' : ''}</small></span><b>${ORO[i] > 9999 ? '9999+' : miles(ORO[i])}</b></button></li>`; }).join('')
     : '<li class="vacio">Todavía no hay ninguno. El tuyo puede ser el primero.</li>';
   $('ranking-nota').textContent = !RANK.length ? 'Los diez pueblos con más apoyos de oro.' : RANK.length > 10 ? 'Los diez con más apoyos de oro, de ' + miles(RANK.length) + ' pueblos dorados. Toca uno para verlo en el mapa.' : 'Los pueblos con más apoyos de oro. Toca uno para verlo en el mapa.';
@@ -1203,23 +1270,23 @@ function repintaTuneo(k) {                   // al elegir una cosa solo cambia e
 function pintaFicha(conGolpe) {
   const F = $('ficha'), S = $('sello');
   pintaApoya();
-  $('pista').innerHTML = sel < 0 ? '<b>8.132</b> municipios, una casita cada uno. Toca el mapa o escribe el tuyo.' : 'Toca otra casita para ver cómo va ese pueblo.';
+  $('pista').innerHTML = sel < 0 ? (TOTAL ? '<b>' + miles(TOTAL) + '</b> pueblos, aldeas y parroquias, una casita cada uno. Toca el mapa o escribe el tuyo.' : 'Todos los pueblos de España, una casita cada uno. Toca el mapa o escribe el tuyo.') : 'Toca otra casita para ver cómo va ese pueblo.';
   encajaPista();
   if (sel < 0) { F.hidden = true; S.hidden = true; mono('abajo'); return; }
-  const t = PUEBLOS[sel], pv = PROV[t.p].n, e = estado(t.c), J = JUEGO, N = J.apuntados ? J.apuntados.size : 0, T = esc(t.n);
+  const t = PUEBLOS[sel], pv = donde(t), e = estado(t.c), J = JUEGO, N = J.apuntados ? J.apuntados.size : 0, T = esc(t.n);
   let h = '', cuerpo = '';
   if (e === 'puede') {
     const directo = !!(J.videos.tiktok && J.videos.instagram && J.videos.youtube);
     h = `${T} todavía puede entrar`;
     cuerpo = `<p>Si alguien ya lo ha comentado, está dentro. Si no, hazlo tú: con un comentario basta.</p>
-      <div class="comenta"><output id="f-texto">${T}, ${esc(pv)}</output><button type="button" class="boton" id="f-copiar">Copiar</button></div>
+      <div class="comenta"><output id="f-texto">${T}, ${esc(pv.replace(' · ', ', '))}</output><button type="button" class="boton" id="f-copiar">Copiar</button></div>
       <p>${directo ? 'Pégalo en un vídeo del juego:' : 'Pégalo en los comentarios de cualquier vídeo del juego, en la red que uses:'}</p>${chips(true)}`;
   } else if (e === 'contando') {
     h = 'Las inscripciones están cerradas';
     cuerpo = `<p>Estoy contando los comentarios de las tres redes. Si alguien comentó ${T} antes del cierre, saldrá en la lista.${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
   } else if (e === 'apuntado') {
     h = `${T} juega`;
-    cuerpo = `<p>Está en la lista con otros ${pueblos(Math.max(0, N - 1))}.${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
+    cuerpo = `<p>${sinCifra() ? 'Juegan todos los pueblos de España.' : 'Está en la lista con otros ' + pueblos(Math.max(0, N - 1)) + '.'}${J.inicio_texto ? ' El primer episodio sale ' + esc(J.inicio_texto) + '.' : ''}</p>`;
   } else if (e === 'nojuega') {
     h = `${T} no juega esta vez`;
     cuerpo = `<p>Nadie lo comentó antes del cierre. Habrá más ediciones: sigue el canal para enterarte de la próxima.</p>${chips(false)}`;
@@ -1301,7 +1368,7 @@ function elige(i, desde) {
   pagoModo = quiere && quiere !== 'tuneo' && JUEGO.pago[quiere] && vale ? quiere : '';
   tunea = quiere === 'tuneo' && !!JUEGO.pago.tuneo && vale; tuneoCosa = '';
   q.value = t.n; $('q-borrar').hidden = false; cierraLista();
-  const medio = Math.max(60, Math.min(250, radioVecinos(i) * 1.75));
+  const medio = Math.max(t.a ? 7 : 12, Math.min(250, radioVecinos(i) * 1.75));      // con las aldeas hay sitios con casitas a 200 m: se acerca más
   vuela(t.x, t.y, Math.min(W, H * 1.15) / base / 2 / medio);
   pintaFicha(true);
   if (location.hash !== '#pueblo-' + t.c) location.hash = 'pueblo-' + t.c;
@@ -1320,7 +1387,7 @@ cv.addEventListener('click', (ev) => { if (!MAPA || anim) return; const g = aRej
 cv.addEventListener('pointermove', (ev) => {
   if (ev.pointerType !== 'mouse' || !MAPA) return; const g = aRejilla(ev), i = anim ? -1 : cerca(g[0], g[1], 13 / g[2]), tip = $('tip');
   cv.style.cursor = i >= 0 ? 'pointer' : ''; tip.hidden = i < 0 || i === sel; if (tip.hidden) return;
-  tip.textContent = PUEBLOS[i].n + ' (' + PROV[PUEBLOS[i].p].n + ')' + (ORO[i] ? ' · ' + apoyosT(ORO[i]) + ' de oro' : '');
+  tip.textContent = PUEBLOS[i].n + ' (' + donde(PUEBLOS[i]) + ')' + (ORO[i] ? ' · ' + apoyosT(ORO[i]) + ' de oro' : '');
   const tw = tip.offsetWidth; tip.style.transform = `translate(${Math.max(4, Math.min(W - tw - 4, g[3] - tw / 2))}px, ${g[4] < 44 ? g[4] + 20 : g[4] - 38}px)`;
 });
 cv.addEventListener('pointerleave', () => { $('tip').hidden = true; });
@@ -1328,29 +1395,118 @@ cv.addEventListener('pointerleave', () => { $('tip').hidden = true; });
 /* ---------- buscador */
 const q = $('q'), lista = $('q-lista');
 let ops = [], act = -1;
+// provincias y comunidades como las escribe la gente (además de su nombre oficial y sus dos mitades)
+const EXO = { '01': ['alava', 'alaba'], '07': ['baleares', 'islas baleares', 'mallorca', 'menorca', 'ibiza', 'eivissa', 'formentera'], 15: ['la coruna', 'coruna', 'coruna a'], 17: ['gerona'], 20: ['guipuzcoa'], 25: ['lerida'],
+  31: ['nafarroa'], 32: ['orense'], 35: ['gran canaria', 'lanzarote', 'fuerteventura'], 38: ['tenerife', 'la palma', 'la gomera', 'el hierro', 'santa cruz'], 48: ['vizcaya'], 26: ['rioja'], 12: ['castello'], '03': ['alacant'] };
+const CCAA = { andalucia: '04 11 14 18 21 23 29 41', aragon: '22 44 50', asturias: '33', 'principado de asturias': '33', baleares: '07', 'islas baleares': '07', 'illes balears': '07', canarias: '35 38', 'islas canarias': '35 38',
+  cantabria: '39', 'castilla y leon': '05 09 24 34 37 40 42 47 49', 'castilla leon': '05 09 24 34 37 40 42 47 49', 'castilla la mancha': '02 13 16 19 45', cataluna: '08 17 25 43', catalunya: '08 17 25 43', catalonia: '08 17 25 43',
+  'comunidad valenciana': '03 12 46', 'comunitat valenciana': '03 12 46', 'pais valencia': '03 12 46', extremadura: '06 10', galicia: '15 27 32 36', galiza: '15 27 32 36', 'comunidad de madrid': '28', 'region de murcia': '30',
+  navarra: '31', 'pais vasco': '01 20 48', euskadi: '01 20 48', 'euskal herria': '01 20 48', 'pais basco': '01 20 48', 'la rioja': '26' };
+const una = (s) => s.replace(/(.)\1+/g, '$1');                         // «Barcelonaaaa», «malagoooon»: las letras repetidas cuentan una vez
+let MUNK = null;                                                        // nombre de municipio → sus índices (para «Lébor, Totana»)
+function sitio(s) {                         // ¿es una provincia, una comunidad o un municipio? → { p: provincias, m: municipios }
+  if (!s || s.length < 3) return null;
+  if (!MUNK) { MUNK = new Map(); for (let i = 0; i < N_MUN; i++) { const t = PUEBLOS[i]; for (const k of [t.k].concat(t.ks || [])) (MUNK.get(k) || MUNK.set(k, []).get(k)).push(i); } }
+  const p = new Set(), m = new Set(MUNK.get(s) || []);
+  PROV.forEach((v, i) => { if (v.k.includes(s)) p.add(i); });
+  if (CCAA[s]) for (const id of CCAA[s].split(' ')) PROV.forEach((v, i) => { if (v.id === id) p.add(i); });
+  return p.size || m.size ? { p, m } : null;
+}
+function lugarDe(q) {                       // «Cuenca», «en catalunya», «de Sevilla», «pontevedra aunque no soy de aquí» → el sitio que nombra (o nada)
+  const p = norm(q).split(' ').filter(Boolean);
+  while (p.length > 1 && ['en', 'de', 'del', 'provincia', 'prov', 'comunidad', 'la', 'region'].includes(p[0]) && !CCAA[p.join(' ')] && !sitio(p.join(' '))) p.shift();
+  for (let n = Math.min(4, p.length); n >= 1; n--) { const r = sitio(p.slice(0, n).join(' ')); if (r) return r; }
+  return null;
+}
+const cuantosCumple = (t, L) => L.reduce((n, l) => n + (l.p.has(t.p) || l.m.has(t.a ? t.m : IDX.get(t.c)) ? 1 : 0), 0);
+function nivel(t, qn, qc) {                 // 0 igual · 1 empieza así · 2 una palabra empieza así · 3 lo contiene (con 4 letras o más) · -1 nada
+  if (t.b.indexOf(qc) < 0) return -1;
+  if (t.k === qn || t.kc === qc || (t.ks && t.ks.includes(qn)) || (t.alc && t.alc.includes(qc))) return 0;
+  if (t.kc.startsWith(qc) || (t.ks && t.ks.some((s) => s.startsWith(qn))) || (t.al && t.al.some((s) => s.startsWith(qn)))) return 1;
+  if (t.w.includes(' ' + qn) || (t.al && t.al.some((s) => (' ' + s).includes(' ' + qn)))) return 2;
+  return qc.length >= 4 ? 3 : -1;
+}
+function nivelR(t, qr) {                    // lo mismo, con las letras repetidas juntadas
+  if (t.br.indexOf(qr) < 0) return -1;
+  if (t.kr === qr || (t.alr && t.alr.includes(qr))) return 0;
+  if (t.kr.startsWith(qr) || (t.alr && t.alr.some((s) => s.startsWith(qr)))) return 1;
+  return qr.length >= 4 ? 3 : -1;
+}
+function dist(a, b, max) {                  // erratas: distancia de edición con trasposiciones («Madric», «Mradrid», «Albuquerque»), cortando en max
+  const n = a.length, m = b.length; if (Math.abs(n - m) > max) return max + 1;
+  let p2 = null, p1 = new Array(m + 1), c = new Array(m + 1); for (let j = 0; j <= m; j++) p1[j] = j;
+  for (let i = 1; i <= n; i++) { c[0] = i; let mn = i;
+    for (let j = 1; j <= m; j++) { let v = Math.min(p1[j] + 1, c[j - 1] + 1, p1[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (p2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, p2[j - 2] + 1); c[j] = v; if (v < mn) mn = v; }
+    if (mn > max) return max + 1; p2 = p1; p1 = c; c = new Array(m + 1); }
+  return p1[m];
+}
+const mejora = (sal, i, v) => { if (!sal.has(i) || sal.get(i) > v) sal.set(i, v); };
+const puntua = (t, n, extra, i) => (n * 2 + extra) * 1e8 + t.a * 5e7 + Math.min(99, t.n.length) * 1e5 + i;
+function buscaEn(qn, extra, sal) {
+  const qc = qn.replace(/ /g, ''); if (!qc) return;
+  for (let i = 0; i < PUEBLOS.length; i++) { const t = PUEBLOS[i], n = nivel(t, qn, qc); if (n >= 0) mejora(sal, i, puntua(t, n, extra, i)); }
+}
+function aprox(qr, sal, filtro, extra) {   // erratas («Madric», «Albuquerque», «Mazanares»): distancia de edición, solo si no hay nada mejor
+  if (qr.length < 5) return; const max = qr.length <= 7 ? 1 : 2;
+  for (let i = 0; i < PUEBLOS.length; i++) { const t = PUEBLOS[i]; if (filtro && !filtro(t)) continue; let d = dist(qr, t.kr, max);
+    if (t.alr) for (const a of t.alr) d = Math.min(d, dist(qr, a, max));
+    if (d <= max) mejora(sal, i, puntua(t, 2 + d, extra || 0, i) - (t.kr[0] === qr[0] ? 5e7 : 0)); }
+}
 function busca(v) {
-  const trozos = v.split(','), qn = norm(trozos[0]), qp = trozos.length > 1 ? norm(trozos.slice(1).join(' ')) : '';
-  if (!qn) return [];
-  const sal = [], esp = ' ' + qn;
-  for (let i = 0; i < PUEBLOS.length; i++) {
-    const t = PUEBLOS[i]; let n;
-    if (t.k === qn || (t.ks && t.ks.includes(qn))) n = 0;                             // nombre exacto (o una de sus dos lenguas)
-    else if (t.k.startsWith(qn) || (t.ks && t.ks.some((s) => s.startsWith(qn)))) n = 1;  // empieza así
-    else if (t.w.includes(esp)) n = 2;                                                // una palabra empieza así
-    else if (qn.length >= 4 && t.k.includes(qn)) n = 3;                               // lo contiene
-    else continue;
-    if (qp && !PROV[t.p].k.some((s) => s.startsWith(qp) || (' ' + s).includes(' ' + qp))) continue;
-    sal.push(n * 1e7 + Math.min(99, t.n.length) * 1e5 + i);
+  v = String(v).normalize('NFKC');
+  v = v.replace(/\(([^()]*)$/, (x, d) => '(' + d + ')').replace(/\(([^()]*)\)/g, (x, d) => '(' + d.replace(/[,;]/g, ' ') + ')');   // «(Burgos» sin cerrar · «(Tarragonés,Cataluña)»
+  const sal = new Map(), trozos = v.split(/[,;]/);
+  let nombre = trozos[0], quals = trozos.slice(1);
+  if (quals.length && ARTICULOS.has(norm(quals[0]))) { nombre = quals[0] + ' ' + nombre; quals = quals.slice(1); }      // «Coruña, A» = «A Coruña»
+  const L = quals.map(lugarDe).filter(Boolean);
+  const entero = norm(nombre); if (!entero) return [];
+  buscaEn(entero, 0, sal);                                                                  // tal cual («Anca (San Pedro)» incluido)
+  let qn = norm(nombre.replace(/\(([^()]*)\)/g, (x, d) => { const l = lugarDe(d); if (l) L.push(l); return ' '; })) || entero;   // «Mazarambroz (Toledo)»
+  qn = qn.replace(/([a-z])\d+/g, '$1').replace(/^(?:mi pueblo es|soy de|yo soy de|el mio es) /, '').replace(/ (?:capital|ciudad|pueblo|pls|plss|porfa)$/, '').trim() || qn;   // «Rubí Barcelona67», «Almería capital»
+  if (qn !== entero) buscaEn(qn, 0, sal);
+  const p = qn.split(' ');
+  if (p.length > 1 && ARTICULOS.has(p[0])) buscaEn(p.slice(1).join(' '), 1, sal);         // «El Paretón» → «Paretón»
+  const conLugar = (nom, l) => {                                                            // el nombre buscado dentro del sitio que dicen (y con erratas si hace falta)
+    while (nom.length > 1 && ['de', 'en', 'del', 'provincia'].includes(nom[nom.length - 1])) nom.pop();
+    while (nom.length > 1 && ['de', 'en', 'del'].includes(nom[0])) nom.shift();
+    const sub = new Map(), qs = nom.join(' '); buscaEn(qs, 0, sub);
+    let n = 0; for (const [i, val] of sub) if (cuantosCumple(PUEBLOS[i], [l])) { mejora(sal, i, val + 1e8); n++; }
+    if (!n) { const tmp = new Map(); aprox(una(qs.replace(/ /g, '')), tmp, (t) => cuantosCumple(t, [l]), 1); for (const [i, val] of tmp) mejora(sal, i, val + 1e8); }
+  };
+  for (let j = 1; j <= Math.min(4, p.length - 1); j++) {                                     // «Tocón Granada», «Sanlúcar la Mayor de Sevilla»: lo último dice dónde está
+    const l = sitio(p.slice(-j).join(' ')); if (l) conLugar(p.slice(0, -j), l);
   }
-  return sal.sort((a, b) => a - b).map((n) => n % 1e5);
+  for (let j = 1; j <= Math.min(3, p.length - 1); j++) {                                     // «Toledo Fuensalida», «Huelva Nerva»: el sitio delante
+    const l = sitio(p.slice(0, j).join(' ')); if (l) conLugar(p.slice(j), l);
+  }
+  if (!sal.size && quals.length) for (const q of quals) {                                    // «Mallorca, Alcudia»: al revés
+    const sub = new Map(), l = lugarDe(nombre); buscaEn(norm(q), 1, sub);
+    for (const [i, val] of sub) if (!l || cuantosCumple(PUEBLOS[i], [l])) mejora(sal, i, val);
+  }
+  const qr = una(qn.replace(/ /g, ''));
+  if (!sal.size && qr) for (let i = 0; i < PUEBLOS.length; i++) { const t = PUEBLOS[i], n = nivelR(t, qr); if (n >= 0) mejora(sal, i, puntua(t, n, 1, i)); }   // letras repetidas
+  if (!sal.size) aprox(qr, sal, L.length ? (t) => cuantosCumple(t, L) : null);               // erratas (en el sitio que dicen, si lo dicen)
+  if (!sal.size && L.length) aprox(qr, sal, null);
+  if (!sal.size && p.length > 1) {                                                            // frases: «Sanlúcar la Mayor de Sevilla y Castilleja del Campo…», «Escobedo Maliaño» → los nombres que salen dentro
+    const tx = ' ' + norm(v) + ' ', provs = new Set();
+    for (const w of tx.trim().split(' ')) { const l = sitio(w); if (l) l.p.forEach((x) => provs.add(x)); }
+    for (let i = 0; i < PUEBLOS.length; i++) { const t = PUEBLOS[i]; if (t.k.length < 4) continue;
+      let pos = tx.indexOf(' ' + t.k + ' '); if (pos < 0 && t.al) for (const a of t.al) if (a.length >= 4 && (pos = tx.indexOf(' ' + a + ' ')) >= 0) break;
+      if (pos < 0) continue;
+      const esProv = PROV[t.p].k.includes(t.k) && !t.a;                                      // «de Sevilla» suele ser la provincia, no el municipio
+      mejora(sal, i, (esProv ? 9 : 4) * 1e8 + pos * 1e6 - t.k.length * 1e4 - (provs.has(t.p) ? 5e7 : 0) + t.a * 1e3 + (i % 1000)); }
+  }
+  if (L.length) for (const [i, val] of sal) { const n = cuantosCumple(PUEBLOS[i], L); if (n) sal.set(i, val - 1e9 * n / L.length); }   // lo que dice dónde está, primero (si lo dice, manda)
+  return [...sal.entries()].sort((a, b) => a[1] - b[1]).map((e) => e[0]);
 }
 function abreLista(res) {
   ops = res.slice(0, 7); act = -1;
-  let html = ops.map((i, n) => `<li role="option" id="op-${n}" data-i="${i}" aria-selected="false">${esc(PUEBLOS[i].n)}<span>${esc(PROV[PUEBLOS[i].p].n)}</span></li>`).join('');
+  let html = ops.map((i, n) => `<li role="option" id="op-${n}" data-i="${i}" aria-selected="false">${esc(PUEBLOS[i].n)}<span>${esc(donde(PUEBLOS[i]))}</span></li>`).join('');
   if (res.length > 7) html += `<li class="mas" role="presentation">Hay ${miles(res.length - 7)} más. Sigue escribiendo.</li>`;
-  if (!res.length) html = '<li class="nada" role="presentation">No encuentro ningún municipio con ese nombre. Si es una aldea o una pedanía, busca el municipio al que pertenece.</li>';
+  if (!res.length) html = '<li class="nada" role="presentation">' + (ALDEAS === 'cargando' ? 'Todavía estoy cargando las aldeas, pedanías y parroquias. Espera un segundo.' : 'No encuentro ningún pueblo con ese nombre. Prueba con menos letras o con el nombre en la otra lengua.') + '</li>';
   lista.innerHTML = html; lista.hidden = false; lista.scrollTop = 0; q.setAttribute('aria-expanded', 'true'); q.removeAttribute('aria-activedescendant');
-  $('q-estado').textContent = res.length ? (res.length === 1 ? '1 municipio' : miles(res.length) + ' municipios') : 'Sin resultados';
+  $('q-estado').textContent = res.length ? (res.length === 1 ? '1 pueblo' : miles(res.length) + ' pueblos') : 'Sin resultados';
   if (!res.length && sel < 0) mono('hombros'); else if (sel < 0) mono('abajo');
 }
 function cierraLista() { lista.hidden = true; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); act = -1; }
@@ -1399,8 +1555,8 @@ function demo(f) {
 $('demo-salir').addEventListener('click', () => { JUEGO = REAL; pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = true; refresca(); });
 function leeHash() {
   const h = location.hash.slice(1); let m;
-  if ((m = /^pueblo-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null && i !== sel) elige(i, 'hash'); }
-  else if ((m = /^tunea-(\d{5})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null) { pendiente = 'tuneo'; elige(i, 'hash'); } }     // enlace directo a la tienda de un pueblo
+  if ((m = /^pueblo-(\d{5}|\d{11})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null) { if (i !== sel) elige(i, 'hash'); } else if (ALDEAS === 'cargando') ESPERA = { c: m[1] }; }
+  else if ((m = /^tunea-(\d{5}|\d{11})$/.exec(h))) { const i = IDX.get(m[1]); if (i != null) { pendiente = 'tuneo'; elige(i, 'hash'); } else if (ALDEAS === 'cargando') ESPERA = { c: m[1], tunea: true }; }     // enlace directo a la tienda de un pueblo
   else if ((m = /^demo-(inscripcion|cerrado|listo|jugando|final)$/.exec(h))) demo(m[1]);
 }
 
@@ -1423,7 +1579,7 @@ car.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowRight') { ev.prev
 const trae = (u, o) => fetch(u, o).then((r) => { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); });
 Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego.json', { cache: 'no-cache' }).catch(() => POR_DEFECTO), trae('data/cobros.json', { cache: 'no-cache' }).catch(() => null)]).then(([m, p, j, k]) => {
   montaMapa(m); montaPueblos(p); REAL = JUEGO = prepara(j, k);
-  mide(); $('carga').hidden = true; q.disabled = false; q.placeholder = 'Tomelloso, Ribadeo…';
+  mide(); $('carga').hidden = true; q.disabled = false; q.placeholder = 'Tomelloso, Lébor, Anca…';
   new ResizeObserver(() => { if (mide()) pide(); }).observe(cv);
   entrando = !CALMA; t0 = performance.now();
   refresca(); setInterval(tic, 1000);
@@ -1432,8 +1588,9 @@ Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego
   const abreCondiciones = () => { if (location.hash === '#condiciones') { const d = document.getElementById('condiciones'); if (d) d.open = true; } };
   addEventListener('hashchange', abreCondiciones); abreCondiciones();
   addEventListener('resize', encajaPista); if (document.fonts && document.fonts.ready) document.fonts.ready.then(encajaPista, () => {});
-  const ini = () => { leeHash(); if (sel < 0) { const g = IDX.get(guardado.lee()); if (g != null) elige(g, 'hash'); } };
+  const ini = () => { leeHash(); if (sel < 0 && !ESPERA) { const c = guardado.lee(), g = IDX.get(c); if (g != null) elige(g, 'hash'); else if (c && ALDEAS === 'cargando') ESPERA = { c }; } };
   if (CALMA) ini(); else setTimeout(ini, /^#pueblo-/.test(location.hash) || guardado.lee() ? 1150 : 0);
+  trae('data/aldeas.json').then(sumaAldeas).catch((e) => { ALDEAS = 'error'; ESPERA = null; if (window.console) console.error(e); });   // el resto de pueblos, después del mapa
   const posturas = () => { for (const mm of document.querySelectorAll('.mono[data-src]')) if (!mm.getAttribute('src')) mm.src = mm.dataset.src; };
   q.addEventListener('focus', posturas, { once: true }); cv.addEventListener('pointerdown', posturas, { once: true });
 }).catch((e) => { $('carga').textContent = 'No se ha podido cargar el mapa. Comprueba la conexión y recarga la página.'; if (window.console) console.error(e); });

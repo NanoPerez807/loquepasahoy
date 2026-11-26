@@ -34,6 +34,22 @@ class Mal(Exception):
     pass
 
 
+def todos_los_pueblos(D):
+    """código → nombre de TODOS los pueblos que juegan: los municipios (data/pueblos.json, 5 cifras) y las aldeas, pedanías,
+    parroquias y núcleos (data/aldeas.json, 11 cifras = municipio + 6 cifras de su unidad poblacional; ver web-src/aldeas.py)."""
+    M = json.load(open(os.path.join(D, 'pueblos.json'), encoding='utf-8'))
+    P = {p[0]: p[1] for p in M}
+    fa = os.path.join(D, 'aldeas.json')
+    if os.path.exists(fa):
+        A = json.load(open(fa, encoding='utf-8')); nom = A['nom'].split('|'); i = 0
+        for k, n in enumerate(A['mun']):
+            suf = 0
+            for r in range(n):
+                suf = suf + A['cod'][i] if r else A['cod'][i]
+                P[M[k][0] + str(suf).zfill(6)] = nom[i] + ' (' + M[k][1] + ')'; i += 1
+    return P
+
+
 def huella(id_pago):
     return hashlib.sha256(id_pago.encode()).hexdigest()[:24]
 
@@ -115,7 +131,7 @@ def apunte(s, P, linea=None):
     ref = (s.get('client_reference_id') or '').strip()
     h = huella(s['id'])
     base = {'h': h, 'creado': int(s.get('created') or 0)}
-    m = re.match(r'^(TUN|ORO|VEC)-(\d{5})(?:-([A-Za-z0-9_]+))?$', ref)
+    m = re.match(r'^(TUN|ORO|VEC)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
     if not m or m[2] not in P:
         return dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')
     t, c, resto = m[1], m[2], m[3] or ''
@@ -221,7 +237,7 @@ def resumen(L, P):
 def main(a):
     if not a or a[0] in ('-h', '--help'):
         print(__doc__); return 0
-    P = {p[0]: p[1] for p in json.load(open(F_PUEBLOS, encoding='utf-8'))}
+    P = todos_los_pueblos(os.path.dirname(F_PUEBLOS))
     L = lee_libro()
     try:
         if a[0] == '--stripe':

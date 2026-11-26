@@ -26,7 +26,7 @@ F_LIBRO = os.path.join(RAIZ, 'data', 'cobros-libro.json')
 F_WEB = os.path.join(RAIZ, 'data', 'cobros.json')
 F_PUEBLOS = os.path.join(RAIZ, 'data', 'pueblos.json')
 PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000}             # céntimos, IVA incluido
-COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador']   # el orden de la tienda
+COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon']   # el orden de la tienda
 VENTANA = 7 * 86400                                       # se miran los pagos de los últimos 7 días (una sesión de pago caduca a las 24 h)
 
 

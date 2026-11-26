@@ -299,6 +299,15 @@ button,input{font:inherit;color:inherit}
 .tu .boton{min-height:46px;padding:8px 16px;line-height:1.2;text-align:center;text-decoration:none}
 .boton.wa{background:#3ddc84}
 .rk-caja h3{font-weight:900;font-size:19px;margin-bottom:8px}
+.vecs-sub{font-size:14px;line-height:1.35;color:#ebe8ff;margin:-2px 0 10px}
+.vecs{display:grid;gap:9px}
+.vecs button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border:var(--borde);border-radius:12px;background:var(--carton);color:var(--tinta);text-align:left;font:inherit;cursor:pointer;box-shadow:0 4px 0 var(--tinta)}
+.vecs .v-e{flex:none;width:28px;height:28px;background:linear-gradient(180deg,#fff0a8,var(--oro));clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.vecs .v-t{min-width:0}
+.vecs .v-n{display:block;font-weight:900;font-size:16px;line-height:1.2;overflow-wrap:anywhere}
+.vecs .v-q{display:block;font-weight:600;font-size:13px;line-height:1.3;color:#46506b;overflow-wrap:anywhere}
+.vecs button:focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+@media (hover:hover){.vecs button:hover .v-n{text-decoration:underline;text-underline-offset:3px}}
 .feed li+li{border-top:2px solid rgba(255,255,255,.2)}
 .feed button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;width:100%;padding:9px 0;border:0;border-radius:6px;background:none;color:#fff;text-align:left;font:inherit;cursor:pointer}
 .feed .f-q{font-weight:800;font-size:15.5px;line-height:1.25;overflow-wrap:anywhere}
@@ -567,6 +576,7 @@ button,input{font:inherit;color:inherit}
     </div>
     <div class="rk-lado">
       <article class="tu" id="tu" aria-live="polite"></article>
+      <section class="rk-caja" aria-labelledby="rk-vec-t" id="rk-vec-caja" hidden><h3 id="rk-vec-t">Vecinos de honor</h3><p class="vecs-sub">Salen con su nombre en los agradecimientos del episodio. ¡Gracias!</p><ol class="vecs" id="rk-vec"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-feed-t"><h3 id="rk-feed-t">Últimos apoyos</h3><ol class="feed" id="rk-feed"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-niv-t"><h3 id="rk-niv-t">Niveles de casita</h3><ol class="niv" id="rk-niv"></ol></section>
       <p class="rk-regla">Los puntos no salvan a nadie: el sorteo es igual para todos.</p>
@@ -829,7 +839,7 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
   // Ranking: lo apuntado a mano en juego.json más cada pago del libro del robot (el libro no lleva datos de nadie: solo el pueblo, lo comprado y la
   // hora). Sin libro vale lo sumado en cobros.json (ahí un vecino de honor sin nombre revisado cuenta como un apoyo de oro). «desde»: el primer pago de
   // cada pueblo, para desempatar (va delante el que llegó antes). «feed»: los últimos apoyos.
-  J.puntos = new Map(); J.desde = new Map(); J.feed = [];
+  J.puntos = new Map(); J.desde = new Map(); J.feed = []; J.vecT = new Map();
   const suma = (c, n, s) => { c = String(c); n = Math.floor(+n) || 0; if (n > 0) J.puntos.set(c, (J.puntos.get(c) || 0) + n); if (s > 0 && !(J.desde.get(c) <= s)) J.desde.set(c, s); };
   const de = (f, neg) => {
     for (const c in f.apoyos || {}) suma(c, PTS.oro * Math.floor(+f.apoyos[c]));
@@ -843,7 +853,8 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
     const ya = p.t === 'YA', t = TIPO[ya ? p.era : p.t], c = String(p.c || ''), n = Math.max(1, Math.floor(+p.n || 1)), s = Math.floor(+p.creado || 0);
     if (!t || !/^(\d{5}|\d{11})$/.test(c) || (t === 'tuneo' && !COSAS[p.k])) continue;
     suma(c, ya ? 0 : PTS[t] * n, s);                                     // los «YA» se apuntaron a mano en juego.json: del libro solo sale la hora
-    if (s) J.feed.push({ c, t, n, k: p.k, s }); }
+    if (s) J.feed.push({ c, t, n, k: p.k, s });
+    if (s && t === 'vecino') { if (!J.vecT.has(c)) J.vecT.set(c, []); for (let x = 0; x < n; x++) J.vecT.get(c).push(s); } }
   else if (k) de(k, false);
   if (J.demo && Array.isArray(j.recientes)) J.feed = j.recientes.slice();
   J.feed.sort((a, b) => b.s - a.s); J.feed.length = Math.min(J.feed.length, 40);
@@ -1395,7 +1406,7 @@ function pintaRanking() {
   L.hidden = !resto.length; L.setAttribute('start', '4');
   L.innerHTML = resto.map((f, k) => `<li><button type="button" data-i="${f.i}" aria-label="${etiqueta(f, k + 3)}"><span class="r-n" aria-hidden="true">${k + 4}</span><span class="r-p" aria-hidden="true">${parte(f.n)}<small>${parte(f.sub)}${pue && f.niv >= 0 ? ' · ' + minus(NIVELES[f.niv][1]) : ''}${pue && EST[f.i] === 2 ? ' · caído con estilo' : ''}</small></span><b aria-hidden="true">${miles(f.pts)}</b></button></li>`).join('');
   const M = $('rk-mas'); M.hidden = filas.length <= 10; M.textContent = rkMas ? 'Ver menos' : 'Ver los ' + Math.min(50, filas.length) + ' primeros'; M.setAttribute('aria-expanded', String(rkMas));
-  pintaTu(); pintaFeed(); pintaNiveles();
+  pintaTu(); pintaVecinos(); pintaFeed(); pintaNiveles();
 }
 function pintaTu() {                           // la tarjeta de tu pueblo (el guardado o, si no hay, el que estás mirando): puesto, cuánto le falta, nivel y WhatsApp
   const g = IDX.get(guardado.lee()), i = g != null ? g : sel, T = $('tu');
@@ -1413,10 +1424,23 @@ function pintaTu() {                           // la tarjeta de tu pueblo (el gu
   if (ofrece && (JUEGO.pago.oro || JUEGO.pago.tuneo || JUEGO.pago.vecino)) h += `<div class="fila"><button type="button" class="boton dorado" data-i="${i}">Súmale puntos</button>${JUEGO.demo ? '' : `<a class="boton wa" href="${esc(waHref(i))}" target="_blank" rel="noopener">Pide apoyo por WhatsApp</a>`}</div>`;
   T.innerHTML = h;
 }
+function nombreVec(e) {                // el nombre (revisado) del vecino de honor de ese pago: los nombres van en el orden en que se pagaron
+  const N = JUEGO.vecinos.get(e.c) || [], T = (JUEGO.vecT && JUEGO.vecT.get(e.c) || []).slice().sort((a, b) => a - b), k = T.indexOf(e.s);
+  return k >= 0 && N[k] ? N[k] : (T.length <= 1 && N.length === 1 ? N[0] : '');
+}
+function pintaVecinos() {
+  const L = [];
+  for (const [c, N] of JUEGO.vecinos) { if (!IDX.has(c)) continue; const T = (JUEGO.vecT && JUEGO.vecT.get(c) || []).slice().sort((a, b) => a - b); N.forEach((n, k) => L.push({ c, n, s: T[k] || 0 })); }
+  L.sort((a, b) => b.s - a.s);
+  $('rk-vec-caja').hidden = !L.length;
+  $('rk-vec').innerHTML = L.slice(0, 30).map((v) => { const i = IDX.get(v.c), t = PUEBLOS[i];
+    return `<li><button type="button" data-i="${i}"><span class="v-e" aria-hidden="true"></span><span class="v-t"><span class="v-n">${esc(v.n)}</span><span class="v-q">${parte(t.n)} · ${parte(donde(t))}</span></span></button></li>`; }).join('')
+    + (L.length > 30 ? `<li class="vecs-mas">y ${miles(L.length - 30)} más</li>` : '');
+}
 function pintaFeed() {
   const F = JUEGO.feed.filter((e) => IDX.has(e.c)).slice(0, 8);
   $('rk-feed').innerHTML = F.length ? F.map((e) => { const i = IDX.get(e.c), t = PUEBLOS[i];
-    const que = e.t === 'tuneo' ? 'Le ponen ' + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor') : 'Recibe ' + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
+    const que = e.t === 'tuneo' ? 'Le ponen ' + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor' + (nombreVec(e) ? ': ' + esc(nombreVec(e)) : '')) : 'Recibe ' + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
     return `<li><button type="button" data-i="${i}"><span class="f-q">${parte(t.n)} <small>${parte(donde(t))}</small></span><span class="f-que">${que}</span><time datetime="${new Date(e.s * 1000).toISOString()}">${hace(e.s)}</time><span class="f-mas" aria-label="${puntosT(PTS[e.t] * e.n)} más">+${miles(PTS[e.t] * e.n)}</span></button></li>`; }).join('')
     : '<li class="vacio">Todavía no hay apoyos. El primero se pone el n.º 1.</li>';
 }

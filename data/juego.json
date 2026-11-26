@@ -1,10 +1,10 @@
 {
-  "fase": "inscripcion",
+  "fase": "listo",
   "cierre": "2026-11-26T18:00:00+01:00",
   "cierre_texto": "el jueves 26 a las 18:00",
   "inicio_texto": "el viernes 27",
   "videos": { "tiktok": "", "instagram": "", "youtube": "" },
-  "apuntados": null,
+  "apuntados": "todos",
   "dias": [],
   "ganador": null,
   "pago": { "tuneo": "https://buy.stripe.com/8x2dR1ayN3GZf9Vd3XdnW02?client_reference_id={ref}", "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}", "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}", "negocio": "" },

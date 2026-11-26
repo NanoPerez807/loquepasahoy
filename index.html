@@ -1009,7 +1009,7 @@ function sumaAldeas(A) {                    // data/aldeas.json (lo escribe web-
   ESPERA = null;
   if (!lista.hidden && document.activeElement === q && norm(q.value)) abreLista(busca(q.value));
 }
-const APODOS = { 28134: ['Sanse'] };       // nombres que la gente escribe de verdad (también los trae aldeas.json)
+const APODOS = { 28134: ['Sanse'], 10130: ['Navaconejo'] };       // nombres que la gente escribe de verdad (también los trae aldeas.json)
 function cerca(gx, gy, max, salvo) {       // el pueblo más cercano a un punto de la rejilla (o -1)
   const c0 = Math.floor(gx / CEL), r0 = Math.floor(gy / CEL), n = Math.ceil(max / CEL); let mejor = -1, bd = max * max;
   for (let r = r0 - n; r <= r0 + n; r++) for (let c = c0 - n; c <= c0 + n; c++) { if (c < 0 || c >= COLS || r < 0) continue; const L = celdas[r * COLS + c]; if (!L) continue;

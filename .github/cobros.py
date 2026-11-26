@@ -25,9 +25,10 @@ RAIZ = os.environ.get('COBROS_RAIZ') or os.getcwd()
 F_LIBRO = os.path.join(RAIZ, 'data', 'cobros-libro.json')
 F_WEB = os.path.join(RAIZ, 'data', 'cobros.json')
 F_PUEBLOS = os.path.join(RAIZ, 'data', 'pueblos.json')
-PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 800}   # céntimos, IVA incluido (PKT: pack de 5 tuneos · PKO: pack de 3 oros · PRI: primer plano)
+PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 800, 'PNV': 300, 'FLO': 100}   # céntimos, IVA incluido (PKT: pack de 5 tuneos · PKO: pack de 3 oros · PRI: primer plano · PNV: pack Navidad · FLO: flores)
 PRIMER = {'inicio': '2026-11-27', 'fin': '2026-12-31', 'cupo': 10, 'cierre_h': 14}   # primer plano: 10 por episodio; lo pagado antes de las 14:00 (Madrid) va al de ese día
-COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon']   # el orden de la tienda
+COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon', 'nieve', 'arbol', 'estrella']   # el orden de la tienda
+NAVIDAD = ['luces', 'nieve', 'arbol', 'estrella']   # lo que lleva el pack Navidad (un voto de cada por pack)
 VENTANA = 7 * 86400                                       # se miran los pagos de los últimos 7 días (una sesión de pago caduca a las 24 h)
 
 
@@ -89,7 +90,7 @@ def escribe(L):
 
 
 def suma(L):
-    apoyos, vecinos, tuneos = {}, {}, {}
+    apoyos, vecinos, tuneos, flores = {}, {}, {}, {}
     for p in L['pagos']:
         if p.get('devuelto') or p['t'] in ('YA', 'RARO'):
             continue
@@ -97,6 +98,12 @@ def suma(L):
         if p['t'] == 'TUN':
             d = tuneos.setdefault(c, {})
             d[p['k']] = d.get(p['k'], 0) + n
+        elif p['t'] == 'PNV':                       # pack Navidad: un voto para cada cosa de Navidad
+            d = tuneos.setdefault(c, {})
+            for k in NAVIDAD:
+                d[k] = d.get(k, 0) + n
+        elif p['t'] == 'FLO':
+            flores[c] = flores.get(c, 0) + n
         elif p['t'] == 'ORO':
             apoyos[c] = apoyos.get(c, 0) + n
         elif p['t'] == 'VEC':                       # con nombre revisado sale como vecino (y la web le suma su apoyo); si no, cuenta como apoyo suelto
@@ -106,7 +113,7 @@ def suma(L):
             if n > 0:
                 apoyos[c] = apoyos.get(c, 0) + n
     tuneos = {c: {k: d[k] for k in COSAS if k in d} for c, d in sorted(tuneos.items())}
-    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'primeros': primeros(L)}
+    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'flores': dict(sorted(flores.items())), 'primeros': primeros(L)}
 
 
 def primeros(L):
@@ -156,7 +163,7 @@ def apunte(s, P, linea=None):
     ref = (s.get('client_reference_id') or '').strip()
     h = huella(s['id'])
     base = {'h': h, 'creado': int(s.get('created') or 0)}
-    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
+    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO|PNV|FLO)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
     if not m or m[2] not in P:
         return dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')
     t, c, resto = m[1], m[2], m[3] or ''
@@ -173,6 +180,8 @@ def apunte(s, P, linea=None):
         return dict(base, t='ORO', c=c, n=3 * n, pack='PKO')
     if t == 'PRI':
         return dict(base, t='PRI', c=c, n=n)
+    if t in ('PNV', 'FLO'):                          # pack Navidad · flores para un pueblo caído
+        return dict(base, t=t, c=c, n=n)
     if t == 'TUN':
         k = norm(resto).replace(' ', '')
         if k not in COSAS:
@@ -241,6 +250,10 @@ def describe(a, P):
         return f'{"PACK DE 3 OROS" if a.get("pack") else "ORO"} x{a["n"]} → {pueblo}'
     if a['t'] == 'PRI':
         return f'PRIMER PLANO x{a["n"]} → {pueblo}'
+    if a['t'] == 'PNV':
+        return f'PACK NAVIDAD x{a["n"]} (luces, nieve, árbol y estrella) → {pueblo}'
+    if a['t'] == 'FLO':
+        return f'FLORES x{a["n"]} → {pueblo}'
     return f'VECINO DE HONOR → {pueblo} · su apoyo de oro ya cuenta; el nombre, cuando se revise (huella {a["h"][:12]})'
 
 

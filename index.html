@@ -381,6 +381,11 @@ button,input{font:inherit;color:inherit}
 .ficha .oro-letra{font-size:13.5px;line-height:1.45;color:#2f3759}
 .boton.largo{padding:9px 18px;line-height:1.2;text-align:center}
 .boton.dorado{background:var(--brillo)}
+.boton.navidad{background:#3ddc84}
+.boton.flores{background:#ff9cc2}
+.disco.navidad{border-color:#1f9d55}
+.disco.flores{border-color:#ff4d8d}
+.niveles .etiqueta{display:inline-block;vertical-align:3px;margin-left:6px;padding:3px 8px 2px;border-radius:999px;background:var(--tinta);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .oro .fila{display:grid;width:100%;gap:11px}
 .oro .fila .boton{justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:8px 12px 8px 16px;font-size:15.5px;text-align:left}
 .oro .fila .boton span:first-child{min-width:0;overflow-wrap:anywhere}
@@ -712,12 +717,16 @@ button,input{font:inherit;color:inherit}
       <h2>Tunea tu pueblo o hazlo de oro</h2>
       <p class="sub">Apoyas el canal y tu pueblo luce en el mapa. Nada de esto le salva: si cae, cae con estilo.</p>
       <ul class="niveles">
-        <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, gafas de sol, luces, bigote, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida. Suma 1 punto en el ranking.</p>
+        <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, nieve en el tejado, un árbol de Navidad, gafas de sol, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida. Suma 1 punto en el ranking.</p>
           <button type="button" class="chip ir-pago" data-m="tuneo" hidden>Tunea tu pueblo</button><p class="pronto mini" data-m="tuneo">Muy pronto</p></div></li>
         <li><span class="disco">3<small>€</small></span><div><h3>Pueblo de oro</h3><p>3 € cada apoyo, 3 puntos en el ranking. Su casita brilla en el mapa y los apoyos se suman: un pueblo puede llevar uno o cuarenta.</p>
           <button type="button" class="chip ir-pago" data-m="oro" hidden>Haz de oro a tu pueblo</button><p class="pronto mini" data-m="oro">Muy pronto</p></div></li>
         <li><span class="disco">10<small>€</small></span><div><h3>Vecino de honor</h3><p>Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y tu pueblo suma un apoyo de oro y 10 puntos en el ranking.</p>
           <button type="button" class="chip ir-pago" data-m="vecino" hidden>Hazte vecino de honor</button><p class="pronto mini" data-m="vecino">Muy pronto</p></div></li>
+        <li class="nuevo"><span class="disco navidad">3<small>€</small></span><div><h3>Pack Navidad <span class="etiqueta">Nuevo</span></h3><p>Luces, nieve en el tejado, árbol de Navidad y estrella para la casita de tu pueblo: 4 tuneos por 3 €. Suma 4 puntos en el ranking.</p>
+          <button type="button" class="chip ir-pago" data-m="packNavidad" hidden>Ponle la Navidad a tu pueblo</button><p class="pronto mini" data-m="packNavidad">Muy pronto</p></div></li>
+        <li class="nuevo"><span class="disco flores">1<small>€</small></span><div><h3>Flores para los caídos <span class="etiqueta">Nuevo</span></h3><p>Si tu pueblo cae, no se acaba: déjale flores. Se ven junto a sus ruinas en el mapa y suman 1 punto para él y para su provincia.</p>
+          <button type="button" class="chip ir-pago" data-m="flores" hidden>Busca tu pueblo</button><p class="pronto mini" data-m="flores">Muy pronto</p></div></li>
         <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…», un cartel con vuestro nombre sobre vuestro pueblo en el mapa y 50 puntos en el ranking.</p>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>
@@ -727,10 +736,11 @@ button,input{font:inherit;color:inherit}
         <summary>Condiciones de los apoyos</summary>
         <ul>
           <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
-          <li><b>Ranking.</b> Cada euro es un punto para el pueblo que eliges: tuneo 1, pueblo de oro 3, vecino de honor 10 y negocio 50. A igualdad de puntos, va delante el que llegó antes. El ranking no cambia el sorteo ni tiene premios: el n.º 1 sale con corona en los episodios.</li>
+          <li><b>Ranking.</b> Cada euro es un punto para el pueblo que eliges: tuneo 1, pueblo de oro 3, vecino de honor 10, flores 1 y negocio 50; los packs dan un poco más (pack de 5 tuneos, 5; pack de 3 oros, 9; pack Navidad, 4). A igualdad de puntos, va delante el que llegó antes. El ranking no cambia el sorteo ni tiene premios: el n.º 1 sale con corona en los episodios.</li>
           <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
-          <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas o limón (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador y vaca los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
-          <li><b>Packs y primer plano.</b> Pack de 5 tuneos: 4 €, son 5 votos para la cosa que elijas (5 puntos). Pack de 3 oros: 8 €, son 3 apoyos de oro (9 puntos). Primer plano: 5 €, tu pueblo sale de cerca y con su nombre en un episodio (5 puntos); hay 10 huecos por episodio, lo pagado antes de las 14:00 va al de ese día y, si está lleno, al siguiente con hueco. Si tu pueblo cae antes, su primer plano es su caída. Nada de esto cambia el sorteo.</li>
+          <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas, limón o estrella (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador, vaca, nieve y árbol los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
+          <li><b>Packs y primer plano.</b> Pack de 5 tuneos: 4 €, son 5 votos para la cosa que elijas (5 puntos). Pack de 3 oros: 8 €, son 3 apoyos de oro (9 puntos). Pack Navidad: 3 €, son 4 tuneos, un voto para cada uno: luces, nieve en el tejado, árbol de Navidad y estrella (4 puntos). Primer plano: 5 €, tu pueblo sale de cerca y con su nombre en un episodio (5 puntos); hay 10 huecos por episodio, lo pagado antes de las 14:00 va al de ese día y, si está lleno, al siguiente con hueco. Si tu pueblo cae antes, su primer plano es su caída. Nada de esto cambia el sorteo.</li>
+          <li><b>Flores.</b> 1 € cada ramo, para los pueblos que ya han caído. Se ven junto a sus ruinas en este mapa y en el tablero de los episodios, y suman 1 punto para el pueblo y para su provincia. No lo devuelven al juego.</li>
           <li><b>Metas por provincia.</b> Los puntos de todos los pueblos de una provincia suman para ella. A los 25 puntos su bandera ondea en el mapa de los episodios; a los 50, saludo a toda la provincia en la voz de un episodio; a los 100, sale en la portada de un episodio. Se cumplen en el episodio siguiente a llegar.</li>
           <li><b>Plazos.</b> El oro y los tuneos aparecen en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
           <li><b>Nombres.</b> Hasta 30 caracteres. No se publican nombres ofensivos ni nombres o marcas de otras personas sin su permiso (el de tu propio negocio, sí). Si el tuyo no se puede publicar, te escribimos para cambiarlo o te devolvemos el dinero.</li>
@@ -778,11 +788,11 @@ const REDES = { tiktok: 'https://www.tiktok.com/@loquepasa.es', instagram: 'http
 const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube' };
 // Pueblos de oro: los enlaces de pago, el correo y los apoyos de cada pueblo van en data/juego.json (pago, correo, apoyos, vecinos, negocios).
 // Aquí solo están los precios. La página no cobra ni manda nada: enseña el texto que hay que pegar en el mensaje del pago y enlaza a la página de pago.
-const PRECIO = { oro: 3, vecino: 10, tuneo: 1, primer: 5, packTuneos: 4, packOro: 8 };
+const PRECIO = { oro: 3, vecino: 10, tuneo: 1, primer: 5, packTuneos: 4, packOro: 8, packNavidad: 3, flores: 1 };
 const PRIMER = { cupo: 10, cierre: 14, inicio: '2026-11-27', fin: '2026-12-31' };   // primer plano: 10 por episodio; lo pagado antes de las 14:00 va al de ese día
 const METAS = [[25, 'Bandera', 'su bandera ondea en el mapa de los episodios'], [50, 'Saludo', 'saludo a toda la provincia en la voz de un episodio'], [100, 'Portada', 'la provincia sale en la portada de un episodio']];
 // Ranking: 1 € = 1 punto. Niveles de casita según los puntos. Comunidades por su código del INE (el campo «r» de cada provincia en mapa.json).
-const PTS = { tuneo: 1, oro: 3, vecino: 10, negocio: 50, primer: 5 };
+const PTS = { tuneo: 1, oro: 3, vecino: 10, negocio: 50, primer: 5, navidad: 4, flores: 1 };
 const NIVELES = [[1, 'Casita'], [3, 'Casa con huerto'], [10, 'Casa con piscina'], [25, 'Chalet'], [50, 'Mansión'], [100, 'Palacio'], [250, 'Castillo']];
 const COMUN = { '01': 'Andalucía', '02': 'Aragón', '03': 'Asturias', '04': 'Illes Balears', '05': 'Canarias', '06': 'Cantabria', '07': 'Castilla y León', '08': 'Castilla-La Mancha', '09': 'Cataluña',
   10: 'Comunitat Valenciana', 11: 'Extremadura', 12: 'Galicia', 13: 'Comunidad de Madrid', 14: 'Región de Murcia', 15: 'Navarra', 16: 'País Vasco', 17: 'La Rioja', 18: 'Ceuta', 19: 'Melilla' };
@@ -800,8 +810,12 @@ const COSAS = {
   paraguas: { c: 'Paraguas', n: 'Paraguas antimeteoritos', a: 'un paraguas antimeteoritos', g: 'cabeza', alto: 0.84, d: 'No para meteoritos, pero queda mono.' },
   flotador: { c: 'Flotador', n: 'Flotador antitsunamis', a: 'un flotador antitsunamis', g: 'flotador', d: 'Contra un tsunami no sirve. En la piscina, sí.' },
   limon: { c: 'Limón', n: 'Limón en el tejado', a: 'un limón en el tejado', g: 'cabeza', alto: 0.44, d: 'Idea de un vecino de Totana. Para que se sepa de dónde es.' },
+  nieve: { c: 'Nieve', n: 'Nieve en el tejado', a: 'nieve en el tejado', g: 'nieve', d: 'Blanca Navidad, aunque el pueblo esté en Almería.' },
+  arbol: { c: 'Árbol', n: 'Árbol de Navidad', a: 'un árbol de Navidad', g: 'arbol', d: 'Con sus bolas y su estrellita en la punta.' },
+  estrella: { c: 'Estrella', n: 'Estrella de Navidad', a: 'una estrella en el tejado', g: 'cabeza', alto: 0.6, d: 'Para que los Reyes encuentren el pueblo. Si sigue en pie.' },
 };
 const ORDEN_COSAS = Object.keys(COSAS);
+const NAVIDAD = ['luces', 'nieve', 'arbol', 'estrella'];   // lo que trae el pack Navidad (un voto de cada)
 const votosT = (n) => miles(n) + (n === 1 ? ' voto' : ' votos');
 const enlace = (u) => (typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/.test(u.trim()) ? u.trim() : '');
 const POR_DEFECTO = { fase: 'inscripcion', cierre: '2026-11-26T18:00:00+01:00', cierre_texto: 'el jueves 26 a las 18:00', inicio_texto: 'el viernes 27' };
@@ -840,9 +854,9 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
   for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
   J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
   const pg = j.pago || {};
-  J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', tuneo: 'demo{ref}', negocio: '', primer: 'demo{ref}', packTuneos: 'demo{ref}', packOro: 'demo{ref}' }
-    : { oro: enlace(pg.oro), vecino: enlace(pg.vecino), tuneo: enlace(pg.tuneo), negocio: enlace(pg.negocio), primer: enlace(pg.primer), packTuneos: enlace(pg.packTuneos), packOro: enlace(pg.packOro) };
-  for (const m of ['primer', 'packTuneos', 'packOro']) if (J.pago[m].indexOf('{ref}') < 0) J.pago[m] = '';   // sin {ref} no se sabría el pueblo
+  J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', tuneo: 'demo{ref}', negocio: '', primer: 'demo{ref}', packTuneos: 'demo{ref}', packOro: 'demo{ref}', packNavidad: 'demo{ref}', flores: 'demo{ref}' }
+    : { oro: enlace(pg.oro), vecino: enlace(pg.vecino), tuneo: enlace(pg.tuneo), negocio: enlace(pg.negocio), primer: enlace(pg.primer), packTuneos: enlace(pg.packTuneos), packOro: enlace(pg.packOro), packNavidad: enlace(pg.packNavidad), flores: enlace(pg.flores) };
+  for (const m of ['primer', 'packTuneos', 'packOro', 'packNavidad', 'flores']) if (J.pago[m].indexOf('{ref}') < 0) J.pago[m] = '';   // sin {ref} no se sabría el pueblo
   J.primeros = new Map(); J.priDe = new Map();                          // primer plano: episodio (fecha) → pueblos · pueblo → episodios
   for (const d in (k && k.primeros) || {}) { const L = Array.isArray(k.primeros[d]) ? k.primeros[d].map(String) : []; J.primeros.set(d, L); for (const c of L) { if (!J.priDe.has(c)) J.priDe.set(c, []); J.priDe.get(c).push(d); } }
   if (J.pago.tuneo.indexOf('{ref}') < 0) J.pago.tuneo = '';          // sin {ref} no se sabría ni el pueblo ni la cosa: mejor «muy pronto»
@@ -857,6 +871,8 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
   for (const f of [j, k || {}]) for (const c in f.tuneos || {}) { const o = f.tuneos[c], v = J.tuneos.get(String(c)) || {}; let hay = false; if (!o || typeof o !== 'object') continue;
     for (const x in o) { const n = Math.floor(+o[x]); if (COSAS[x] && n > 0) { v[x] = (v[x] || 0) + n; hay = true; } }
     if (hay) J.tuneos.set(String(c), v); }
+  J.flores = new Map();                                                // código → ramos de flores (para los pueblos caídos)
+  for (const f of [j, k || {}]) for (const c in f.flores || {}) { const n = Math.floor(+f.flores[c]); if (n > 0) J.flores.set(String(c), (J.flores.get(String(c)) || 0) + n); }
   // Ranking: lo apuntado a mano en juego.json más cada pago del libro del robot (el libro no lleva datos de nadie: solo el pueblo, lo comprado y la
   // hora). Sin libro vale lo sumado en cobros.json (ahí un vecino de honor sin nombre revisado cuenta como un apoyo de oro). «desde»: el primer pago de
   // cada pueblo, para desempatar (va delante el que llegó antes). «feed»: los últimos apoyos.
@@ -866,9 +882,10 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
     for (const c in f.apoyos || {}) suma(c, PTS.oro * Math.floor(+f.apoyos[c]));
     for (const c in f.vecinos || {}) if (Array.isArray(f.vecinos[c])) suma(c, PTS.vecino * f.vecinos[c].length);
     for (const c in f.tuneos || {}) { const o = f.tuneos[c]; if (o && typeof o === 'object') for (const x in o) if (COSAS[x]) suma(c, PTS.tuneo * Math.floor(+o[x])); }
+    for (const c in f.flores || {}) suma(c, PTS.flores * Math.floor(+f.flores[c]));
     if (neg) for (const g of Array.isArray(f.negocios) ? f.negocios : []) if (g && g.c) suma(g.c, PTS.negocio); };
   de(j, true);
-  const TIPO = { ORO: 'oro', VEC: 'vecino', TUN: 'tuneo', PRI: 'primer' }, P = l && Array.isArray(l.pagos) ? l.pagos : null;
+  const TIPO = { ORO: 'oro', VEC: 'vecino', TUN: 'tuneo', PRI: 'primer', PNV: 'navidad', FLO: 'flores' }, P = l && Array.isArray(l.pagos) ? l.pagos : null;
   if (P) for (const p of P) {
     if (!p || p.devuelto) continue;
     const ya = p.t === 'YA', t = TIPO[ya ? p.era : p.t], c = String(p.c || ''), n = Math.max(1, Math.floor(+p.n || 1)), s = Math.floor(+p.creado || 0);
@@ -946,6 +963,7 @@ function refresca() {
   for (const [c, L] of JUEGO.negocios) { const i = IDX.get(c); if (i != null) NEG.set(i, L); }
   LOOK = new Array(PUEBLOS.length).fill(null); N_TUN = 0;
   for (const [c, v] of JUEGO.tuneos) { const i = IDX.get(c); if (i != null) { LOOK[i] = viste(v); N_TUN++; } }
+  for (const [c, n] of JUEGO.flores) { const i = IDX.get(c); if (i != null) LOOK[i] = Object.assign(LOOK[i] || { cabeza: '' }, { flores: n }); }
   ranking();
   if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
   if (tunea && !JUEGO.pago.tuneo) { tunea = false; tuneoCosa = ''; }
@@ -1087,11 +1105,12 @@ const sobre = (i, h) => { const L = LOOK[i]; return L && L.cabeza && EST[i] !== 
 function adorno(x, y, h, e, L, delante) {   // se pinta en dos veces: lo de detrás antes que la casita y lo de delante después
   if (!L) return; const lw = Math.max(1, h * 0.075), ruina = e === 2;
   cx.lineJoin = 'round'; cx.lineCap = 'round'; cx.strokeStyle = TINTA; cx.lineWidth = lw;
-  if (!delante) { if (L.flotador) flotador(x, y, h, lw, false); return; }
+  if (!delante) { if (L.flotador) flotador(x, y, h, lw, false); if (L.arbol) arbol(x, y, h, lw); return; }
   if (L.vaca) vaca(x, y, h, lw);
-  if (!ruina) { if (L.luces) luces(x, y, h, lw); if (L.gafas) gafas(x, y, h, lw); if (L.bigote) bigote(x, y, h, lw); }
+  if (!ruina) { if (L.nieve) nieve(x, y, h, lw); if (L.luces) luces(x, y, h, lw); if (L.gafas) gafas(x, y, h, lw); if (L.bigote) bigote(x, y, h, lw); }
   if (L.flotador) flotador(x, y, h, lw, true);
-  if (L.cabeza) { const yy = ruina ? y + h * 0.44 : y; ({ gorro, corona, boina, ciguena, paraguas, limon })[L.cabeza](x, yy, h, lw); }
+  if (ruina && L.flores) flores(x, y, h, lw, L.flores);
+  if (L.cabeza) { const yy = ruina ? y + h * 0.44 : y; ({ gorro, corona, boina, ciguena, paraguas, limon, estrella })[L.cabeza](x, yy, h, lw); }
 }
 function gorro(x, y, h) {
   cx.fillStyle = '#e8283f'; cx.beginPath(); cx.moveTo(x - h * 0.24, y - h * 0.46); cx.quadraticCurveTo(x - h * 0.15, y - h * 0.88, x - h * 0.44, y - h * 0.93);
@@ -1128,6 +1147,43 @@ function limon(x, y, h) {                     // un limón tumbado en el tejado,
   cx.quadraticCurveTo(x + h * 0.31, cy + r, x, cy + r); cx.quadraticCurveTo(x - h * 0.31, cy + r, x - h * 0.38, cy); cx.closePath(); cx.fill(); cx.stroke();
   cx.fillStyle = 'rgba(255,255,255,.75)'; cx.beginPath(); cx.ellipse(x - h * 0.13, cy - h * 0.08, h * 0.09, h * 0.035, -0.25, 0, 6.3); cx.fill();
   cx.fillStyle = '#2fbf5a'; cx.beginPath(); cx.ellipse(x + h * 0.13, cy - h * 0.25, h * 0.14, h * 0.055, -0.45, 0, 6.3); cx.fill(); cx.stroke();
+}
+function nieve(x, y, h, lw) {                 // nieve en el tejado, con carámbanos
+  cx.fillStyle = '#ffffff'; cx.beginPath(); cx.moveTo(x - h * 0.62, y + h * 0.05); cx.lineTo(x, y - h * 0.57); cx.lineTo(x + h * 0.62, y + h * 0.05);
+  cx.quadraticCurveTo(x + h * 0.54, y + h * 0.1, x + h * 0.46, y); cx.quadraticCurveTo(x + h * 0.37, y - h * 0.02, x + h * 0.3, y - h * 0.12);
+  cx.quadraticCurveTo(x + h * 0.19, y - h * 0.17, x + h * 0.12, y - h * 0.28); cx.quadraticCurveTo(x, y - h * 0.38, x - h * 0.1, y - h * 0.29);
+  cx.quadraticCurveTo(x - h * 0.2, y - h * 0.2, x - h * 0.28, y - h * 0.14); cx.quadraticCurveTo(x - h * 0.38, y - h * 0.04, x - h * 0.46, y);
+  cx.quadraticCurveTo(x - h * 0.54, y + h * 0.1, x - h * 0.62, y + h * 0.05); cx.closePath(); cx.fill(); cx.stroke();
+  if (h >= 10) { cx.fillStyle = '#dff4ff'; cx.lineWidth = Math.max(0.8, h * 0.03);
+    for (const d of [-0.44, -0.18, 0.16, 0.42]) { const ix = x + h * d, iy = y + h * 0.04; cx.beginPath(); cx.moveTo(ix - h * 0.035, iy); cx.lineTo(ix + h * 0.035, iy); cx.lineTo(ix, iy + h * (0.1 + 0.05 * Math.abs(Math.sin(d * 9)))); cx.closePath(); cx.fill(); cx.stroke(); }
+    cx.lineWidth = lw; }
+}
+function arbol(x, y, h, lw) {                 // árbol de Navidad a la derecha de la casita (se pinta detrás)
+  const bx = x + h * 0.86, by = y + h * 0.5;
+  cx.fillStyle = 'rgba(11,23,54,.18)'; cx.beginPath(); cx.ellipse(bx, by + h * 0.02, h * 0.27, h * 0.05, 0, 0, 6.3); cx.fill();
+  cx.fillStyle = '#7a4a2a'; cx.beginPath(); cx.rect(bx - h * 0.05, by - h * 0.14, h * 0.1, h * 0.14); cx.fill(); cx.stroke();
+  cx.fillStyle = '#1f9d55';
+  for (const [w, b, t] of [[0.31, 0.1, 0.52], [0.25, 0.36, 0.78], [0.18, 0.6, 1.02]]) { cx.beginPath(); cx.moveTo(bx - h * w, by - h * b); cx.lineTo(bx, by - h * t); cx.lineTo(bx + h * w, by - h * b); cx.closePath(); cx.fill(); cx.stroke(); }
+  if (h >= 11) { const B = [[-0.14, 0.2, '#ff2e4d'], [0.12, 0.26, '#ffd43b'], [-0.06, 0.46, '#3a8bff'], [0.1, 0.55, '#ff2e4d'], [-0.04, 0.72, '#ffd43b']];
+    cx.lineWidth = Math.max(0.8, h * 0.025); for (const [dx, dy, c] of B) { cx.fillStyle = c; cx.beginPath(); cx.arc(bx + h * dx, by - h * dy, h * 0.045, 0, 6.3); cx.fill(); cx.stroke(); } cx.lineWidth = lw; }
+  cx.fillStyle = '#ffd43b'; cx.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, d = h * (k % 2 ? 0.045 : 0.1), px = bx + Math.cos(a) * d, py = by - h * 1.04 + Math.sin(a) * d; if (k) cx.lineTo(px, py); else cx.moveTo(px, py); } cx.closePath(); cx.fill(); cx.stroke();
+}
+function estrella(x, y, h) {                  // estrella de Navidad sobre el tejado
+  const cy = y - h * 0.86, R = h * 0.22, r = R * 0.45;
+  cx.beginPath(); cx.moveTo(x, y - h * 0.5); cx.lineTo(x, cy + R * 0.5); cx.stroke();
+  cx.fillStyle = '#ffd43b'; cx.beginPath();
+  for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, d = k % 2 ? r : R, px = x + Math.cos(a) * d, py = cy + Math.sin(a) * d; if (k) cx.lineTo(px, py); else cx.moveTo(px, py); }
+  cx.closePath(); cx.fill(); cx.stroke();
+  if (h >= 12) { cx.fillStyle = 'rgba(255,255,255,.85)'; cx.beginPath(); cx.arc(x - R * 0.22, cy - R * 0.18, R * 0.13, 0, 6.3); cx.fill(); }
+}
+function flores(x, y, h, lw, n) {             // flores delante de las ruinas de un pueblo caído (más ramos, más flores: hasta 5)
+  const k = Math.min(5, 1 + Math.floor(Math.log2(Math.max(1, n)))), col = ['#ff4d8d', '#ffd43b', '#ff7a1a', '#c86bff', '#ffffff'], base = y + h * 0.56;
+  for (let j = 0; j < k; j++) { const fx = x + h * (-0.4 + j * (k > 1 ? 0.8 / (k - 1) : 0) + (k === 1 ? 0.4 : 0)), top = base - h * (0.2 + 0.05 * (j % 2));
+    cx.strokeStyle = '#1d6b3a'; cx.lineWidth = Math.max(1, h * 0.045); cx.beginPath(); cx.moveTo(fx, base); cx.lineTo(fx, top); cx.stroke();
+    cx.strokeStyle = TINTA; cx.lineWidth = Math.max(0.8, h * 0.03); cx.fillStyle = col[j % col.length];
+    for (let q = 0; q < 5; q++) { const a = q * 1.2566 + j; cx.beginPath(); cx.arc(fx + Math.cos(a) * h * 0.055, top + Math.sin(a) * h * 0.055, h * 0.045, 0, 6.3); cx.fill(); cx.stroke(); }
+    cx.fillStyle = '#ffd43b'; cx.beginPath(); cx.arc(fx, top, h * 0.035, 0, 6.3); cx.fill(); }
+  cx.strokeStyle = TINTA; cx.lineWidth = lw;
 }
 function paraguas(x, y, h) {
   const cy = y - h * 0.8, r = h * 0.47;
@@ -1269,7 +1325,7 @@ function pinta(ahora) {
     if (hs >= 7.5 && !entrando) for (const v of vis) if (ORO[v[2]]) insignia(v[1], v[0], hs * 1.18, ORO[v[2]]);
     if (vista.k >= 5 && !anim) {                                                     // nombres de los vecinos, sin pisarse
       const cxm = W / 2, cym = H / 2, puestos = [[0, H - 58, 172, H], [W * 0.36, 0, W, 50]]; if (senalSel) { puestos.push([senalSel.x - 4, senalSel.y - 4, senalSel.x + senalSel.w + 4, senalSel.y + senalSel.h + 4], senalSel.casa); const g = senalSel.neg; if (g) puestos.push([g.x - 3, g.y - 9, g.x + g.w + 3, g.y + 24]); }
-      const casas = vis.map((v) => [v[1] - hs * (LOOK[v[2]] && LOOK[v[2]].vaca ? 1.3 : 0.62), v[0] - hs * 0.58 - sobre(v[2], hs), v[1] + hs * 0.62, v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
+      const casas = vis.map((v) => [v[1] - hs * (LOOK[v[2]] && LOOK[v[2]].vaca ? 1.3 : 0.62), v[0] - hs * 0.58 - sobre(v[2], hs), v[1] + hs * (LOOK[v[2]] && LOOK[v[2]].arbol ? 1.2 : 0.62), v[0] + hs * 0.56, v[2]]);                     // tampoco encima de otra casita
       for (const v of vis) { const L = NEG.get(v[2]); if (!L) continue; const txt = rotNeg(L);                                        // carteles de los negocios: encima de su casita y, si ahí estorban, debajo
         cx.font = fNeg; const tw = cx.measureText(txt).width + 16, y1 = v[0] - hs * 0.6, y2 = v[0] + hs * 0.62;
         const lado = Math.max(0, tw / 2 - 13); let puesto = false;
@@ -1358,10 +1414,12 @@ function pagoHTML(t, e) {                    // el panel de pago, dentro del blo
 function extrasFicha(t, e) {                 // pack de 3 oros y primer plano (enlaces directos a la página de pago, con el pueblo en la referencia)
   const J = JUEGO, ya = J.priDe.get(t.c), hu = e !== 'eliminado' ? huecoPrimer() : null, ref = (m, r) => (J.demo ? '#juego' : J.pago[m].split('{ref}').join(r));
   let h = '';
+  if (J.pago.flores && e === 'eliminado') h += `<a class="boton flores" id="f-fpagar" target="_blank" rel="noopener" href="${esc(ref('flores', 'FLO-' + t.c))}"><span>Déjale flores</span><span class="precio">${PRECIO.flores} €</span></a>`;
   if (J.pago.packOro) h += `<a class="boton dorado" id="f-kpagar" target="_blank" rel="noopener" href="${esc(ref('packOro', 'PKO-' + t.c))}"><span>Pack de 3 oros</span><span class="precio">${PRECIO.packOro} €</span></a>`;
   if (J.pago.primer && hu) h += `<a class="boton blanco" id="f-ppagar" target="_blank" rel="noopener" href="${esc(ref('primer', 'PRI-' + t.c))}"><span>Primer plano</span><span class="precio">${PRECIO.primer} €</span></a>`;
   if (!h) return '';
-  let txt = J.pago.packOro ? `<b>Pack de 3 oros:</b> 9 puntos por ${PRECIO.packOro} €. ` : '';
+  let txt = J.pago.flores && e === 'eliminado' ? `<b>Flores:</b> ${PRECIO.flores} € cada ramo. Se ven junto a sus ruinas y suman 1 punto, también para su provincia. ` : '';
+  txt += J.pago.packOro ? `<b>Pack de 3 oros:</b> 9 puntos por ${PRECIO.packOro} €. ` : '';
   if (ya) txt += `<b>${parte(t.n)} sale en primer plano</b> el ${ya.map(diaTexto).join(', el ')}. `;
   if (J.pago.primer && hu) txt += `<b>Primer plano:</b> ${parte(t.n)} sale de cerca en el episodio del ${diaTexto(hu[0])} (${hu[1] === 1 ? 'queda 1 hueco' : 'quedan ' + hu[1] + ' huecos'} de ${PRIMER.cupo}) y suma 5 puntos.`;
   return `<div class="fila">${h}</div><p class="oro-linea mini">${txt}</p>`;
@@ -1374,8 +1432,9 @@ function oroFicha(t, e) {                    // el bloque dorado de la ficha: cu
     h += `<p class="oro-estado"><b>${puntosT(pt)} en el ranking</b> (${minus(NIVELES[kn][1])}). ${pos === 0 ? (PRANK.length > 1 ? 'Va el n.º 1 de España: si nadie le pasa, sale con corona en los episodios.' : 'Es el único con puntos: de momento, el n.º 1 de España.')
       : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + miles(PUN[a] - pt + 1) + ' € adelanta a ' + esc(PUEBLOS[a].n) : '') + '.'}${n ? ' Lleva ' + apoyosT(n) + ' de oro.' : ''}${e === 'eliminado' && n ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
   else if (ofrece && (J.pago.oro || J.pago.tuneo || J.pago.vecino)) h += `<p class="oro-estado"><b>Sin puntos todavía.</b> Con 1 € entra en el ranking${PRANK.length ? ', en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1 de España'}.</p>`;
-  if (vec) { const L = vec.slice(0, 8).map((v) => [v, esc(v)]);
-    const txt = vec.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vec.length - 8) + ' más' : enumera(L);
+  { const fl = J.flores.get(t.c); if (fl) h += `<p class="oro-linea">${fl === 1 ? 'Le han dejado un ramo de flores.' : 'Le han dejado ' + miles(fl) + ' ramos de flores.'}</p>`; }
+  if (vec) { const vu = [...vec.reduce((m, v) => m.set(v, (m.get(v) || 0) + 1), new Map())].map(([v, x]) => x > 1 ? v + ' (×' + x + ')' : v), L = vu.slice(0, 8).map((v) => [v, esc(v)]);   // el mismo nombre dos veces sale una, con «×2»
+    const txt = vu.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vu.length - 8) + ' más' : enumera(L);
     h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${txt}${/[.!?…]$/.test(txt) ? '' : '.'}</p>`; }
   if (neg) h += `<p class="oro-linea">Con el apoyo de ${enumera(neg.map((g) => [g.n, g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.n)}</a>` : '<b>' + esc(g.n) + '</b>']))}.</p>`;
   if (ofrece) {
@@ -1395,7 +1454,7 @@ function abrePago() {                        // lleva la vista y el foco al pane
 }
 function pintaApoya() {                      // la sección «Haz de oro a tu pueblo»: botones de cada nivel y clasificación
   const J = JUEGO;
-  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : m === 'vecino' ? 'Hazte vecino de honor' : 'Tunea tu pueblo'; }   // generales: no nombran el pueblo que se esté mirando
+  for (const b of document.querySelectorAll('.ir-pago')) { const m = b.dataset.m; b.hidden = !J.pago[m]; b.textContent = m === 'oro' ? 'Haz de oro a tu pueblo' : m === 'vecino' ? 'Hazte vecino de honor' : m === 'packNavidad' ? 'Ponle la Navidad a tu pueblo' : m === 'flores' ? 'Busca tu pueblo' : 'Tunea tu pueblo'; }   // generales: no nombran el pueblo que se esté mirando
   for (const s of document.querySelectorAll('#apoya .pronto')) s.hidden = !!J.pago[s.dataset.m];
   const p1 = PRANK[0];
   $('ap-rk-txt').textContent = p1 == null ? 'Cada euro es un punto en el ranking de los pueblos. Todavía no hay ninguno: el primero se pone el n.º 1.'
@@ -1472,16 +1531,17 @@ function nombreVec(e) {                // el nombre (revisado) del vecino de hon
 function pintaVecinos() {
   const L = [];
   for (const [c, N] of JUEGO.vecinos) { if (!IDX.has(c)) continue; const T = (JUEGO.vecT && JUEGO.vecT.get(c) || []).slice().sort((a, b) => a - b); N.forEach((n, k) => L.push({ c, n, s: T[k] || 0 })); }
-  L.sort((a, b) => b.s - a.s);
-  $('rk-vec-caja').hidden = !L.length;
-  $('rk-vec').innerHTML = L.slice(0, 30).map((v) => { const i = IDX.get(v.c), t = PUEBLOS[i];
-    return `<li><button type="button" data-i="${i}"><span class="v-e" aria-hidden="true"></span><span class="v-t"><span class="v-n">${esc(v.n)}</span><span class="v-q">${parte(t.n)} · ${parte(donde(t))}</span></span></button></li>`; }).join('')
-    + (L.length > 30 ? `<li class="vecs-mas">y ${miles(L.length - 30)} más</li>` : '');
+  const G = new Map(); for (const v of L) { const k = v.c + '|' + v.n, g = G.get(k); if (g) { g.x++; g.s = Math.max(g.s, v.s); } else G.set(k, Object.assign({ x: 1 }, v)); }   // el mismo nombre en el mismo pueblo, una vez con «×2»
+  const L2 = [...G.values()].sort((a, b) => b.s - a.s);
+  $('rk-vec-caja').hidden = !L2.length;
+  $('rk-vec').innerHTML = L2.slice(0, 30).map((v) => { const i = IDX.get(v.c), t = PUEBLOS[i];
+    return `<li><button type="button" data-i="${i}"><span class="v-e" aria-hidden="true"></span><span class="v-t"><span class="v-n">${esc(v.n)}${v.x > 1 ? ' ×' + v.x : ''}</span><span class="v-q">${parte(t.n)} · ${parte(donde(t))}</span></span></button></li>`; }).join('')
+    + (L2.length > 30 ? `<li class="vecs-mas">y ${miles(L2.length - 30)} más</li>` : '');
 }
 function pintaFeed() {
   const F = JUEGO.feed.filter((e) => IDX.has(e.c)).slice(0, 8);
   $('rk-feed').innerHTML = F.length ? F.map((e) => { const i = IDX.get(e.c), t = PUEBLOS[i];
-    const que = e.t === 'primer' ? 'Saldrá en primer plano' + (JUEGO.priDe.get(e.c) ? ' el ' + diaTexto(JUEGO.priDe.get(e.c)[0]) : ' en un episodio') : e.t === 'tuneo' ? (e.pack ? 'Pack de tuneos: le ponen ' : 'Le ponen ') + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor' + (nombreVec(e) ? ': ' + esc(nombreVec(e)) : '')) : (e.pack ? 'Pack de oro: recibe ' : 'Recibe ') + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
+    const que = e.t === 'primer' ? 'Saldrá en primer plano' + (JUEGO.priDe.get(e.c) ? ' el ' + diaTexto(JUEGO.priDe.get(e.c)[0]) : ' en un episodio') : e.t === 'navidad' ? 'Se pone la Navidad: luces, nieve, árbol y estrella' + (e.n > 1 ? ' (x' + e.n + ')' : '') : e.t === 'flores' ? (e.n > 1 ? 'Le dejan ' + e.n + ' ramos de flores' : 'Le dejan flores') : e.t === 'tuneo' ? (e.pack ? 'Pack de tuneos: le ponen ' : 'Le ponen ') + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor' + (nombreVec(e) ? ': ' + esc(nombreVec(e)) : '')) : (e.pack ? 'Pack de oro: recibe ' : 'Recibe ') + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
     return `<li><button type="button" data-i="${i}"><span class="f-q">${parte(t.n)} <small>${parte(donde(t))}</small></span><span class="f-que">${que}</span><time datetime="${new Date(e.s * 1000).toISOString()}">${hace(e.s)}</time><span class="f-mas" aria-label="${puntosT(PTS[e.t] * e.n)} más">+${miles(PTS[e.t] * e.n)}</span></button></li>`; }).join('')
     : '<li class="vacio">Todavía no hay apoyos. El primero se pone el n.º 1.</li>';
 }
@@ -1513,9 +1573,9 @@ function tuneoFicha(t, e) {                  // el bloque de los tuneos: la casi
   let h = `<div class="tuneo" id="f-tuneo" tabindex="-1" role="group" aria-labelledby="f-tuneo-t"><div class="tuneo-cab"><canvas class="tuneo-casa" id="f-tcasa" width="132" height="102" role="img" aria-label="${esc(desc)}"></canvas>
     <div><h3 id="f-tuneo-t">${tunea && puede ? 'Tunea ' + T : 'La casita de ' + T}</h3><p class="tuneo-lleva">${L || (tunea && puede) || !puede ? llevaTexto(L) : 'Todavía no lleva nada. ¿Un gorro de Papá Noel? ¿Una vaca?'}</p>${votos.length && (tunea || votos.length > 1) ? `<p class="tuneo-votos">Votos: ${esc(votos.join(', '))}.</p>` : ''}</div></div>`;
   if (!puede) return h + (e !== 'nojuega' && !J.pago.tuneo ? '<p class="pronto mini">Tuneos, muy pronto</p>' : '') + '</div>';
-  if (!tunea) return h + `<button type="button" class="boton tuneo-abre" id="f-tunea"><span>${L ? 'Tunéala más' : 'Tunea su casita'}</span><span class="precio">${PRECIO.tuneo} €</span></button></div>`;
+  if (!tunea) return h + `<button type="button" class="boton tuneo-abre" id="f-tunea"><span>${L ? 'Tunéala más' : 'Tunea su casita'}</span><span class="precio">${PRECIO.tuneo} €</span></button>${J.pago.packNavidad && e !== 'eliminado' ? `<a class="boton navidad largo" id="f-npagar" target="_blank" rel="noopener" href="${esc(J.demo ? '#juego' : J.pago.packNavidad.split('{ref}').join('PNV-' + t.c))}"><span>Pack Navidad: luces, nieve, árbol y estrella</span><span class="precio">${PRECIO.packNavidad} €</span></a>` : ''}<p class="aviso" id="f-tuneo-aviso" role="status"></p></div>`;
   h += `<p class="tuneo-sub">${PRECIO.tuneo} € cada cosa. Lleva lo que más se pida.</p><div class="cosas" role="group" aria-label="Qué le pones">`
-    + ORDEN_COSAS.map((k) => `<button type="button" class="cosa" data-k="${k}" aria-pressed="${tuneoCosa === k}"><canvas width="56" height="46" aria-hidden="true"></canvas><span>${COSAS[k].c}</span></button>`).join('') + '</div>';
+    + ORDEN_COSAS.map((k) => `<button type="button" class="cosa" data-k="${k}" aria-pressed="${tuneoCosa === k}"><canvas width="56" height="46" aria-hidden="true"></canvas><span>${COSAS[k].c}</span></button>`).join('') + '</div>' + `${J.pago.packNavidad && e !== 'eliminado' ? `<a class="boton navidad largo" id="f-npagar" target="_blank" rel="noopener" href="${esc(J.demo ? '#juego' : J.pago.packNavidad.split('{ref}').join('PNV-' + t.c))}"><span>Pack Navidad: luces, nieve, árbol y estrella</span><span class="precio">${PRECIO.packNavidad} €</span></a>` : ''}`;
   if (tuneoCosa) { const C = COSAS[tuneoCosa];
     h += `<div class="tuneo-elegido"><p><b>${C.n}</b> para ${T}. ${esc(C.d)} ${esc(votoTexto(t, tuneoCosa))}</p>
       <a class="boton largo" id="f-tpagar" target="_blank" rel="noopener" href="${esc(hrefTuneo(t, tuneoCosa))}"><span>Ir a pagar</span><span class="precio">${PRECIO.tuneo} €</span></a>`
@@ -1526,7 +1586,7 @@ function tuneoFicha(t, e) {                  // el bloque de los tuneos: la casi
 }
 function encuadre(L, o, w, alto, max) {     // tamaño y sitio de una casita para que quepa entera con lo que lleva (en px del lienzo)
   const a = L && L.cabeza ? COSAS[L.cabeza].alto : 0, arriba = 0.56 + Math.max(a, o ? 0.15 : 0), izq = L && L.vaca ? 1.44 : L && L.flotador ? 0.74 : 0.62;
-  const der = o ? 0.84 : L && L.flotador ? 0.74 : 0.62, abajo = L && L.flotador ? 0.72 : 0.6, h = Math.min(max, (w - 10) / (izq + der), (alto - 8) / (arriba + abajo));
+  const der = Math.max(o ? 0.84 : L && L.flotador ? 0.74 : 0.62, L && L.arbol ? 1.22 : 0), abajo = L && L.flotador ? 0.72 : 0.6, h = Math.min(max, (w - 10) / (izq + der), (alto - 8) / (arriba + abajo));
   return { h, x: 5 + izq * h + (w - 10 - (izq + der) * h) / 2, y: 4 + arriba * h + (alto - 8 - (arriba + abajo) * h) / 2 };
 }
 function pintaTuneos() {                     // pinta la casita del pueblo (con lo elegido puesto, si se está eligiendo) y la de cada cosa de la tienda
@@ -1605,8 +1665,8 @@ $('ficha').addEventListener('click', async (ev) => {
   } else if (b.id === 'f-tunea') { tunea = true; tuneoCosa = ''; pintaFicha(false); abreTuneo(); }
   else if (b.id === 'f-tuneo-cerrar') { tunea = false; tuneoCosa = ''; pintaFicha(false); if ($('f-tunea')) $('f-tunea').focus({ preventScroll: true }); }
   else if (b.classList.contains('cosa')) { tuneoCosa = b.dataset.k; repintaTuneo(tuneoCosa); }
-  else if (b.id === 'f-kpagar' || b.id === 'f-ppagar' || b.id === 'f-ktpagar') {
-    const av = $(b.id === 'f-ktpagar' ? 'f-tuneo-aviso' : 'f-aviso');
+  else if (b.id === 'f-kpagar' || b.id === 'f-ppagar' || b.id === 'f-ktpagar' || b.id === 'f-npagar' || b.id === 'f-fpagar') {
+    const av = $(b.id === 'f-ktpagar' || b.id === 'f-npagar' ? 'f-tuneo-aviso' : 'f-aviso');
     if (JUEGO.demo) { ev.preventDefault(); if (av) av.textContent = 'Vista de prueba: aquí se abriría la página de pago.'; }
     else if (av) av.textContent = 'La página de pago se abre aparte. Cuando termines, aparece aquí en unos minutos.';
   } else if (b.id === 'f-tpagar') {
@@ -1660,8 +1720,8 @@ $('ranking').addEventListener('keydown', (ev) => {              // pestañas: fl
 
 function elige(i, desde) {
   const t = PUEBLOS[i]; sel = i; const quiere = pendiente, vale = estado(t.c) !== 'nojuega'; pendiente = '';
-  pagoModo = quiere && quiere !== 'tuneo' && JUEGO.pago[quiere] && vale ? quiere : '';
-  tunea = quiere === 'tuneo' && !!JUEGO.pago.tuneo && vale; tuneoCosa = '';
+  pagoModo = quiere && quiere !== 'tuneo' && quiere !== 'packNavidad' && quiere !== 'flores' && JUEGO.pago[quiere] && vale ? quiere : '';
+  tunea = (quiere === 'tuneo' || quiere === 'packNavidad') && !!JUEGO.pago.tuneo && vale; tuneoCosa = '';
   q.value = t.n; $('q-borrar').hidden = false; cierraLista();
   const medio = Math.max(t.a ? 7 : 12, Math.min(250, radioVecinos(i) * 1.75));      // con las aldeas hay sitios con casitas a 200 m: se acerca más
   vuela(t.x, t.y, Math.min(W, H * 1.15) / base / 2 / medio);
@@ -1844,9 +1904,10 @@ function demo(f) {
     }
   }
   j.tuneos = { 13082: { gorro: 4, gafas: 2, vaca: 1, corona: 3 }, 13005: { corona: 5, luces: 2, bigote: 1 }, 27051: { ciguena: 3, flotador: 1 }, 22130: { boina: 2, gafas: 1 },
-    41095: { paraguas: 2, luces: 1 }, '03031': { flotador: 2, gafas: 1, gorro: 1 }, 24008: { luces: 3, gorro: 2 }, 13019: { gorro: 1, vaca: 1 }, 31232: { bigote: 2, boina: 1 }, '02081': { vaca: 2, luces: 1 } };
+    41095: { paraguas: 2, luces: 1 }, '03031': { flotador: 2, gafas: 1, gorro: 1 }, 24008: { luces: 3, gorro: 2, nieve: 2, arbol: 1 }, 13028: { estrella: 2, nieve: 1, arbol: 1, luces: 1 }, 13019: { gorro: 1, vaca: 1 }, 31232: { bigote: 2, boina: 1 }, '02081': { vaca: 2, luces: 1 } };
   const ya = Date.now() / 1000;
-  j.recientes = [['13082', 'vecino', 1, '', 0.3], ['27051', 'tuneo', 1, 'ciguena', 1.2], ['13005', 'oro', 2, '', 3], ['41095', 'tuneo', 1, 'paraguas', 5.5], ['03031', 'oro', 1, '', 27], ['22130', 'tuneo', 2, 'boina', 51]]
+  j.flores = { 13019: 6, 13061: 1 };
+  j.recientes = [['13082', 'vecino', 1, '', 0.3], ['13028', 'navidad', 1, '', 0.5], ['13019', 'flores', 3, '', 0.9], ['27051', 'tuneo', 1, 'ciguena', 1.2], ['13005', 'oro', 2, '', 3], ['41095', 'tuneo', 1, 'paraguas', 5.5], ['03031', 'oro', 1, '', 27], ['22130', 'tuneo', 2, 'boina', 51]]
     .map(([c, t, n, k, h]) => ({ c, t, n, k, s: Math.round(ya - h * 3600) }));
   JUEGO = prepara(j); pagoModo = pendiente = ''; tunea = false; tuneoCosa = ''; $('demo').hidden = false; refresca();
 }

@@ -1,16 +1,15 @@
-# Robot de cobros: cada 10 minutos mira en Stripe los pagos nuevos (tuneos, pueblos de oro, vecinos de honor) y los pone en la web.
+# Robot de cobros, a mano: mira en Stripe los pagos nuevos y los pone en la web. El que va solo es vigila.yml (cada 5 minutos);
+# este se deja para lanzarlo a mano desde Actions («Run workflow») si hace falta.
 # Necesita el secreto STRIPE_KEY (Settings → Secrets and variables → Actions): una clave RESTRINGIDA de Stripe con permiso de
 # lectura de «Checkout Sessions». Sin el secreto no hace nada. Nunca guarda datos de quien paga (ver .github/cobros.py).
 name: Cobros
 on:
-  schedule:
-    - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch: {}
 permissions:
   contents: write
   pages: write
 concurrency:
-  group: cobros
+  group: vigila
   cancel-in-progress: false
 jobs:
   cobros:

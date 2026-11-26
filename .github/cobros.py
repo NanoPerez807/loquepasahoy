@@ -25,7 +25,8 @@ RAIZ = os.environ.get('COBROS_RAIZ') or os.getcwd()
 F_LIBRO = os.path.join(RAIZ, 'data', 'cobros-libro.json')
 F_WEB = os.path.join(RAIZ, 'data', 'cobros.json')
 F_PUEBLOS = os.path.join(RAIZ, 'data', 'pueblos.json')
-PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000}             # céntimos, IVA incluido
+PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 800}   # céntimos, IVA incluido (PKT: pack de 5 tuneos · PKO: pack de 3 oros · PRI: primer plano)
+PRIMER = {'inicio': '2026-11-27', 'fin': '2026-12-31', 'cupo': 10, 'cierre_h': 14}   # primer plano: 10 por episodio; lo pagado antes de las 14:00 (Madrid) va al de ese día
 COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon']   # el orden de la tienda
 VENTANA = 7 * 86400                                       # se miran los pagos de los últimos 7 días (una sesión de pago caduca a las 24 h)
 
@@ -105,7 +106,31 @@ def suma(L):
             if n > 0:
                 apoyos[c] = apoyos.get(c, 0) + n
     tuneos = {c: {k: d[k] for k in COSAS if k in d} for c, d in sorted(tuneos.items())}
-    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos}
+    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'primeros': primeros(L)}
+
+
+def primeros(L):
+    """Primer plano: cada pago, por orden de llegada, al primer episodio con hueco (10 por episodio) desde el de su día (si se pagó antes de las 14:00 de Madrid) o el siguiente."""
+    from datetime import date, timedelta
+    ini, fin = date.fromisoformat(PRIMER['inicio']), date.fromisoformat(PRIMER['fin']); usados = {}
+    pagos = sorted((p for p in L['pagos'] if p['t'] == 'PRI' and not p.get('devuelto')), key=lambda p: (p['creado'], p['h']))
+    for p in pagos:
+        loc = datetime.fromtimestamp(p['creado'], timezone.utc) + timedelta(hours=1)          # Madrid en noviembre y diciembre: UTC+1
+        d = max(ini, loc.date() + timedelta(days=0 if loc.hour < PRIMER['cierre_h'] else 1))
+        for _ in range(int(p.get('n', 1))):
+            while d <= fin and len(usados.get(d.isoformat(), [])) >= PRIMER['cupo']:
+                d += timedelta(days=1)
+            if d > fin:
+                break
+            usados.setdefault(d.isoformat(), []).append(p['c'])
+    return dict(sorted(usados.items()))
+
+
+def euros_cent(s):
+    if (s.get('currency') or '').lower() == 'eur':
+        return int(s.get('amount_total') or 0)
+    cc = s.get('currency_conversion') or {}
+    return int(cc.get('amount_total') or 0) if (cc.get('source_currency') or '').lower() == 'eur' else 0
 
 
 def cantidad(s, tipo, linea=None):
@@ -131,11 +156,23 @@ def apunte(s, P, linea=None):
     ref = (s.get('client_reference_id') or '').strip()
     h = huella(s['id'])
     base = {'h': h, 'creado': int(s.get('created') or 0)}
-    m = re.match(r'^(TUN|ORO|VEC)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
+    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
     if not m or m[2] not in P:
         return dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')
     t, c, resto = m[1], m[2], m[3] or ''
     n = cantidad(s, t, linea)
+    cent = euros_cent(s)
+    if cent:
+        base['cent'] = cent
+    if t == 'PKT':                                   # pack de 5 tuneos: 5 votos por pack
+        k = norm(resto).replace(' ', '')
+        if k not in COSAS:
+            return dict(base, t='RARO', c=c, nota=f'pack de tuneos «{k}» que no está en la tienda: revisar a mano')
+        return dict(base, t='TUN', c=c, k=k, n=5 * n, pack='PKT')
+    if t == 'PKO':                                   # pack de 3 oros
+        return dict(base, t='ORO', c=c, n=3 * n, pack='PKO')
+    if t == 'PRI':
+        return dict(base, t='PRI', c=c, n=n)
     if t == 'TUN':
         k = norm(resto).replace(' ', '')
         if k not in COSAS:
@@ -199,9 +236,11 @@ def describe(a, P):
         return f'RARO {a["h"][:8]} · {a.get("nota", "")}'
     pueblo = f'{P.get(a["c"], "?")} ({a["c"]})'
     if a['t'] == 'TUN':
-        return f'TUNEO {a["k"]} x{a["n"]} → {pueblo}'
+        return f'{"PACK DE 5 TUNEOS" if a.get("pack") else "TUNEO"} {a["k"]} x{a["n"]} → {pueblo}'
     if a['t'] == 'ORO':
-        return f'ORO x{a["n"]} → {pueblo}'
+        return f'{"PACK DE 3 OROS" if a.get("pack") else "ORO"} x{a["n"]} → {pueblo}'
+    if a['t'] == 'PRI':
+        return f'PRIMER PLANO x{a["n"]} → {pueblo}'
     return f'VECINO DE HONOR → {pueblo} · su apoyo de oro ya cuenta; el nombre, cuando se revise (huella {a["h"][:12]})'
 
 
@@ -220,7 +259,7 @@ def resumen(L, P):
     for p in L['pagos']:
         k = p['t'] + (' devuelto' if p.get('devuelto') else '')
         cuenta[k] = cuenta.get(k, 0) + 1
-    euros = sum(int(p.get('n', 1)) * PRECIO[p['t']] for p in L['pagos'] if p['t'] in PRECIO and not p.get('devuelto')) / 100
+    euros = sum(p.get('cent') or int(p.get('n', 1)) * PRECIO[p['t']] for p in L['pagos'] if p['t'] in PRECIO and not p.get('devuelto')) / 100
     print(f'apuntes: {len(L["pagos"])} · ' + ', '.join(f'{k} {v}' for k, v in sorted(cuenta.items())) + f' · cobrado por el robot: unos {euros:.0f} € (IVA incluido, sin comisiones)')
     T = W['tuneos']
     print(f'tuneos: {sum(sum(d.values()) for d in T.values())} votos en {len(T)} pueblos · oro suelto: {sum(W["apoyos"].values())} en {len(W["apoyos"])} pueblos · vecinos con nombre: {sum(len(v) for v in W["vecinos"].values())}')

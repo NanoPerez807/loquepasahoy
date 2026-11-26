@@ -714,7 +714,7 @@ button,input{font:inherit;color:inherit}
           <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
           <li><b>Ranking.</b> Cada euro es un punto para el pueblo que eliges: tuneo 1, pueblo de oro 3, vecino de honor 10 y negocio 50. A igualdad de puntos, va delante el que llegó antes. El ranking no cambia el sorteo ni tiene premios: el n.º 1 sale con corona en los episodios.</li>
           <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
-          <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña o paraguas (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador y vaca los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
+          <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas o limón (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador y vaca los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
           <li><b>Plazos.</b> El oro y los tuneos aparecen en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
           <li><b>Nombres.</b> Hasta 30 caracteres. No se publican nombres ofensivos, marcas ni nombres de otras personas sin su permiso. Si el tuyo no se puede publicar, te escribimos para cambiarlo o te devolvemos el dinero.</li>
           <li><b>Pago.</b> Se hace en Stripe, que actúa como vendedor y te envía el justificante. Esta web no ve ni guarda tus datos de pago.</li>
@@ -780,6 +780,7 @@ const COSAS = {
   ciguena: { c: 'Cigüeña', n: 'Nido de cigüeña', a: 'un nido de cigüeña', g: 'cabeza', alto: 0.54, d: 'Vuelve cada año. El pueblo, ya veremos.' },
   paraguas: { c: 'Paraguas', n: 'Paraguas antimeteoritos', a: 'un paraguas antimeteoritos', g: 'cabeza', alto: 0.84, d: 'No para meteoritos, pero queda mono.' },
   flotador: { c: 'Flotador', n: 'Flotador antitsunamis', a: 'un flotador antitsunamis', g: 'flotador', d: 'Contra un tsunami no sirve. En la piscina, sí.' },
+  limon: { c: 'Limón', n: 'Limón en el tejado', a: 'un limón en el tejado', g: 'cabeza', alto: 0.44, d: 'Idea de un vecino de Totana. Para que se sepa de dónde es.' },
 };
 const ORDEN_COSAS = Object.keys(COSAS);
 const votosT = (n) => miles(n) + (n === 1 ? ' voto' : ' votos');
@@ -1058,7 +1059,7 @@ function adorno(x, y, h, e, L, delante) {   // se pinta en dos veces: lo de detr
   if (L.vaca) vaca(x, y, h, lw);
   if (!ruina) { if (L.luces) luces(x, y, h, lw); if (L.gafas) gafas(x, y, h, lw); if (L.bigote) bigote(x, y, h, lw); }
   if (L.flotador) flotador(x, y, h, lw, true);
-  if (L.cabeza) { const yy = ruina ? y + h * 0.44 : y; ({ gorro, corona, boina, ciguena, paraguas })[L.cabeza](x, yy, h, lw); }
+  if (L.cabeza) { const yy = ruina ? y + h * 0.44 : y; ({ gorro, corona, boina, ciguena, paraguas, limon })[L.cabeza](x, yy, h, lw); }
 }
 function gorro(x, y, h) {
   cx.fillStyle = '#e8283f'; cx.beginPath(); cx.moveTo(x - h * 0.24, y - h * 0.46); cx.quadraticCurveTo(x - h * 0.15, y - h * 0.88, x - h * 0.44, y - h * 0.93);
@@ -1087,6 +1088,14 @@ function ciguena(x, y, h, lw) {
   cx.lineWidth = lw + Math.max(1, h * 0.05); cx.beginPath(); cx.moveTo(x + h * 0.22, y - h * 0.97); cx.lineTo(x + h * 0.42, y - h * 0.9); cx.stroke();
   cx.strokeStyle = '#ff7a1a'; cx.lineWidth = Math.max(1, h * 0.05); cx.stroke(); cx.strokeStyle = TINTA; cx.lineWidth = lw;
   if (h >= 14) { cx.fillStyle = TINTA; cx.beginPath(); cx.arc(x + h * 0.17, y - h * 0.99, h * 0.017, 0, 6.3); cx.fill(); }
+}
+function limon(x, y, h) {                     // un limón tumbado en el tejado, con su hoja (idea de un vecino de Totana)
+  const cy = y - h * 0.62, r = h * 0.21;
+  cx.fillStyle = '#ffe02e'; cx.beginPath(); cx.moveTo(x - h * 0.38, cy);
+  cx.quadraticCurveTo(x - h * 0.31, cy - r, x, cy - r); cx.quadraticCurveTo(x + h * 0.31, cy - r, x + h * 0.38, cy);
+  cx.quadraticCurveTo(x + h * 0.31, cy + r, x, cy + r); cx.quadraticCurveTo(x - h * 0.31, cy + r, x - h * 0.38, cy); cx.closePath(); cx.fill(); cx.stroke();
+  cx.fillStyle = 'rgba(255,255,255,.75)'; cx.beginPath(); cx.ellipse(x - h * 0.13, cy - h * 0.08, h * 0.09, h * 0.035, -0.25, 0, 6.3); cx.fill();
+  cx.fillStyle = '#2fbf5a'; cx.beginPath(); cx.ellipse(x + h * 0.13, cy - h * 0.25, h * 0.14, h * 0.055, -0.45, 0, 6.3); cx.fill(); cx.stroke();
 }
 function paraguas(x, y, h) {
   const cy = y - h * 0.8, r = h * 0.47;

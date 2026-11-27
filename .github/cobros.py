@@ -25,7 +25,7 @@ RAIZ = os.environ.get('COBROS_RAIZ') or os.getcwd()
 F_LIBRO = os.path.join(RAIZ, 'data', 'cobros-libro.json')
 F_WEB = os.path.join(RAIZ, 'data', 'cobros.json')
 F_PUEBLOS = os.path.join(RAIZ, 'data', 'pueblos.json')
-PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 800, 'PNV': 300, 'FLO': 100}   # céntimos, IVA incluido (PKT: pack de 5 tuneos · PKO: pack de 3 oros · PRI: primer plano · PNV: pack Navidad · FLO: flores)
+PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 800, 'PNV': 300, 'FLO': 100, 'NEG': 5000}   # céntimos, IVA incluido (PKT: pack de 5 tuneos · PKO: pack de 3 oros · PRI: primer plano · PNV: pack Navidad · FLO: flores · NEG: apoyo de negocio)
 PRIMER = {'inicio': '2026-11-27', 'fin': '2026-12-31', 'cupo': 10, 'cierre_h': 14}   # primer plano: 10 por episodio; lo pagado antes de las 14:00 (Madrid) va al de ese día
 COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon', 'nieve', 'arbol', 'estrella']   # el orden de la tienda
 NAVIDAD = ['luces', 'nieve', 'arbol', 'estrella']   # lo que lleva el pack Navidad (un voto de cada por pack)
@@ -90,7 +90,7 @@ def escribe(L):
 
 
 def suma(L):
-    apoyos, vecinos, tuneos, flores = {}, {}, {}, {}
+    apoyos, vecinos, tuneos, flores, negocios = {}, {}, {}, {}, []
     for p in L['pagos']:
         if p.get('devuelto') or p['t'] in ('YA', 'RARO'):
             continue
@@ -106,6 +106,9 @@ def suma(L):
             flores[c] = flores.get(c, 0) + n
         elif p['t'] == 'ORO':
             apoyos[c] = apoyos.get(c, 0) + n
+        elif p['t'] == 'NEG':                       # apoyo de negocio: sus puntos los suma la web desde el libro; el cartel, cuando el nombre esté revisado
+            if p.get('nombre'):
+                negocios.append({'c': c, 'n': p['nombre'], 'k': n})
         elif p['t'] == 'VEC':                       # con nombre revisado sale como vecino (y la web le suma su apoyo); si no, cuenta como apoyo suelto
             if p.get('nombre'):
                 vecinos.setdefault(c, []).append(p['nombre'])
@@ -113,7 +116,7 @@ def suma(L):
             if n > 0:
                 apoyos[c] = apoyos.get(c, 0) + n
     tuneos = {c: {k: d[k] for k in COSAS if k in d} for c, d in sorted(tuneos.items())}
-    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'flores': dict(sorted(flores.items())), 'primeros': primeros(L)}
+    return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'flores': dict(sorted(flores.items())), 'negocios': negocios, 'primeros': primeros(L)}
 
 
 def primeros(L):
@@ -163,7 +166,7 @@ def apunte(s, P, linea=None):
     ref = (s.get('client_reference_id') or '').strip()
     h = huella(s['id'])
     base = {'h': h, 'creado': int(s.get('created') or 0)}
-    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO|PNV|FLO)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
+    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO|PNV|FLO|NEG)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
     if not m or m[2] not in P:
         return dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')
     t, c, resto = m[1], m[2], m[3] or ''
@@ -182,6 +185,8 @@ def apunte(s, P, linea=None):
         return dict(base, t='PRI', c=c, n=n)
     if t in ('PNV', 'FLO'):                          # pack Navidad · flores para un pueblo caído
         return dict(base, t=t, c=c, n=n)
+    if t == 'NEG':                                   # apoyo de negocio (50 € cada uno): el nombre del cartel espera a que alguien lo revise
+        return dict(base, t='NEG', c=c, n=n, revisar=True)
     if t == 'TUN':
         k = norm(resto).replace(' ', '')
         if k not in COSAS:
@@ -254,6 +259,8 @@ def describe(a, P):
         return f'PACK NAVIDAD x{a["n"]} (luces, nieve, árbol y estrella) → {pueblo}'
     if a['t'] == 'FLO':
         return f'FLORES x{a["n"]} → {pueblo}'
+    if a['t'] == 'NEG':
+        return f'APOYO DE NEGOCIO x{a["n"]} ({a["n"] * 50} €) → {pueblo} · sus puntos ya cuentan; el cartel, cuando se revise el nombre (huella {a["h"][:12]})'
     return f'VECINO DE HONOR → {pueblo} · su apoyo de oro ya cuenta; el nombre, cuando se revise (huella {a["h"][:12]})'
 
 
@@ -278,7 +285,7 @@ def resumen(L, P):
     print(f'tuneos: {sum(sum(d.values()) for d in T.values())} votos en {len(T)} pueblos · oro suelto: {sum(W["apoyos"].values())} en {len(W["apoyos"])} pueblos · vecinos con nombre: {sum(len(v) for v in W["vecinos"].values())}')
     for c, d in sorted(T.items(), key=lambda kv: -sum(kv[1].values()))[:10]:
         print(f'  {P.get(c, "?")} ({c}): ' + ', '.join(f'{k} {n}' for k, n in sorted(d.items(), key=lambda kv: -kv[1])))
-    pend = [p for p in L['pagos'] if p['t'] == 'VEC' and p.get('revisar') and not p.get('devuelto')]
+    pend = [p for p in L['pagos'] if p['t'] in ('VEC', 'NEG') and p.get('revisar') and not p.get('devuelto')]
     if pend:
         print(f'vecinos de honor a la espera de nombre: {len(pend)} (python3 .github/cobros.py --pendientes)')
     raros = [p for p in L['pagos'] if p['t'] == 'RARO']
@@ -307,13 +314,13 @@ def main(a):
             resumen(L, P); return 0
         elif a[0] == '--pendientes':
             for p in L['pagos']:
-                if p['t'] == 'VEC' and p.get('revisar') and not p.get('devuelto'):
-                    print(f'  {p["h"]} · {P.get(p["c"], "?")} ({p["c"]}) · pagado el {datetime.fromtimestamp(p["creado"], timezone.utc):%d-%m %H:%M} UTC')
+                if p['t'] in ('VEC', 'NEG') and p.get('revisar') and not p.get('devuelto'):
+                    print(f'  {p["h"]} · {"NEGOCIO" if p["t"] == "NEG" else "vecino"} · {P.get(p["c"], "?")} ({p["c"]}) · pagado el {datetime.fromtimestamp(p["creado"], timezone.utc):%d-%m %H:%M} UTC')
             return 0
         elif a[0] in ('--nombre', '--sin-nombre'):
             p = busca(L, a[1])
-            if p['t'] != 'VEC':
-                raise Mal('ese pago no es de un vecino de honor')
+            if p['t'] not in ('VEC', 'NEG'):
+                raise Mal('ese pago no es de un vecino de honor ni de un negocio')
             if a[0] == '--nombre':
                 nombre = limpia_nombre(' '.join(a[2:]))
                 if len(nombre) < 2:
@@ -322,7 +329,7 @@ def main(a):
             else:
                 p.pop('nombre', None); p['sin_nombre'] = True
             p.pop('revisar', None)
-            n, dichos = 1, [f'vecino de honor de {P.get(p["c"], "?")}: ' + (f'«{p["nombre"]}»' if p.get('nombre') else 'sin nombre publicado')]
+            n, dichos = 1, [f'{"negocio que apoya a" if p["t"] == "NEG" else "vecino de honor de"} {P.get(p["c"], "?")}: ' + (f'«{p["nombre"]}»' if p.get('nombre') else 'sin nombre publicado')]
         elif a[0] == '--devuelto':
             p = busca(L, a[1]); p['devuelto'] = True
             n, dichos = 1, ['devuelto: ' + describe(p, P)]

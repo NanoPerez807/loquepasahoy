@@ -7,7 +7,7 @@
   "apuntados": "todos",
   "dias": [],
   "ganador": null,
-  "pago": {"tuneo": "https://buy.stripe.com/8x2dR1ayN3GZf9Vd3XdnW02?client_reference_id={ref}", "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}", "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}", "negocio": "", "primer": "https://buy.stripe.com/7sYdR1eP31yR0f14xrdnW05?client_reference_id={ref}", "packTuneos": "https://buy.stripe.com/14A4grdKZb9re5R5BvdnW06?client_reference_id={ref}", "packOro": "https://buy.stripe.com/7sY9AL22ha5nbXJ4xrdnW07?client_reference_id={ref}", "packNavidad": "https://buy.stripe.com/4gM00b22h91j2n96FzdnW08?client_reference_id={ref}", "flores": "https://buy.stripe.com/bJe14f8qF0uN3rd1lfdnW09?client_reference_id={ref}"},
+  "pago": {"tuneo": "https://buy.stripe.com/8x2dR1ayN3GZf9Vd3XdnW02?client_reference_id={ref}", "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}", "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}", "negocio": "https://buy.stripe.com/7sYdR1ayNa5naTF1lfdnW0a?client_reference_id={ref}", "primer": "https://buy.stripe.com/7sYdR1eP31yR0f14xrdnW05?client_reference_id={ref}", "packTuneos": "https://buy.stripe.com/14A4grdKZb9re5R5BvdnW06?client_reference_id={ref}", "packOro": "https://buy.stripe.com/7sY9AL22ha5nbXJ4xrdnW07?client_reference_id={ref}", "packNavidad": "https://buy.stripe.com/4gM00b22h91j2n96FzdnW08?client_reference_id={ref}", "flores": "https://buy.stripe.com/bJe14f8qF0uN3rd1lfdnW09?client_reference_id={ref}"},
   "correo": "",
   "apoyos": { "03114": 1, "12139": 1, "16244": 1, "23095": 1 },
   "vecinos": { "30039": ["Gines Rosa"] },

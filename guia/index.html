@@ -166,14 +166,14 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
     <p class="entradilla">El método tal cual lo uso: los cuatro formatos, las plantillas de guion, la voz con IA y los vídeos en 3D que me monta Claude. Sin saber animar y sin salir a cámara.</p>
 
     <div class="precio" data-oferta>
-      <div class="que" data-que>Precio de lanzamiento, solo este fin de semana</div>
-      <div class="cifra"><b data-precio>25 €</b><span data-luego>Desde el lunes, 29 €</span></div>
+      <div class="que" data-que>Lanzamiento por Black Friday, solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25&nbsp;€</b><span data-luego>Desde el lunes, 39&nbsp;€</span></div>
       <div class="cuenta" data-cuenta aria-label="Tiempo que queda del precio de lanzamiento">
         <div><b data-d>2</b><span>días</span></div>
         <div><b data-h>00</b><span>horas</span></div>
         <div><b data-m>00</b><span>minutos</span></div>
       </div>
-      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25 €</a>
+      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
       <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
     </div>
 
@@ -243,9 +243,9 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
   <div class="cierre-in">
     <h2 class="sec-t">Tu primer vídeo, esta semana</h2>
     <div class="precio" data-oferta>
-      <div class="que" data-que>Precio de lanzamiento, solo este fin de semana</div>
-      <div class="cifra"><b data-precio>25 €</b><span data-luego>Desde el lunes, 29 €</span></div>
-      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25 €</a>
+      <div class="que" data-que>Lanzamiento por Black Friday, solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25&nbsp;€</b><span data-luego>Desde el lunes, 39&nbsp;€</span></div>
+      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
       <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
     </div>
   </div>
@@ -273,7 +273,7 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
 const OFERTA = {
   fin: Date.UTC(2026, 10, 29, 22, 59, 0),
   lanzamiento: { precio: 25, enlace: 'https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b' },   // plink_1UgLOx1p5e7gGFT3H4nMmkj1
-  normal: { precio: 29, enlace: 'https://buy.stripe.com/eVq6oz8qFgtL9PBgg9dnW0c' },   // plink_1UgLP31p5e7gGFT3cyxSj4ec
+  normal: { precio: 39, enlace: 'https://buy.stripe.com/fZubITeP3fpH1j59RLdnW0d' },   // plink_1UgLRv1p5e7gGFT3CNXyfsXt
 };
 const $$ = s => document.querySelectorAll(s);
 const dos = n => String(n).padStart(2, '0');
@@ -284,7 +284,7 @@ function pinta() {
   const p = lanz ? OFERTA.lanzamiento : OFERTA.normal;
   $$('[data-precio]').forEach(e => { e.textContent = p.precio + '\u00a0€'; });
   $$('[data-comprar]').forEach(e => { e.textContent = 'Comprar la guía por ' + p.precio + '\u00a0€'; e.href = p.enlace; });
-  $$('[data-que]').forEach(e => { e.textContent = lanz ? 'Precio de lanzamiento, solo este fin de semana' : 'Precio de la guía'; });
+  $$('[data-que]').forEach(e => { e.textContent = lanz ? 'Lanzamiento por Black Friday, solo este fin de semana' : 'Precio de la guía'; });
   $$('[data-luego]').forEach(e => { e.textContent = lanz ? 'Desde el lunes, ' + OFERTA.normal.precio + '\u00a0€' : 'Impuestos incluidos'; });
   $$('[data-cuenta]').forEach(c => {
     c.hidden = !lanz;

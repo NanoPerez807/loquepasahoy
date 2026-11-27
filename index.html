@@ -350,6 +350,7 @@ button,input{font:inherit;color:inherit}
 .niveles .chip.blanco{background:#fff}
 .pronto.mini{margin-top:11px;font-size:13.5px;padding:4px 10px 3px;box-shadow:0 3px 0 var(--tinta)}
 .apoya .regla{margin-top:28px;padding-top:20px;border-top:var(--borde);max-width:680px;font-weight:800;font-size:17px;line-height:1.4}
+.apoya .junto{margin-top:26px;max-width:680px;padding:13px 16px;border:var(--borde);border-radius:14px;background:#fff;font-size:16px;line-height:1.45}
 .apoya .letra{margin-top:8px;max-width:680px;font-size:14.5px;font-weight:500;color:#232b4b}
 .apoya .condiciones{margin-top:14px;max-width:680px;font-size:14.5px;line-height:1.5;font-weight:500;color:#232b4b}
 .apoya .condiciones summary{cursor:pointer;font-weight:800;text-decoration:underline;text-underline-offset:3px;width:max-content;max-width:100%}
@@ -743,6 +744,7 @@ button,input{font:inherit;color:inherit}
           <button type="button" class="chip ir-pago" data-m="negocio" hidden>Busca tu pueblo</button>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>
+      <p class="junto" id="ap-junto"><b>Todo en un solo pago.</b> En la página de pago puedes subir la cantidad (tres vecinos de honor, cuatro apoyos de negocio…) y añadir más cosas para el mismo pueblo: oro, primer plano, el pack Navidad… Pagas una vez, y al canal le llega más, porque cada pago por separado se lleva su comisión.</p>
       <p class="regla">Apoyar no cambia el sorteo. Los pueblos caen al azar, también el tuyo.</p>
       <p class="letra">Los apoyos aparecen en el mapa en menos de 24 horas. Solo para mayores de 18 años.</p>
       <details class="condiciones" id="condiciones">
@@ -753,6 +755,7 @@ button,input{font:inherit;color:inherit}
           <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
           <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas, limón o estrella (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador, vaca, nieve y árbol los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
           <li><b>Packs y primer plano.</b> Pack de 5 tuneos: 4 €, son 5 votos para la cosa que elijas (5 puntos). Pack de 3 oros: 8 €, son 3 apoyos de oro (9 puntos). Pack Navidad: 3 €, son 4 tuneos, un voto para cada uno: luces, nieve en el tejado, árbol de Navidad y estrella (4 puntos). Primer plano: 5 €, tu pueblo sale de cerca y con su nombre en un episodio (5 puntos); hay 10 huecos por episodio, lo pagado antes de las 14:00 va al de ese día y, si está lleno, al siguiente con hueco. Si tu pueblo cae antes, su primer plano es su caída. Nada de esto cambia el sorteo.</li>
+          <li><b>Varias cosas en un pago.</b> En la página de pago puedes cambiar la cantidad y añadir otras cosas de la tienda para el mismo pueblo. Cada una cuenta igual que si la compraras por separado: tres vecinos de honor son 30 puntos y el nombre sale «×3»; varios primeros planos, en episodios seguidos. Si añades un vecino de honor, pon el nombre en la casilla «nombre para los créditos».</li>
           <li><b>Negocios y ayuntamientos.</b> 50 € cada apoyo, IVA incluido: el cartel con vuestro nombre sobre vuestro pueblo en este mapa y en el tablero de los episodios, «con el apoyo de…» en el siguiente episodio con hueco (es un patrocinio y se dice así) y 50 puntos por cada apoyo, para el pueblo y su provincia. El nombre lo revisamos antes de publicarlo: el de vuestro negocio o ayuntamiento, sí; marcas de otros o nombres ofensivos, no (si no se puede publicar, os escribimos o os devolvemos el dinero). Para algo más grande, escribidnos.</li>
           <li><b>Flores.</b> 1 € cada ramo, para los pueblos que ya han caído. Se ven junto a sus ruinas en este mapa y en el tablero de los episodios, y suman 1 punto para el pueblo y para su provincia. No lo devuelven al juego.</li>
           <li><b>Metas por provincia.</b> Los puntos de todos los pueblos de una provincia suman para ella. A los 25 puntos, su bandera ondea en el mapa de los episodios; a los 50, saludo a toda la provincia en la voz de un episodio; a los 100, sale en la portada de un episodio; a los 200, su nombre en letras gigantes, como el cartel de Hollywood, en el tablero de todos los episodios; a los 300, fuegos artificiales sobre la provincia en un episodio; a los 500, la cámara sobrevuela la provincia en un episodio, con los nombres de sus pueblos con más puntos; a los 750, una estatua de oro gigante en la provincia, en todos los episodios; a los 1.000, un episodio especial dedicado a la provincia, y desde ahí, cada 500 puntos más, otra ronda de fuegos artificiales y otro saludo en la voz. Se cumplen en el episodio siguiente a llegar (lo conseguido antes de las 14:00, hora de Madrid, en el de ese mismo día); el episodio especial, en los días siguientes. Las metas no protegen a nadie: si una catástrofe pasa por encima de las letras o de la estatua, caen como todo lo demás, y el sorteo no cambia.</li>
@@ -1440,7 +1443,7 @@ function pagoHTML(t, e) {                    // el panel de pago, dentro del blo
   const m = pagoModo, T = parte(t.n), ref = conRef(m), vec = m === 'vecino';
   const pagar = `<a class="boton dorado largo" id="f-pagar" target="_blank" rel="noopener" href="${esc(hrefPago())}">Ir a pagar</a>`;
   let h = `<div class="pago" id="f-pago" tabindex="-1" role="group" aria-labelledby="f-pago-t"><h3 id="f-pago-t">${vec ? 'Vecino de honor de ' + T : (ORO[sel] ? 'Más oro para ' : 'Haz de oro a ') + T}</h3>
-    <p class="oro-linea">${vec ? `${PRECIO.vecino} €. Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y ${T} suma un apoyo de oro.` : `${PRECIO.oro} € cada apoyo.${ref ? ' En la página de pago eliges cuántos.' : ''}`}</p>`;
+    <p class="oro-linea">${vec ? `${PRECIO.vecino} €. Tu nombre y tu pueblo salen en los agradecimientos de un episodio, y ${T} suma un apoyo de oro.${ref ? ' En la página de pago puedes poner más de uno y añadir oro: todo en un solo pago.' : ''}` : `${PRECIO.oro} € cada apoyo.${ref ? ' En la página de pago eliges cuántos y puedes añadir más cosas: todo en un solo pago.' : ''}`}</p>`;
   if (vec) h += `<div class="campo-n"><label for="f-nombre">¿Qué nombre pongo?</label><input id="f-nombre" type="text" maxlength="30" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" placeholder="Marta G." value="${esc(pagoNombre)}"></div>`;
   if (ref) h += pagar;
   else h += `<ol class="pago-pasos"><li><div><p>Copia este texto:</p><div class="comenta"><output id="f-nota">${esc(notaPago(m, t, pagoNombre))}</output><button type="button" class="boton" id="f-nota-copiar">Copiar</button></div></div></li>
@@ -1459,8 +1462,8 @@ function extrasFicha(t, e) {                 // pack de 3 oros y primer plano (e
   let txt = J.pago.flores && e === 'eliminado' ? `<b>Flores:</b> ${PRECIO.flores} € cada ramo. Se ven junto a sus ruinas y suman 1 punto, también para su provincia. ` : '';
   txt += J.pago.packOro ? `<b>Pack de 3 oros:</b> 9 puntos por ${PRECIO.packOro} €. ` : '';
   if (ya) txt += `<b>${parte(t.n)} sale en primer plano</b> el ${ya.map(diaTexto).join(', el ')}. `;
-  if (J.pago.primer && hu) txt += `<b>Primer plano:</b> ${parte(t.n)} sale de cerca en el episodio del ${diaTexto(hu[0])} (${hu[1] === 1 ? 'queda 1 hueco' : 'quedan ' + hu[1] + ' huecos'} de ${PRIMER.cupo}) y suma 5 puntos. `;
-  if (J.pago.negocio) txt += `<b>Negocios y ayuntamientos:</b> ${PRECIO.negocio} € cada apoyo (50 puntos). Vuestro cartel sobre ${parte(t.n)} en el mapa y en el tablero, y «con el apoyo de…» en un episodio.`;
+  if (J.pago.primer && hu) txt += `<b>Primer plano:</b> ${parte(t.n)} sale de cerca en el episodio del ${diaTexto(hu[0])} (${hu[1] === 1 ? 'queda 1 hueco' : 'quedan ' + hu[1] + ' huecos'} de ${PRIMER.cupo}) y suma 5 puntos; en la página de pago puedes pedir más, para episodios seguidos. `;
+  if (J.pago.negocio) txt += `<b>Negocios y ayuntamientos:</b> ${PRECIO.negocio} € cada apoyo (50 puntos; en la página de pago eliges cuántos). Vuestro cartel sobre ${parte(t.n)} en el mapa y en el tablero, y «con el apoyo de…» en un episodio.`;
   return `<div class="fila">${h}</div><p class="oro-linea mini">${txt}</p>`;
 }
 function oroFicha(t, e) {                    // el bloque dorado de la ficha: cuántos apoyos lleva, quién lo apoya y cómo sumarle uno
@@ -1640,7 +1643,7 @@ function tuneoFicha(t, e) {                  // el bloque de los tuneos: la casi
       <a class="boton largo" id="f-tpagar" target="_blank" rel="noopener" href="${esc(hrefTuneo(t, tuneoCosa))}"><span>Ir a pagar</span><span class="precio">${PRECIO.tuneo} €</span></a>`
       + (JUEGO.pago.packTuneos ? `<a class="boton blanco largo" id="f-ktpagar" target="_blank" rel="noopener" href="${esc(JUEGO.demo ? '#juego' : JUEGO.pago.packTuneos.split('{ref}').join('PKT-' + t.c + '-' + tuneoCosa))}"><span>Pack de 5 (5 votos)</span><span class="precio">${PRECIO.packTuneos} €</span></a>` : '') + '</div>'; }
   else h += '<p class="tuneo-pista">Toca una cosa para ver cómo le queda.</p>';
-  return h + `<p class="oro-letra">En la página de pago eliges cuántos: cada uno es un voto. Solo decorativo: no cambia el sorteo. Aparece en el mapa en menos de 24 horas. Solo para mayores de 18 años.</p>
+  return h + `<p class="oro-letra">En la página de pago eliges cuántos (cada uno es un voto) y puedes añadir oro, primer plano o el pack Navidad en el mismo pago. Solo decorativo: no cambia el sorteo. Aparece en el mapa en menos de 24 horas. Solo para mayores de 18 años.</p>
     <p class="aviso" id="f-tuneo-aviso" role="status"></p><button type="button" class="chip" id="f-tuneo-cerrar">Ahora no</button></div>`;
 }
 function encuadre(L, o, w, alto, max) {     // tamaño y sitio de una casita para que quepa entera con lo que lleva (en px del lienzo)

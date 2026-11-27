@@ -6,6 +6,8 @@ Lo usa el robot de GitHub (.github/workflows/cobros.yml) cada 10 minutos y tambi
   data/cobros.json         lo que lee la web: apoyos, vecinos y tuneos sumados (se rehace entero desde el libro cada vez).
 NUNCA guarda ni enseña datos de quien paga (nombre, correo, dirección): solo el código del pueblo, la cosa y la cantidad.
 Los nombres de los vecinos de honor no se publican solos: su apoyo de oro cuenta al momento, y el nombre espera a que alguien lo revise.
+Una compra puede llevar varias cosas para el mismo pueblo (en la página de pago se cambia la cantidad y se añaden cosas: así se paga una
+sola comisión): el robot lee cada línea de la compra por su precio de Stripe (PRECIO_ID) y apunta una cosa por línea.
 
 uso (desde la raíz del repo de la web):
   python3 .github/cobros.py --stripe              lee de Stripe los pagos nuevos (necesita la variable STRIPE_KEY, una clave restringida
@@ -29,6 +31,10 @@ PRECIO = {'TUN': 100, 'ORO': 300, 'VEC': 1000, 'PRI': 500, 'PKT': 400, 'PKO': 80
 PRIMER = {'inicio': '2026-11-27', 'fin': '2026-12-31', 'cupo': 10, 'cierre_h': 14}   # primer plano: 10 por episodio; lo pagado antes de las 14:00 (Madrid) va al de ese día
 COSAS = ['gorro', 'luces', 'gafas', 'bigote', 'vaca', 'corona', 'boina', 'ciguena', 'paraguas', 'flotador', 'limon', 'nieve', 'arbol', 'estrella']   # el orden de la tienda
 NAVIDAD = ['luces', 'nieve', 'arbol', 'estrella']   # lo que lleva el pack Navidad (un voto de cada por pack)
+PRECIO_ID = {   # precio de Stripe → tipo (los precios se ven en la página de pago: no son secretos)
+    'price_1UfpeN1p5e7gGFT3skohqbja': 'TUN', 'price_1Ufimc1p5e7gGFT3U79as1fQ': 'ORO', 'price_1Ufimg1p5e7gGFT3iGIFB8H7': 'VEC',
+    'price_1UgB5f1p5e7gGFT3OTb4r2OM': 'PRI', 'price_1UgB5j1p5e7gGFT3y0CET0Lr': 'PKT', 'price_1UgB5l1p5e7gGFT39g5i9Psq': 'PKO',
+    'price_1UgCSz1p5e7gGFT3gTogCtth': 'PNV', 'price_1UgCT11p5e7gGFT3fqAtnh06': 'FLO', 'price_1UgE7m1p5e7gGFT3x2uRNCpX': 'NEG'}
 VENTANA = 7 * 86400                                       # se miran los pagos de los últimos 7 días (una sesión de pago caduca a las 24 h)
 
 
@@ -110,17 +116,17 @@ def suma(L):
             if p.get('nombre'):
                 negocios.append({'c': c, 'n': p['nombre'], 'k': n})
         elif p['t'] == 'VEC':                       # con nombre revisado sale como vecino (y la web le suma su apoyo); si no, cuenta como apoyo suelto
-            if p.get('nombre'):
-                vecinos.setdefault(c, []).append(p['nombre'])
-                n -= 1
-            if n > 0:
+            if p.get('nombre'):                     # 3 vecinos de una vez = el nombre 3 veces (la web lo enseña «×3»)
+                vecinos.setdefault(c, []).extend([p['nombre']] * n)
+            else:
                 apoyos[c] = apoyos.get(c, 0) + n
     tuneos = {c: {k: d[k] for k in COSAS if k in d} for c, d in sorted(tuneos.items())}
     return {'apoyos': dict(sorted(apoyos.items())), 'vecinos': dict(sorted(vecinos.items())), 'tuneos': tuneos, 'flores': dict(sorted(flores.items())), 'negocios': negocios, 'primeros': primeros(L)}
 
 
 def primeros(L):
-    """Primer plano: cada pago, por orden de llegada, al primer episodio con hueco (10 por episodio) desde el de su día (si se pagó antes de las 14:00 de Madrid) o el siguiente."""
+    """Primer plano: cada pago, por orden de llegada, al primer episodio con hueco (10 por episodio) desde el de su día (si se pagó antes de las 14:00 de Madrid) o el siguiente.
+    Si un pago lleva varios, van a episodios seguidos."""
     from datetime import date, timedelta
     ini, fin = date.fromisoformat(PRIMER['inicio']), date.fromisoformat(PRIMER['fin']); usados = {}
     pagos = sorted((p for p in L['pagos'] if p['t'] == 'PRI' and not p.get('devuelto')), key=lambda p: (p['creado'], p['h']))
@@ -133,6 +139,7 @@ def primeros(L):
             if d > fin:
                 break
             usados.setdefault(d.isoformat(), []).append(p['c'])
+            d += timedelta(days=1)                  # 3 primeros planos de una vez: tres episodios seguidos, no tres veces en el mismo
     return dict(sorted(usados.items()))
 
 
@@ -143,12 +150,8 @@ def euros_cent(s):
     return int(cc.get('amount_total') or 0) if (cc.get('source_currency') or '').lower() == 'eur' else 0
 
 
-def cantidad(s, tipo, linea=None):
-    if linea is not None:
-        return max(1, int(linea))
-    li = s.get('line_items')
-    if isinstance(li, dict) and li.get('data'):
-        return max(1, sum(int(x.get('quantity') or 1) for x in li['data']))
+def cantidad(s, tipo):
+    """Cuántas unidades, por el importe (cuando no se tienen las líneas de la compra)."""
     eur = None
     if (s.get('currency') or '').lower() == 'eur':
         eur = s.get('amount_total')
@@ -161,19 +164,32 @@ def cantidad(s, tipo, linea=None):
     return max(1, round(int(eur) / PRECIO[tipo]))
 
 
-def apunte(s, P, linea=None):
-    """Una sesión de Checkout pagada → un apunte del libro (sin datos de quien paga)."""
-    ref = (s.get('client_reference_id') or '').strip()
-    h = huella(s['id'])
-    base = {'h': h, 'creado': int(s.get('created') or 0)}
-    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO|PNV|FLO|NEG)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
-    if not m or m[2] not in P:
-        return dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')
-    t, c, resto = m[1], m[2], m[3] or ''
-    n = cantidad(s, t, linea)
-    cent = euros_cent(s)
-    if cent:
-        base['cent'] = cent
+def lineas_de(s, lineas=None):
+    """[(tipo, cantidad)] de cada línea de la compra (tipo None si el precio no está en PRECIO_ID), o None si no se tienen."""
+    if lineas is None:
+        li = s.get('line_items')
+        lineas = li.get('data') if isinstance(li, dict) else None
+    if not lineas:
+        return None
+    sal = []
+    for x in lineas:
+        pr = x.get('price')
+        pid = (pr.get('id') if isinstance(pr, dict) else pr) or ''
+        sal.append((PRECIO_ID.get(pid), max(1, int(x.get('quantity') or 1))))
+    return sal
+
+
+def cosa_top(L, c):
+    """El tuneo más pedido de un pueblo (para un tuneo añadido en la página de pago sin decir cuál): «lleva lo que más se pida»."""
+    d = {}
+    for p in (L or {}).get('pagos', []):
+        if p.get('t') == 'TUN' and p.get('c') == c and not p.get('devuelto'):
+            d[p['k']] = d.get(p['k'], 0) + int(p.get('n', 1))
+    return max(COSAS, key=lambda k: (d.get(k, 0), -COSAS.index(k)))
+
+
+def uno(base, t, c, resto, n):
+    """Un apunte del libro: n unidades de la cosa t para el pueblo c."""
     if t == 'PKT':                                   # pack de 5 tuneos: 5 votos por pack
         k = norm(resto).replace(' ', '')
         if k not in COSAS:
@@ -181,9 +197,7 @@ def apunte(s, P, linea=None):
         return dict(base, t='TUN', c=c, k=k, n=5 * n, pack='PKT')
     if t == 'PKO':                                   # pack de 3 oros
         return dict(base, t='ORO', c=c, n=3 * n, pack='PKO')
-    if t == 'PRI':
-        return dict(base, t='PRI', c=c, n=n)
-    if t in ('PNV', 'FLO'):                          # pack Navidad · flores para un pueblo caído
+    if t in ('PRI', 'PNV', 'FLO', 'ORO'):            # primer plano · pack Navidad · flores para un pueblo caído · oro
         return dict(base, t=t, c=c, n=n)
     if t == 'NEG':                                   # apoyo de negocio (50 € cada uno): el nombre del cartel espera a que alguien lo revise
         return dict(base, t='NEG', c=c, n=n, revisar=True)
@@ -192,9 +206,37 @@ def apunte(s, P, linea=None):
         if k not in COSAS:
             return dict(base, t='RARO', c=c, nota=f'tuneo «{k}» que no está en la tienda: revisar a mano')
         return dict(base, t='TUN', c=c, k=k, n=n)
-    if t == 'ORO':
-        return dict(base, t='ORO', c=c, n=n)
     return dict(base, t='VEC', c=c, n=n, revisar=True)
+
+
+def apuntes(s, P, lineas=None, L=None):
+    """Una sesión de Checkout pagada → sus apuntes del libro (sin datos de quien paga): lo de la referencia y, si en la página
+    de pago se añadieron otras cosas, un apunte más por cada una (huella de la compra + «+TIPO»), todo para el mismo pueblo."""
+    ref = (s.get('client_reference_id') or '').strip()
+    h = huella(s['id'])
+    base = {'h': h, 'creado': int(s.get('created') or 0)}
+    m = re.match(r'^(TUN|ORO|VEC|PRI|PKT|PKO|PNV|FLO|NEG)-(\d{11}|\d{5})(?:-([A-Za-z0-9_]+))?$', ref)      # 5 cifras: municipio · 11: aldea, pedanía, parroquia…
+    if not m or m[2] not in P:
+        return [dict(base, t='RARO', nota='referencia sin pueblo: revisar a mano en Stripe')]
+    t, c, resto = m[1], m[2], m[3] or ''
+    ls, extra = lineas_de(s, lineas), {}
+    if ls is None:
+        n = cantidad(s, t)
+    else:
+        n = sum(q for k, q in ls if k in (None, t)) or 1                 # las líneas de lo de la referencia (o de un precio que no conozco)
+        for k, q in ls:
+            if k and k != t:
+                extra[k] = extra.get(k, 0) + q
+    cent = euros_cent(s)
+    if cent and not extra:
+        base['cent'] = cent
+    elif extra:
+        base['cent'] = n * PRECIO[t]
+    sal = [uno(base, t, c, resto, n)]
+    for k, q in sorted(extra.items(), key=lambda kv: list(PRECIO).index(kv[0])):
+        r = resto if t in ('TUN', 'PKT') else cosa_top(L, c)            # un tuneo añadido: el de la referencia, o lo que más se pida en ese pueblo
+        sal.append(uno({'h': h + '+' + k, 'creado': base['creado'], 'cent': q * PRECIO[k], 'anadido': True}, k, c, r, q))
+    return sal
 
 
 def stripe(ruta, clave, **q):
@@ -232,20 +274,23 @@ def nuevos(sesiones, L, P, clave=None):
             continue
         if huella(s['id']) in hechas:
             continue
-        linea = None
-        if clave:
-            li = stripe(f'checkout/sessions/{s["id"]}/line_items', clave, limit=10)
-            linea = sum(int(x.get('quantity') or 1) for x in li.get('data') or []) or None
+        lineas = None
+        if clave:                                    # de cada línea solo se usa el precio y la cantidad
+            li = stripe(f'checkout/sessions/{s["id"]}/line_items', clave, limit=20)
+            lineas = [{'price': (x.get('price') or {}).get('id'), 'quantity': x.get('quantity')} for x in li.get('data') or []]
         try:
-            a = apunte(s, P, linea)
+            aa = apuntes(s, P, lineas, L)
         except Mal as e:
-            a = {'h': huella(s['id']), 'creado': int(s.get('created') or 0), 't': 'RARO', 'nota': str(e)}
-        L['pagos'].append(a); hechas.add(a['h']); n += 1
-        dichos.append(describe(a, P))
+            aa = [{'h': huella(s['id']), 'creado': int(s.get('created') or 0), 't': 'RARO', 'nota': str(e)}]
+        for a in aa:
+            L['pagos'].append(a); hechas.add(a['h']); n += 1
+            dichos.append(describe(a, P))
     return n, dichos
 
 
 def describe(a, P):
+    if a.get('anadido'):
+        return describe(dict(a, anadido=False), P) + ' · añadido en la página de pago'
     if a['t'] == 'RARO':
         return f'RARO {a["h"][:8]} · {a.get("nota", "")}'
     pueblo = f'{P.get(a["c"], "?")} ({a["c"]})'
@@ -260,14 +305,25 @@ def describe(a, P):
     if a['t'] == 'FLO':
         return f'FLORES x{a["n"]} → {pueblo}'
     if a['t'] == 'NEG':
-        return f'APOYO DE NEGOCIO x{a["n"]} ({a["n"] * 50} €) → {pueblo} · sus puntos ya cuentan; el cartel, cuando se revise el nombre (huella {a["h"][:12]})'
-    return f'VECINO DE HONOR → {pueblo} · su apoyo de oro ya cuenta; el nombre, cuando se revise (huella {a["h"][:12]})'
+        return f'APOYO DE NEGOCIO x{a["n"]} ({a["n"] * 50} €) → {pueblo} · sus puntos ya cuentan; el cartel, cuando se revise el nombre (huella {corta(a["h"])})'
+    return f'VECINO DE HONOR{" x" + str(a["n"]) if int(a.get("n", 1)) > 1 else ""} → {pueblo} · su apoyo de oro ya cuenta; el nombre, cuando se revise (huella {corta(a["h"])})'
 
 
-def busca(L, clave):
+def corta(h):
+    return h[:12] + h[24:] if '+' in h else h[:12]
+
+
+def busca(L, clave, vale=None):
     clave = clave.strip()
     h = huella(clave) if clave.startswith('cs_') else clave
-    hay = [p for p in L['pagos'] if p['h'].startswith(h)]
+    hay = [p for p in L['pagos'] if p['h'] == h]
+    if not hay:
+        b, _, k = h.partition('+')
+        hay = [p for p in L['pagos'] if p['h'].startswith(b) and (p['h'].partition('+')[2] == k if k else True)]
+        if len(hay) > 1 and vale:
+            hay = [p for p in hay if vale(p)] or hay
+        if len(hay) > 1 and not k:
+            hay = [p for p in hay if '+' not in p['h']] or hay
     if len(hay) != 1:
         raise Mal(f'{"ningún" if not hay else "más de un"} pago con la huella {h[:12]}…')
     return hay[0]
@@ -318,7 +374,7 @@ def main(a):
                     print(f'  {p["h"]} · {"NEGOCIO" if p["t"] == "NEG" else "vecino"} · {P.get(p["c"], "?")} ({p["c"]}) · pagado el {datetime.fromtimestamp(p["creado"], timezone.utc):%d-%m %H:%M} UTC')
             return 0
         elif a[0] in ('--nombre', '--sin-nombre'):
-            p = busca(L, a[1])
+            p = busca(L, a[1], lambda p: p['t'] in ('VEC', 'NEG') and (p.get('revisar') or a[0] == '--sin-nombre'))
             if p['t'] not in ('VEC', 'NEG'):
                 raise Mal('ese pago no es de un vecino de honor ni de un negocio')
             if a[0] == '--nombre':
@@ -331,8 +387,11 @@ def main(a):
             p.pop('revisar', None)
             n, dichos = 1, [f'{"negocio que apoya a" if p["t"] == "NEG" else "vecino de honor de"} {P.get(p["c"], "?")}: ' + (f'«{p["nombre"]}»' if p.get('nombre') else 'sin nombre publicado')]
         elif a[0] == '--devuelto':
-            p = busca(L, a[1]); p['devuelto'] = True
-            n, dichos = 1, ['devuelto: ' + describe(p, P)]
+            p = busca(L, a[1]); b = p['h'].partition('+')[0]
+            grupo = [q for q in L['pagos'] if q['h'].partition('+')[0] == b] if '+' not in a[1] else [p]
+            for q in grupo:
+                q['devuelto'] = True
+            n, dichos = len(grupo), ['devuelto: ' + describe(q, P) for q in grupo]
         elif a[0] == '--ya':
             hechas = {p['h'] for p in L['pagos']}
             nuevos_ya = [x for x in a[1:] if x.startswith('cs_') and huella(x) not in hechas]

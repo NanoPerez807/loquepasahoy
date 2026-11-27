@@ -177,6 +177,24 @@ button,input{font:inherit;color:inherit}
 .parte li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:600;font-size:15px;line-height:1.25}
 .parte li b{display:grid;place-items:center;min-width:34px;height:34px;padding:0 6px;border-radius:17px;background:var(--sol);color:var(--tinta);font-weight:900;font-size:14px;font-variant-numeric:tabular-nums}
 .parte li span{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* ---------- eventos sorpresa y piques: se encienden con "eventos": true en data/juego.json (web-src/juego/a_web.py) */
+html:not(.eventos) [data-eventos]{display:none!important}
+html.eventos [data-sin-eventos]{display:none!important}
+.parte li small{display:block;margin-top:3px;font-weight:600;font-size:13px;line-height:1.3;opacity:.88}
+.pique{display:grid;gap:8px;background:#fff;border:var(--borde);border-radius:16px;padding:11px 12px 12px;box-shadow:0 3px 0 var(--tinta)}
+.pq-cab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:900;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--senal)}
+.pq-vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
+.pq-pueblo{display:grid;gap:2px;min-height:58px;padding:8px 10px;border:var(--borde);border-radius:14px;background:var(--sol);font:inherit;font-weight:900;font-size:16px;line-height:1.1;color:var(--tinta);cursor:pointer;box-shadow:0 3px 0 var(--tinta);text-align:center;overflow-wrap:anywhere}
+.pq-pueblo small{font-weight:700;font-size:12.5px;opacity:.75}
+.pq-pueblo:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tinta)}
+.pq-x{font-weight:900;font-size:12.5px;text-transform:uppercase}
+.pq-txt{font-size:14px;font-weight:600;line-height:1.35}
+.pq-ayer{font-size:13.5px;font-weight:700;line-height:1.35;color:#2f3759}
+.ev-lista{display:grid;gap:7px;margin-top:12px}
+.ev{font-size:15px;font-weight:600;line-height:1.38;padding:8px 11px;border-radius:12px;background:#f1efff;border-left:5px solid var(--suelo)}
+.ev.bueno{border-left-color:var(--cesped)}.ev.pq{border-left-color:var(--senal)}
+.reglas .ev-reglas{margin-top:30px}
+.reglas .ev-reglas h3{font-size:21px}
 
 /* ---------- así se juega */
 .como{background:var(--carton)}
@@ -544,6 +562,12 @@ button,input{font:inherit;color:inherit}
         <div><b id="r-m">–</b><span>minutos</span></div>
         <div><b id="r-s">–</b><span>segundos</span></div>
       </div>
+      <div class="pique" id="pique" data-eventos hidden aria-live="polite">
+        <p class="pq-cab"><span>Pique del día <span id="pq-dia"></span></span><span>gratis</span></p>
+        <div class="pq-vs"><button type="button" class="pq-pueblo" id="pq-a"></button><b class="pq-x">contra</b><button type="button" class="pq-pueblo" id="pq-b"></button></div>
+        <p class="pq-txt">Comenta en el último episodio por qué tiene que ganar tu pueblo: <b>el comentario con más likes decide</b>. El ganador lleva la copa del pique en su casita y el perdedor, un pañal.</p>
+        <p class="pq-ayer" id="pq-ayer" hidden></p>
+      </div>
     </div>
 
     <form class="busca" id="buscar" role="search" autocomplete="off">
@@ -608,7 +632,7 @@ button,input{font:inherit;color:inherit}
       <section class="rk-caja" aria-labelledby="rk-esc-t"><h3 id="rk-esc-t">Todas las metas</h3><img class="metas-img" src="media/metas.webp" alt="Así se ven las metas en el tablero de los episodios: el nombre de la provincia en letras gigantes, su bandera, la estatua de oro y fuegos artificiales" width="1080" height="600" loading="lazy"><p class="vecs-sub">Lo que consigue una provincia con los puntos de todos sus pueblos. Lo conseguido antes de las 14:00 sale en el episodio de ese día.</p><ol class="niv esc" id="rk-esc"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-feed-t"><h3 id="rk-feed-t">Últimos apoyos</h3><ol class="feed" id="rk-feed"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-niv-t"><h3 id="rk-niv-t">Niveles de casita</h3><ol class="niv" id="rk-niv"></ol></section>
-      <p class="rk-regla">Los puntos no salvan a nadie: el sorteo es igual para todos.</p>
+      <p class="rk-regla"><span data-sin-eventos>Los puntos no salvan a nadie: el sorteo es igual para todos.</span><span data-eventos>Los puntos no salvan a nadie: las catástrofes caen igual para todos. Los eventos buenos dependen de los comentarios, no del dinero.</span></p>
     </div>
   </div>
 </section>
@@ -636,7 +660,7 @@ button,input{font:inherit;color:inherit}
         </li>
         <li>
           <div class="foto"><img src="media/dado.webp" width="384" height="384" loading="lazy" alt="Un dado rueda sobre el mapa"><b aria-hidden="true">3</b></div>
-          <div><h3>Los pueblos caen al azar</h3><p>Un sorteo decide a quién le toca. Da igual lo grande que sea tu pueblo o cuánta gente lo haya comentado.</p></div>
+          <div><h3>Los pueblos caen al azar</h3><p><span data-sin-eventos>Un sorteo decide a quién le toca. Da igual lo grande que sea tu pueblo o cuánta gente lo haya comentado.</span><span data-eventos>Un sorteo decide a quién le toca la catástrofe: da igual lo grande que sea tu pueblo. Los comentarios sí cuentan para los eventos buenos: escudos, fiestas y milagros.</span></p></div>
         </li>
         <li>
           <div class="foto"><img src="media/paso-gana.webp" width="384" height="384" loading="lazy" alt="Una copa dorada junto a la última casita en pie"><b aria-hidden="true">4</b></div>
@@ -654,6 +678,19 @@ button,input{font:inherit;color:inherit}
         <li>Cada día sale un episodio con los pueblos que caen.</li>
         <li>Gana el último pueblo que quede en pie.</li>
       </ul>
+      <div class="ev-reglas" id="eventos" data-eventos>
+        <h3>Eventos sorpresa y piques</h3>
+        <ul>
+          <li><b>Comentar tiene premio.</b> El comentario con más likes elige la catástrofe del día siguiente, los más graciosos salen en el episodio y los piques se deciden en los comentarios.</li>
+          <li><b>Las catástrofes caen igual para todos.</b> Las decide solo el sorteo con el número de la ONCE: da igual lo grande que sea tu pueblo, cuánta gente lo comente o cuánto lo apoyen.</li>
+          <li><b>Los eventos buenos se ganan comentando.</b> Desde el día 2, en cada episodio pasa una de estas tres cosas: un <b>milagro</b> (vuelve a jugar un pueblo caído; el 15 % de los días), un <b>escudo</b> (un pueblo en pie lo lleva en el episodio siguiente y, si la catástrofe le toca, se salva; el 45 %) o una <b>fiesta</b> (un pueblo sale de verbena; el 40 %). Desde el día 30, siempre fiesta.</li>
+          <li><b>Papeletas.</b> Antes de cada episodio miro los comentarios con más likes del anterior, unos 30 por red (TikTok, Instagram y YouTube). Cada pueblo nombrado suma los likes de sus comentarios: esas son sus papeletas. El escudo y la fiesta se sortean entre los pueblos en pie con papeletas, y el milagro, entre los caídos con papeletas (comenta para resucitar a tu pueblo), cada uno en proporción a sus papeletas. Si no hay ninguno, entre todos. Los 10 con más papeletas salen en el episodio como «los más comentados».</li>
+          <li><b>Piques.</b> En cada episodio, dos pueblos vecinos sorteados se pican. Gana el que defienda el comentario con más likes que nombre a uno de los dos. El ganador lleva la copa del pique en su casita; el perdedor, un pañal durante un episodio. Si nadie los nombra, empate y copa de cartón para los dos.</li>
+          <li><b>Batallas.</b> A veces, los dos comentarios con más likes se pelean en el episodio. Arrasa la catástrofe del que tenga más likes, pero caen los mismos pueblos.</li>
+          <li><b>Todo se puede comprobar.</b> Los eventos salen de la misma semilla pública que las catástrofes y las papeletas de cada día se publican en el parte de catástrofes. Un milagro o un escudo no cambian el calendario: cada día quedan en pie los pueblos previstos.</li>
+          <li><b>Gratis.</b> Los eventos y los piques no se compran. Los apoyos no dan papeletas, eventos ni piques, y los eventos no dan puntos.</li>
+        </ul>
+      </div>
       <a class="boton dorado" href="#apoya" style="margin-top:26px">Tunea tu pueblo por 1 €</a>
     </div>
   </div>
@@ -771,6 +808,7 @@ button,input{font:inherit;color:inherit}
           <li><b>Qué compras.</b> Tuneo: 1 € cada uno, IVA incluido. Es un adorno para la casita de un pueblo en este mapa (gorro, gafas, luces, una vaca…). Pueblo de oro: 3 € por apoyo, IVA incluido. La casita de tu pueblo se ve dorada en este mapa. Vecino de honor: 10 €, IVA incluido. Tu nombre y tu pueblo salen en los agradecimientos de un episodio del juego, y tu pueblo suma un apoyo de oro.</li>
           <li><b>Ranking.</b> Cada euro es un punto para el pueblo que eliges: tuneo 1, pueblo de oro 3, vecino de honor 10, flores 1 y negocio 50; los packs dan un poco más (pack de 5 tuneos, 5; pack de 3 oros, 9; pack Navidad, 4). A igualdad de puntos, va delante el que llegó antes. El ranking no cambia el sorteo ni tiene premios: el n.º 1 sale con corona en los episodios.</li>
           <li><b>Lo que no compras.</b> Ninguna ventaja en el juego: el sorteo no cambia y no hay premios. El paraguas no para meteoritos y el flotador no salva de ningún tsunami.</li>
+          <li data-eventos><b>Eventos y piques.</b> Son gratis y no se compran. Las catástrofes caen igual para todos con el sorteo. Los eventos buenos (milagro, escudo y fiesta) se sortean con la misma semilla pública entre los pueblos con papeletas, que salen de los likes de los comentarios, y los piques los decide el comentario con más likes. Ningún apoyo da papeletas, eventos ni piques, y los eventos no dan puntos.</li>
           <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas, limón o estrella (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador, vaca, nieve y árbol los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
           <li><b>Packs y primer plano.</b> Pack de 5 tuneos: 4 €, son 5 votos para la cosa que elijas (5 puntos). Pack de 3 oros: 8 €, son 3 apoyos de oro (9 puntos). Pack Navidad: 3 €, son 4 tuneos, un voto para cada uno: luces, nieve en el tejado, árbol de Navidad y estrella (4 puntos). Primer plano: 5 €, tu pueblo sale de cerca y con su nombre en un episodio (5 puntos); hay 10 huecos por episodio, lo pagado antes de las 14:00 va al de ese día y, si está lleno, al siguiente con hueco. Si tu pueblo cae antes, su primer plano es su caída. Nada de esto cambia el sorteo.</li>
           <li><b>Varias cosas en un pago.</b> En la página de pago puedes cambiar la cantidad y añadir otras cosas de la tienda para el mismo pueblo. Cada una cuenta igual que si la compraras por separado: tres vecinos de honor son 30 puntos y el nombre sale «×3»; varios primeros planos, en episodios seguidos. Si añades un vecino de honor, pon el nombre en la casilla «nombre para los créditos».</li>
@@ -892,8 +930,20 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
     videos: j.videos || {}, dias: Array.isArray(j.dias) ? j.dias : [], ganador: j.ganador ? String(j.ganador) : null, demo: !!j.demo };
   J.todos = j.apuntados === 'todos';
   J.apuntados = J.todos ? TODOS : Array.isArray(j.apuntados) ? new Set(j.apuntados.map(String)) : null;
-  J.caidos = new Map();
-  for (const d of J.dias) for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
+  J.caidos = new Map(); J.milagros = new Map(); J.fiestas = new Map(); J.piques = new Map(); J.escudo = null; J.pique = null;
+  for (const d of J.dias) {                // los caídos de cada día y, después, su evento (un MILAGRO devuelve al juego a un caído)
+    for (const c of d.caidos || []) if (!J.caidos.has(String(c))) J.caidos.set(String(c), d);
+    const ev = d.evento, q = d.pique;
+    if (ev && ev.codigo) { const c = String(ev.codigo);
+      if (ev.tipo === 'milagro' && J.caidos.has(c)) { J.milagros.set(c, { dia: d.dia, antes: J.caidos.get(c).dia }); J.caidos.delete(c); }
+      if (ev.tipo === 'fiesta') J.fiestas.set(c, d.dia); }
+    if (q && q.a && q.b) { const x = { dia: d.dia, a: String(q.a), b: String(q.b), an: q.an || '', bn: q.bn || '', gana: q.gana || null };
+      for (const c of [x.a, x.b]) { if (!J.piques.has(c)) J.piques.set(c, []); J.piques.get(c).push(x); } }
+  }
+  const ult = J.dias.length ? J.dias[J.dias.length - 1] : null;
+  J.eventos = !!j.eventos;
+  J.escudo = ult && ult.evento && ult.evento.tipo === 'escudo' ? String(ult.evento.codigo) : null;   // lo lleva en el episodio siguiente
+  J.pique = ult && ult.pique && ult.pique.a && ult.pique.b && !ult.pique.gana ? J.piques.get(String(ult.pique.a)).slice(-1)[0] : null;
   J.dia = J.dias.length ? J.dias[J.dias.length - 1].dia : 0;
   const pg = j.pago || {};
   J.pago = J.demo ? { oro: 'demo{ref}', vecino: 'demo{ref}', tuneo: 'demo{ref}', negocio: '', primer: 'demo{ref}', packTuneos: 'demo{ref}', packOro: 'demo{ref}', packNavidad: 'demo{ref}', flores: 'demo{ref}' }
@@ -976,7 +1026,7 @@ function pintaPanel() {
   $('paso-plazo').textContent = f === 'inscripcion' ? 'Tienes hasta ' + J.cierre_texto + '.' : 'Las inscripciones de esta edición ya están cerradas.';
   const P = $('parte'), L = $('parte-lista');
   P.hidden = !(J.dias.length && (f === 'jugando' || f === 'final'));
-  L.innerHTML = J.dias.slice().reverse().map((d) => `<li><b>${esc(d.dia)}</b><div>${esc(d.titulo || 'Catástrofe')}</div><span>${caen((d.caidos || []).length)}</span></li>`).join('');
+  L.innerHTML = J.dias.slice().reverse().map((d) => `<li><b>${esc(d.dia)}</b><div>${esc(d.titulo || 'Catástrofe')}${J.eventos ? evParte(d) : ''}</div><span>${caen((d.caidos || []).length)}</span></li>`).join('');
 }
 function plazoEpisodio() {                     // en la tienda: cuánto falta para las 14:00 (lo pagado antes sale en el episodio de ese día)
   const P = $('ap-plazo'); if (!P) return; const f = fase();
@@ -1011,6 +1061,49 @@ function ranking() {                    // puntos de cada casita, su puesto y lo
   for (const [c, n, s] of H) { const p = PUEBLOS[IDX.get(c)].p, a = Math.max(0, base.get(p) || 0), b = a + n; base.set(p, b);
     for (let k = metasDe(a); k < metasDe(b); k++) JUEGO.metasF.push({ c, t: 'meta', p, k, s }); }
 }
+/* ---------- eventos sorpresa y piques (reglas en #eventos; datos de web-src/juego/eventos.py, pasados con a_web.py) */
+const nomDe = (c, n) => { const i = IDX.get(String(c)); return i != null ? PUEBLOS[i].n : n || String(c); };
+const papT = (n) => miles(n) + (n === 1 ? ' papeleta' : ' papeletas');
+function evParte(d) {                         // la línea pequeña de cada día en el parte: evento, pique y los más comentados
+  const L = [], ev = d.evento, q = d.pique;
+  if (ev && ev.codigo) { const n = esc(nomDe(ev.codigo, ev.nombre)), p = ev.papeletas ? ' (' + papT(ev.papeletas) + ')' : '';
+    L.push(ev.tipo === 'milagro' ? 'Milagro: vuelve ' + n + p : ev.tipo === 'escudo' ? 'Escudo para ' + n + p + ' en el día ' + (d.dia + 1) : 'Fiesta en ' + n + p); }
+  if (d.escudo_usado && d.escudo_usado.salvado) L.push('¡El escudo salvó a ' + esc(nomDe(d.escudo_usado.codigo)) + '!');
+  if (q && q.a && q.b) L.push('Pique: ' + esc(nomDe(q.a, q.an)) + ' contra ' + esc(nomDe(q.b, q.bn)) + (q.gana === 'a' ? ' (gana ' + esc(nomDe(q.a, q.an)) + ')' : q.gana === 'b' ? ' (gana ' + esc(nomDe(q.b, q.bn)) + ')' : q.gana === 'empate' ? ' (empate)' : ''));
+  const P = d.papeletas ? Object.entries(d.papeletas).sort((x, y) => y[1] - x[1] || (x[0] < y[0] ? -1 : 1)) : [];
+  if (P.length) L.push('Papeletas: ' + P.map(([c, n]) => esc(nomDe(c)) + ' ' + miles(n)).join(' · '));
+  return L.length ? '<small>' + L.join('<br>') + '</small>' : '';
+}
+function pintaPique() {
+  const B = $('pique'); if (!B) return; const J = JUEGO, q = J.eventos && (fase() === 'jugando') ? J.pique : null;
+  B.hidden = !q; if (!q) return;
+  $('pq-dia').textContent = q.dia;
+  for (const [id, c, n] of [['pq-a', q.a, q.an], ['pq-b', q.b, q.bn]]) {
+    const b = $(id), i = IDX.get(c), t = i != null ? PUEBLOS[i] : null;
+    b.innerHTML = esc(nomDe(c, n)) + (t ? '<small>' + esc(donde(t)) + '</small>' : '');
+    b.onclick = () => { const k = IDX.get(c); if (k != null) elige(k, 'ranking'); };
+  }
+  const prev = J.dias.length > 1 ? J.dias[J.dias.length - 2].pique : null, A = $('pq-ayer');
+  A.hidden = !(prev && prev.gana);
+  if (prev && prev.gana) A.textContent = 'Pique del día ' + (J.dias.length - 1) + ': ' + (prev.gana === 'empate' ? 'empate entre ' + nomDe(prev.a, prev.an) + ' y ' + nomDe(prev.b, prev.bn) + ' (copa de cartón para los dos).'
+    : 'ganó ' + nomDe(prev.gana === 'a' ? prev.a : prev.b) + ' contra ' + nomDe(prev.gana === 'a' ? prev.b : prev.a) + '.');
+}
+function eventosFicha(t) {                    // lo que le ha pasado a este pueblo con los eventos y los piques
+  const J = JUEGO; if (!J.eventos) return '';
+  const L = [], m = J.milagros.get(t.c), f = J.fiestas.get(t.c);
+  if (m) L.push(['bueno', `Volvió a jugar por un milagro el día ${m.dia} (había caído el día ${m.antes}).`]);
+  if (J.escudo === t.c) L.push(['bueno', `Tiene escudo en el próximo episodio: si la catástrofe le toca, se salva.`]);
+  if (f) L.push(['bueno', `Salió de fiesta el día ${f}.`]);
+  for (const q of J.piques.get(t.c) || []) {
+    const yo = q.a === t.c ? 'a' : 'b', otro = esc(nomDe(yo === 'a' ? q.b : q.a, yo === 'a' ? q.bn : q.an));
+    L.push(['pq', !q.gana ? `Está en el pique del día ${q.dia} contra ${otro}. Comenta en el último episodio: el comentario con más likes decide.`
+      : q.gana === 'empate' ? `Empató el pique del día ${q.dia} con ${otro}: copa de cartón para los dos.` : q.gana === yo ? `Ganó el pique del día ${q.dia} contra ${otro}: copa del pique en su casita.`
+      : `Perdió el pique del día ${q.dia} contra ${otro}: pañal en el episodio ${q.dia + 1}.`]);
+  }
+  const u = J.dias.length ? J.dias[J.dias.length - 1] : null, pp = u && u.papeletas ? u.papeletas[t.c] : 0;
+  if (pp) L.push(['bueno', `En el día ${u.dia} tuvo ${papT(pp)} por los likes de sus comentarios.`]);
+  return L.length ? '<div class="ev-lista">' + L.map(([k, x]) => `<p class="ev ${k}">${x}</p>`).join('') + '</div>' : '';
+}
 function refresca() {
   faseVista = fase();
   const f = faseVista;                  // 0 casita normal · 1 no juega · 2 eliminada · 3 ganadora
@@ -1026,7 +1119,8 @@ function refresca() {
   if (pagoModo && !JUEGO.pago[pagoModo]) pagoModo = '';
   if (tunea && !JUEGO.pago.tuneo) { tunea = false; tuneoCosa = ''; }
   cv.setAttribute('aria-label', 'Mapa de España con una casita por cada pueblo, aldea, pedanía o parroquia.' + (OROS.length ? ' Las doradas son pueblos de oro.' : '') + (N_TUN ? ' Algunas van tuneadas, con gorro, gafas o hasta una vaca.' : '') + ' Usa el buscador para encontrar el tuyo.');
-  pintaPanel(); pintaFicha(false); tic(); pide();
+  document.documentElement.classList.toggle('eventos', !!JUEGO.eventos);
+  pintaPanel(); pintaPique(); pintaFicha(false); tic(); pide();
 }
 
 /* ---------- mapa */
@@ -1722,7 +1816,7 @@ function pintaFicha(conGolpe) {
   }
   const mio = guardado.lee() === t.c;
   F.innerHTML = `<div class="senal" data-e="${e}"><div class="senal-cartel"${t.n.length > 22 ? ' style="font-size:19px"' : ''}>${T.replace(/\//g, '/<wbr>')}</div><div class="senal-prov">${esc(pv)}</div>${ORO[sel] ? `<div class="senal-oro">${DESTELLO}Pueblo de oro</div>` : ''}<div class="senal-patas"><i></i><i></i></div></div>
-    <h2>${h}</h2>${cuerpo}${tuneoFicha(t, e)}${oroFicha(t, e)}<hr class="sep">
+    <h2>${h}</h2>${cuerpo}${eventosFicha(t)}${tuneoFicha(t, e)}${oroFicha(t, e)}<hr class="sep">
     <div class="fila"><button type="button" class="boton blanco" id="f-guardar">${mio ? 'Dejar de guardarlo' : 'Guardar como mi pueblo'}</button>
     <button type="button" class="boton blanco" id="f-compartir">${navigator.share ? 'Compartir' : 'Copiar enlace'}</button>${e !== 'nojuega' && !JUEGO.demo ? `<a class="boton wa" href="${esc(waHref(sel))}" target="_blank" rel="noopener">Pide apoyo por WhatsApp</a>` : ''}</div>
     <p class="aviso" id="f-aviso" role="status"></p>`;

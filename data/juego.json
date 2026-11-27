@@ -1,16 +1,19 @@
 {
-  "fase": "listo",
+  "fase": "jugando",
   "cierre": "2026-11-26T18:00:00+01:00",
   "cierre_texto": "el jueves 26 a las 18:00",
   "inicio_texto": "el viernes 27",
   "videos": { "tiktok": "", "instagram": "", "youtube": "" },
   "apuntados": "todos",
-  "dias": [],
+  "dias": [
+    { "dia": 1, "titulo": "La rebelión de los calcetines impares", "caidos": ["27064010600", "27064012200", "27064012500", "27064012900", "27064011600", "27064010000", "27064011200", "27064011500", "27064011100", "27038030200", "27038031100", "27038031900", "27038032300", "27038031700", "27038032800", "27038030300", "27064013100", "27064011700", "27064010100", "27064010300", "27064012300", "27064012000", "27064012100", "27038032400", "27038030000", "27038031400", "27038032900", "27038030100", "27038032700", "27038031000", "27038030800", "27038031200", "27038033100", "27038031500", "27038030600", "27038032000", "27038030400", "27038021200", "27038021100", "27038022500", "27038020500", "27038022100", "27038020600", "27038020800", "27038023500", "27038011200", "27038031800", "27038031300", "27038032200", "27038032500", "27038032100", "27038030700", "27038010400", "27038032600", "27033010000", "27038071100", "27033010500", "27033056600", "27033055000", "27033050500", "27033070200", "27038070500", "27038070900", "27038071500", "27038071300", "27038070800", "27038071700", "27038071000", "27033070000", "27038071600", "27038070400", "27038071800", "27038070600", "27038070300", "27038071400", "27038070100", "27038063100", "27038061600", "27038063400", "27038061900", "27038062800", "27038060400", "27038062500", "27038061300", "27038064000", "27038060100", "27038061000", "27038060800", "27038062900", "27038062000", "27033055100", "27038060700", "27038061500", "27038063500", "27038063700", "27038062700", "27038061400", "27038063800", "27038061700", "27038080500", "27038083700", "27038081200", "27038082900", "27038081100", "27038083000", "27038083500"], "pique": { "a": "05136", "b": "05237", "an": "Muñico", "bn": "Solana de Rioalmar", "gana": null } }
+  ],
   "ganador": null,
-  "pago": {"tuneo": "https://buy.stripe.com/8x2dR1ayN3GZf9Vd3XdnW02?client_reference_id={ref}", "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}", "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}", "negocio": "https://buy.stripe.com/7sYdR1ayNa5naTF1lfdnW0a?client_reference_id={ref}", "primer": "https://buy.stripe.com/7sYdR1eP31yR0f14xrdnW05?client_reference_id={ref}", "packTuneos": "https://buy.stripe.com/14A4grdKZb9re5R5BvdnW06?client_reference_id={ref}", "packOro": "https://buy.stripe.com/7sY9AL22ha5nbXJ4xrdnW07?client_reference_id={ref}", "packNavidad": "https://buy.stripe.com/4gM00b22h91j2n96FzdnW08?client_reference_id={ref}", "flores": "https://buy.stripe.com/bJe14f8qF0uN3rd1lfdnW09?client_reference_id={ref}"},
+  "pago": { "tuneo": "https://buy.stripe.com/8x2dR1ayN3GZf9Vd3XdnW02?client_reference_id={ref}", "oro": "https://buy.stripe.com/3cI9AL8qFelDe5R6FzdnW00?client_reference_id={ref}", "vecino": "https://buy.stripe.com/7sY8wH0Yd91j4vh3tndnW01?client_reference_id={ref}", "negocio": "https://buy.stripe.com/7sYdR1ayNa5naTF1lfdnW0a?client_reference_id={ref}", "primer": "https://buy.stripe.com/7sYdR1eP31yR0f14xrdnW05?client_reference_id={ref}", "packTuneos": "https://buy.stripe.com/14A4grdKZb9re5R5BvdnW06?client_reference_id={ref}", "packOro": "https://buy.stripe.com/7sY9AL22ha5nbXJ4xrdnW07?client_reference_id={ref}", "packNavidad": "https://buy.stripe.com/4gM00b22h91j2n96FzdnW08?client_reference_id={ref}", "flores": "https://buy.stripe.com/bJe14f8qF0uN3rd1lfdnW09?client_reference_id={ref}" },
   "correo": "",
   "apoyos": { "03114": 1, "12139": 1, "16244": 1, "23095": 1 },
   "vecinos": { "30039": ["Gines Rosa"] },
   "negocios": [],
-  "tuneos": {}
+  "tuneos": {},
+  "eventos": true
 }

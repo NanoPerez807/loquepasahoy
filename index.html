@@ -390,7 +390,8 @@ button,input{font:inherit;color:inherit}
 .boton.flores{background:#ff9cc2}.boton.negocio{background:var(--autovia);color:#fff}.boton.negocio .precio{color:var(--tinta)}
 .disco.navidad{border-color:#1f9d55}
 .disco.flores{border-color:#ff4d8d}
-.disco.metas{border-color:var(--oro);color:var(--oro-2)}.ap-metas{margin:6px 0 10px}
+.disco.metas{border-color:var(--oro);color:var(--oro-2)}
+.plazo{display:inline-block;margin-top:14px;padding:8px 14px;border-radius:10px;background:var(--tinta);color:#fff;font-weight:700;font-size:15px;line-height:1.35}.plazo b{color:var(--sol)}.ap-metas{margin:6px 0 10px}
 .metas-img{display:block;width:100%;height:auto;border-radius:12px;border:3px solid var(--tinta);margin:8px 0 10px;background:#2a1f5c}
 .niveles .etiqueta{display:inline-block;vertical-align:3px;margin-left:6px;padding:3px 8px 2px;border-radius:999px;background:var(--tinta);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .oro .fila{display:grid;width:100%;gap:11px}
@@ -724,6 +725,7 @@ button,input{font:inherit;color:inherit}
     <div>
       <h2>Tunea tu pueblo o hazlo de oro</h2>
       <p class="sub">Apoyas el canal y tu pueblo luce en el mapa. Nada de esto le salva: si cae, cae con estilo.</p>
+      <p class="plazo" id="ap-plazo" hidden></p>
       <ul class="niveles">
         <li><span class="disco">1<small>€</small></span><div><h3>Tunea tu pueblo</h3><p>1 € cada cosa: gorro de Papá Noel, nieve en el tejado, un árbol de Navidad, gafas de sol, una vaca… para la casita de tu pueblo. Cada tuneo es un voto y lleva lo que más se pida. Suma 1 punto en el ranking.</p>
           <button type="button" class="chip ir-pago" data-m="tuneo" hidden>Tunea tu pueblo</button><p class="pronto mini" data-m="tuneo">Muy pronto</p></div></li>
@@ -955,7 +957,16 @@ function pintaPanel() {
   P.hidden = !(J.dias.length && (f === 'jugando' || f === 'final'));
   L.innerHTML = J.dias.slice().reverse().map((d) => `<li><b>${esc(d.dia)}</b><div>${esc(d.titulo || 'Catástrofe')}</div><span>${caen((d.caidos || []).length)}</span></li>`).join('');
 }
+function plazoEpisodio() {                     // en la tienda: cuánto falta para las 14:00 (lo pagado antes sale en el episodio de ese día)
+  const P = $('ap-plazo'); if (!P) return; const f = fase();
+  if (f !== 'listo' && f !== 'jugando') { P.hidden = true; return; }
+  const x = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()), g = (k) => +x.find((y) => y.type === k).value;
+  const ahora = g('hour') * 60 + g('minute'), hoy = ahora < 14 * 60, m = hoy ? 14 * 60 - ahora : 38 * 60 - ahora, txt = m >= 60 ? Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0') + ' min' : m + ' min';
+  const h = `Para salir en el episodio de <b>${hoy ? 'hoy' : 'mañana'}</b>: quedan <b>${txt}</b> (lo que se pague antes de las 14:00).`;
+  if (P.innerHTML !== h) P.innerHTML = h; P.hidden = false;
+}
 function tic() {
+  plazoEpisodio();
   const f = fase();
   if (f !== faseVista) refresca();
   if (f !== 'inscripcion') return;
@@ -1494,12 +1505,15 @@ function pintaApoya() {                      // la sección «Haz de oro a tu pu
   if (R.correo) { co.href = 'mailto:' + R.correo; co.hidden = false; } else co.hidden = true;
 }
 /* ---------- ranking */
-function waTexto(i) {                         // lo que se manda por WhatsApp para pedir apoyo a un pueblo
+function waTexto(i) {                         // lo que se manda por WhatsApp para pedir apoyo a un pueblo (y lo que le falta a su provincia para la siguiente meta)
   const t = PUEBLOS[i], pt = PUN[i], pos = PPOS.get(i), url = location.href.split('#')[0] + '#pueblo-' + t.c;
-  if (!pt) return '¿Metemos a ' + t.n + ' en el ranking de El último pueblo en pie? Con 1 € ya entra' + (PRANK.length ? ' en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1') + '. Súmale puntos aquí: ' + url;
-  if (pos === 0) return '¡' + t.n + ' va el n.º 1 de España en El último pueblo en pie, con ' + puntosT(pt) + '! Si nadie le pasa, sale con corona en los episodios. Que no nos adelanten: ' + url;
-  const a = PRANK[pos - 1];
-  return '¡Vamos, ' + t.n + '! Va el ' + (pos + 1) + '.º de España en El último pueblo en pie, con ' + puntosT(pt) + ', y con ' + miles(PUN[a] - pt + 1) + ' € adelanta a ' + PUEBLOS[a].n + '. Súmale puntos aquí: ' + url;
+  const o = RPROV.find((x) => x.k === t.p), pp = o ? o.pts : 0, sg = metaN(metasDe(pp));
+  const meta = PROV[t.p] ? ' Y a la provincia de ' + PROV[t.p].n + ' le faltan ' + puntosT(sg[0] - pp) + ' para su siguiente meta: ' + sg[2] + '.' : '';
+  let frase, cierre = 'Súmale puntos aquí: ';
+  if (!pt) frase = '¿Metemos a ' + t.n + ' en el ranking de El último pueblo en pie? Con 1 € ya entra' + (PRANK.length ? ' en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1') + '.';
+  else if (pos === 0) { frase = '¡' + t.n + ' va el n.º 1 de España en El último pueblo en pie, con ' + puntosT(pt) + '! Si nadie le pasa, sale con corona en los episodios.'; cierre = 'Que no nos adelanten: '; }
+  else { const a2 = PRANK[pos - 1]; frase = '¡Vamos, ' + t.n + '! Va el ' + (pos + 1) + '.º de España en El último pueblo en pie, con ' + puntosT(pt) + ', y con ' + miles(PUN[a2] - pt + 1) + ' € adelanta a ' + PUEBLOS[a2].n + '.'; }
+  return frase + meta + ' ' + cierre + url;
 }
 const waHref = (i) => 'https://wa.me/?text=' + encodeURIComponent(waTexto(i));
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];

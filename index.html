@@ -313,6 +313,7 @@ button,input{font:inherit;color:inherit}
 .feed .f-q{font-weight:800;font-size:15.5px;line-height:1.25;overflow-wrap:anywhere}
 .feed .f-q small{font-weight:600;font-size:13px;color:#d7d3ff}
 .feed .f-que{font-size:14px;line-height:1.3;color:#ebe8ff}
+.feed .f-meta .f-que{color:var(--sol);font-weight:700}
 .feed time{font-size:12.5px;color:#c9c4ff}
 .feed .f-mas{grid-row:1/4;grid-column:2;align-self:center;font-weight:900;font-size:21px;color:var(--oro);font-variant-numeric:tabular-nums}
 .feed button:focus-visible{outline:3px solid var(--sol);outline-offset:2px;box-shadow:none}
@@ -327,6 +328,10 @@ button,input{font:inherit;color:inherit}
 .niv .disco{width:44px;height:44px;border-width:5px;font-size:15px;color:var(--tinta);box-shadow:none}
 .niv li>small{font-weight:600;font-size:13px;color:#d7d3ff;text-align:right}
 .niv li.tuyo>span:nth-child(2)::after{content:' · el tuyo';font-weight:600;color:var(--sol)}
+.esc li{align-items:start}.esc .e-t{display:grid;gap:2px;padding-top:2px}.esc .e-d{font-weight:500;font-size:13.5px;line-height:1.3;color:#ebe8ff}
+.esc .disco.largo{font-size:11px;letter-spacing:-.02em}.esc li.hecha .disco{background:var(--oro);border-color:#fff}
+.esc li{grid-template-columns:44px minmax(0,1fr)}.esc .e-w{font-size:13.5px;font-weight:800;color:var(--sol);line-height:1.3}
+.metas .m-ok{margin-bottom:4px}
 .rk-regla{font-weight:800;font-size:15.5px;line-height:1.4}
 
 /* ---------- pueblos de oro: los precios van en señales (disco de límite y cartel azul de servicios), la clasificación en un
@@ -385,6 +390,7 @@ button,input{font:inherit;color:inherit}
 .boton.flores{background:#ff9cc2}
 .disco.navidad{border-color:#1f9d55}
 .disco.flores{border-color:#ff4d8d}
+.disco.metas{border-color:var(--oro);color:var(--oro-2)}.ap-metas{margin:6px 0 10px}
 .niveles .etiqueta{display:inline-block;vertical-align:3px;margin-left:6px;padding:3px 8px 2px;border-radius:999px;background:var(--tinta);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .oro .fila{display:grid;width:100%;gap:11px}
 .oro .fila .boton{justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:8px 12px 8px 16px;font-size:15.5px;text-align:left}
@@ -587,6 +593,7 @@ button,input{font:inherit;color:inherit}
       <article class="tu" id="tu" aria-live="polite"></article>
       <section class="rk-caja" aria-labelledby="rk-vec-t" id="rk-vec-caja" hidden><h3 id="rk-vec-t">Vecinos de honor</h3><p class="vecs-sub">Salen con su nombre en los agradecimientos del episodio. ¡Gracias!</p><ol class="vecs" id="rk-vec"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-metas-t"><h3 id="rk-metas-t">Metas por provincia</h3><p class="vecs-sub">Los puntos de todos sus pueblos suman para la provincia. Al llegar a una meta, se cumple en el episodio siguiente.</p><ol class="metas" id="rk-metas"></ol></section>
+      <section class="rk-caja" aria-labelledby="rk-esc-t"><h3 id="rk-esc-t">Todas las metas</h3><p class="vecs-sub">Lo que consigue una provincia con los puntos de todos sus pueblos. Lo conseguido antes de las 14:00 sale en el episodio de ese día.</p><ol class="niv esc" id="rk-esc"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-feed-t"><h3 id="rk-feed-t">Últimos apoyos</h3><ol class="feed" id="rk-feed"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-niv-t"><h3 id="rk-niv-t">Niveles de casita</h3><ol class="niv" id="rk-niv"></ol></section>
       <p class="rk-regla">Los puntos no salvan a nadie: el sorteo es igual para todos.</p>
@@ -727,6 +734,8 @@ button,input{font:inherit;color:inherit}
           <button type="button" class="chip ir-pago" data-m="packNavidad" hidden>Ponle la Navidad a tu pueblo</button><p class="pronto mini" data-m="packNavidad">Muy pronto</p></div></li>
         <li class="nuevo"><span class="disco flores">1<small>€</small></span><div><h3>Flores para los caídos <span class="etiqueta">Nuevo</span></h3><p>Si tu pueblo cae, no se acaba: déjale flores. Se ven junto a sus ruinas en el mapa y suman 1 punto para él y para su provincia.</p>
           <button type="button" class="chip ir-pago" data-m="flores" hidden>Busca tu pueblo</button><p class="pronto mini" data-m="flores">Muy pronto</p></div></li>
+        <li class="nuevo"><span class="disco metas" aria-hidden="true">★</span><div><h3>Metas por provincia <span class="etiqueta">Nuevas</span></h3><p>Todo lo que compras suma también para tu provincia. Con los puntos de todos sus pueblos llegan la bandera, el saludo, la portada, su nombre en letras gigantes, fuegos artificiales, un vuelo por la provincia, una estatua de oro y hasta un episodio especial.</p>
+          <p class="mini ap-metas" id="ap-metas" hidden></p><a class="chip" href="#rk-esc-t">Ver todas las metas</a></div></li>
         <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…», un cartel con vuestro nombre sobre vuestro pueblo en el mapa y 50 puntos en el ranking.</p>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>
@@ -741,7 +750,7 @@ button,input{font:inherit;color:inherit}
           <li><b>Tuneos.</b> Cada tuneo es un voto. En la cabeza, la casita lleva lo más votado: gorro, corona, boina, cigüeña, paraguas, limón o estrella (si empatan, el que va antes en la tienda). Gafas, bigote, luces, flotador, vaca, nieve y árbol los lleva en cuanto tienen un voto. Cualquiera puede tunear cualquier pueblo.</li>
           <li><b>Packs y primer plano.</b> Pack de 5 tuneos: 4 €, son 5 votos para la cosa que elijas (5 puntos). Pack de 3 oros: 8 €, son 3 apoyos de oro (9 puntos). Pack Navidad: 3 €, son 4 tuneos, un voto para cada uno: luces, nieve en el tejado, árbol de Navidad y estrella (4 puntos). Primer plano: 5 €, tu pueblo sale de cerca y con su nombre en un episodio (5 puntos); hay 10 huecos por episodio, lo pagado antes de las 14:00 va al de ese día y, si está lleno, al siguiente con hueco. Si tu pueblo cae antes, su primer plano es su caída. Nada de esto cambia el sorteo.</li>
           <li><b>Flores.</b> 1 € cada ramo, para los pueblos que ya han caído. Se ven junto a sus ruinas en este mapa y en el tablero de los episodios, y suman 1 punto para el pueblo y para su provincia. No lo devuelven al juego.</li>
-          <li><b>Metas por provincia.</b> Los puntos de todos los pueblos de una provincia suman para ella. A los 25 puntos su bandera ondea en el mapa de los episodios; a los 50, saludo a toda la provincia en la voz de un episodio; a los 100, sale en la portada de un episodio. Se cumplen en el episodio siguiente a llegar.</li>
+          <li><b>Metas por provincia.</b> Los puntos de todos los pueblos de una provincia suman para ella. A los 25 puntos, su bandera ondea en el mapa de los episodios; a los 50, saludo a toda la provincia en la voz de un episodio; a los 100, sale en la portada de un episodio; a los 200, su nombre en letras gigantes, como el cartel de Hollywood, en el tablero de todos los episodios; a los 300, fuegos artificiales sobre la provincia en un episodio; a los 500, la cámara sobrevuela la provincia en un episodio, con los nombres de sus pueblos con más puntos; a los 750, una estatua de oro gigante en la provincia, en todos los episodios; a los 1.000, un episodio especial dedicado a la provincia, y desde ahí, cada 500 puntos más, otra ronda de fuegos artificiales y otro saludo en la voz. Se cumplen en el episodio siguiente a llegar (lo conseguido antes de las 14:00, hora de Madrid, en el de ese mismo día); el episodio especial, en los días siguientes. Las metas no protegen a nadie: si una catástrofe pasa por encima de las letras o de la estatua, caen como todo lo demás, y el sorteo no cambia.</li>
           <li><b>Plazos.</b> El oro y los tuneos aparecen en menos de 24 horas. El nombre sale en el siguiente episodio que tenga sitio en los agradecimientos.</li>
           <li><b>Nombres.</b> Hasta 30 caracteres. No se publican nombres ofensivos ni nombres o marcas de otras personas sin su permiso (el de tu propio negocio, sí). Si el tuyo no se puede publicar, te escribimos para cambiarlo o te devolvemos el dinero.</li>
           <li><b>Pago.</b> Se hace en Stripe, que actúa como vendedor y te envía el justificante. Esta web no ve ni guarda tus datos de pago.</li>
@@ -790,7 +799,14 @@ const RED_NOMBRE = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube
 // Aquí solo están los precios. La página no cobra ni manda nada: enseña el texto que hay que pegar en el mensaje del pago y enlaza a la página de pago.
 const PRECIO = { oro: 3, vecino: 10, tuneo: 1, primer: 5, packTuneos: 4, packOro: 8, packNavidad: 3, flores: 1 };
 const PRIMER = { cupo: 10, cierre: 14, inicio: '2026-11-27', fin: '2026-12-31' };   // primer plano: 10 por episodio; lo pagado antes de las 14:00 va al de ese día
-const METAS = [[25, 'Bandera', 'su bandera ondea en el mapa de los episodios'], [50, 'Saludo', 'saludo a toda la provincia en la voz de un episodio'], [100, 'Portada', 'la provincia sale en la portada de un episodio']];
+// Metas por provincia: [puntos, nombre corto, lo que pasa]. Pasados los 1.000 puntos no se acaban: cada 500 más, otra ronda (metaN da la k-ésima).
+const METAS = [[25, 'Bandera', 'su bandera ondea en el mapa de los episodios'], [50, 'Saludo', 'saludo a toda la provincia en la voz de un episodio'], [100, 'Portada', 'la provincia sale en la portada de un episodio'],
+  [200, 'Letras gigantes', 'su nombre en letras gigantes, como el cartel de Hollywood, en el tablero de todos los episodios'], [300, 'Fuegos artificiales', 'fuegos artificiales sobre la provincia en un episodio'],
+  [500, 'Vuelo por la provincia', 'la cámara sobrevuela la provincia en un episodio, con los nombres de sus pueblos con más puntos'], [750, 'Estatua de oro', 'una estatua de oro gigante en la provincia, en todos los episodios'],
+  [1000, 'Episodio especial', 'un episodio especial dedicado a la provincia']];
+const META_CADA = 500, META_OTRA = ['Otra ronda', 'otra ronda de fuegos artificiales y otro saludo en la voz'];
+const metaN = (k) => k < METAS.length ? METAS[k] : [METAS[METAS.length - 1][0] + META_CADA * (k - METAS.length + 1), META_OTRA[0], META_OTRA[1]];
+const metasDe = (p) => { let k = 0; while (p >= metaN(k)[0]) k++; return k; };        // cuántas metas lleva una provincia con p puntos (la siguiente es metaN(k))
 // Ranking: 1 € = 1 punto. Niveles de casita según los puntos. Comunidades por su código del INE (el campo «r» de cada provincia en mapa.json).
 const PTS = { tuneo: 1, oro: 3, vecino: 10, negocio: 50, primer: 5, navidad: 4, flores: 1 };
 const NIVELES = [[1, 'Casita'], [3, 'Casa con huerto'], [10, 'Casa con piscina'], [25, 'Chalet'], [50, 'Mansión'], [100, 'Palacio'], [250, 'Castillo']];
@@ -876,7 +892,7 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
   // Ranking: lo apuntado a mano en juego.json más cada pago del libro del robot (el libro no lleva datos de nadie: solo el pueblo, lo comprado y la
   // hora). Sin libro vale lo sumado en cobros.json (ahí un vecino de honor sin nombre revisado cuenta como un apoyo de oro). «desde»: el primer pago de
   // cada pueblo, para desempatar (va delante el que llegó antes). «feed»: los últimos apoyos.
-  J.puntos = new Map(); J.desde = new Map(); J.feed = []; J.vecT = new Map();
+  J.puntos = new Map(); J.desde = new Map(); J.feed = []; J.vecT = new Map(); J.hist = [];   // hist: [código, puntos, hora] de cada pago del libro (para las metas)
   const suma = (c, n, s) => { c = String(c); n = Math.floor(+n) || 0; if (n > 0) J.puntos.set(c, (J.puntos.get(c) || 0) + n); if (s > 0 && !(J.desde.get(c) <= s)) J.desde.set(c, s); };
   const de = (f, neg) => {
     for (const c in f.apoyos || {}) suma(c, PTS.oro * Math.floor(+f.apoyos[c]));
@@ -891,6 +907,7 @@ function prepara(j, k, l) {              // j = juego.json (estado y lo apuntado
     const ya = p.t === 'YA', t = TIPO[ya ? p.era : p.t], c = String(p.c || ''), n = Math.max(1, Math.floor(+p.n || 1)), s = Math.floor(+p.creado || 0);
     if (!t || !/^(\d{5}|\d{11})$/.test(c) || (t === 'tuneo' && !COSAS[p.k])) continue;
     suma(c, ya ? 0 : PTS[t] * n, s);                                     // los «YA» se apuntaron a mano en juego.json: del libro solo sale la hora
+    if (!ya && s) J.hist.push([c, PTS[t] * n, s]);
     if (s) J.feed.push({ c, t, n, k: p.k, s, pack: p.pack || '' });
     if (s && t === 'vecino') { if (!J.vecT.has(c)) J.vecT.set(c, []); for (let x = 0; x < n; x++) J.vecT.get(c).push(s); } }
   else if (k) de(k, false);
@@ -952,6 +969,12 @@ function ranking() {                    // puntos de cada casita, su puesto y lo
   for (const i of PRANK) { const t = PUEBLOS[i], r = PROV[t.p].r; mete(pv, t.p, PROV[t.p].n, i); mete(ca, r, COMUN[r] || PROV[t.p].n, i); }   // en orden: el primero de cada una es su mejor pueblo
   const orden = (a, b) => b.pts - a.pts || PPOS.get(a.mejor) - PPOS.get(b.mejor);
   RPROV = [...pv.values()].sort(orden); RCCAA = [...ca.values()].sort(orden);
+  // Las metas conseguidas, con su hora, para «Últimos apoyos»: lo apuntado a mano (sin hora) es la base de cada provincia y los pagos del libro se suman en orden.
+  const base = new Map(RPROV.map((o) => [o.k, o.pts])), H = (JUEGO.hist || []).filter((h) => IDX.has(h[0])).sort((a, b) => a[2] - b[2]);
+  for (const [c, n] of H) { const p = PUEBLOS[IDX.get(c)].p; base.set(p, (base.get(p) || 0) - n); }
+  JUEGO.metasF = [];
+  for (const [c, n, s] of H) { const p = PUEBLOS[IDX.get(c)].p, a = Math.max(0, base.get(p) || 0), b = a + n; base.set(p, b);
+    for (let k = metasDe(a); k < metasDe(b); k++) JUEGO.metasF.push({ c, t: 'meta', p, k, s }); }
 }
 function refresca() {
   faseVista = fase();
@@ -1433,6 +1456,7 @@ function oroFicha(t, e) {                    // el bloque dorado de la ficha: cu
       : 'Va el ' + (pos + 1) + '.º de España' + (ofrece ? ': con ' + miles(PUN[a] - pt + 1) + ' € adelanta a ' + esc(PUEBLOS[a].n) : '') + '.'}${n ? ' Lleva ' + apoyosT(n) + ' de oro.' : ''}${e === 'eliminado' && n ? ' Cayó, pero con estilo: sus ruinas son doradas.' : ''}</p>`; }
   else if (ofrece && (J.pago.oro || J.pago.tuneo || J.pago.vecino)) h += `<p class="oro-estado"><b>Sin puntos todavía.</b> Con 1 € entra en el ranking${PRANK.length ? ', en el puesto ' + miles(PRANK.length + 1) : ' y se pone el n.º 1 de España'}.</p>`;
   { const fl = J.flores.get(t.c); if (fl) h += `<p class="oro-linea">${fl === 1 ? 'Le han dejado un ramo de flores.' : 'Le han dejado ' + miles(fl) + ' ramos de flores.'}</p>`; }
+  if (PROV[t.p]) h += `<p class="oro-linea">${metaTexto(t.p)}</p>`;
   if (vec) { const vu = [...vec.reduce((m, v) => m.set(v, (m.get(v) || 0) + 1), new Map())].map(([v, x]) => x > 1 ? v + ' (×' + x + ')' : v), L = vu.slice(0, 8).map((v) => [v, esc(v)]);   // el mismo nombre dos veces sale una, con «×2»
     const txt = vu.length > 8 ? L.map((v) => v[1]).join(', ') + ' y ' + (vu.length - 8) + ' más' : enumera(L);
     h += `<p class="oro-linea">${vec.length === 1 ? 'Vecino de honor' : 'Vecinos de honor'}: ${txt}${/[.!?…]$/.test(txt) ? '' : '.'}</p>`; }
@@ -1484,7 +1508,8 @@ function pintaRanking() {
   const V = rkVista, pue = V === 'pueblos', fem = !pue, o_ = fem ? '.ª' : '.º';
   for (const b of document.querySelectorAll('.rk-tabs [role="tab"]')) { const s = b.dataset.v === V; b.setAttribute('aria-selected', String(s)); b.tabIndex = s ? 0 : -1; if (s) $('rk-panel').setAttribute('aria-labelledby', b.id); }
   const filas = pue ? PRANK.map((i) => ({ i, n: PUEBLOS[i].n, sub: donde(PUEBLOS[i]), pts: PUN[i], niv: nivelDe(PUN[i]) }))
-    : (V === 'provincias' ? RPROV : RCCAA).map((o) => ({ i: o.mejor, n: o.n, sub: o.pue === 1 ? PUEBLOS[o.mejor].n : pueblos(o.pue), pts: o.pts, mejor: PUEBLOS[o.mejor].n }));
+    : (V === 'provincias' ? RPROV : RCCAA).map((o) => { const m = V === 'provincias' ? metasDe(o.pts) : 0;
+      return { i: o.mejor, n: o.n, sub: (o.pue === 1 ? PUEBLOS[o.mejor].n : pueblos(o.pue)) + (m ? ' · ' + (m === 1 ? '1 meta' : m + ' metas') : ''), pts: o.pts, mejor: PUEBLOS[o.mejor].n }; });
   const etiqueta = (f, k) => `${k + 1}${o_}: ${esc(f.n)}${pue ? ' (' + esc(f.sub) + ')' : ''}, ${puntosT(f.pts)}. ${pue ? 'Ver en el mapa' : 'Ver su mejor pueblo, ' + esc(f.mejor)}`;
   let h = '';
   for (let k = 0; k < 3; k++) { const f = filas[k];
@@ -1502,11 +1527,23 @@ function pintaRanking() {
 }
 function pintaMetas() {                       // las provincias con más puntos: metas cumplidas y lo que les falta para la siguiente
   const L = RPROV.slice(0, 6), E = $('rk-metas'); if (!E) return;
-  E.innerHTML = L.length ? L.map((o) => { const sig = METAS.find((m) => o.pts < m[0]), ok = METAS.filter((m) => o.pts >= m[0]), base = ok.length ? ok[ok.length - 1][0] : 0;
-    const pc = sig ? Math.round(100 * (o.pts - base) / (sig[0] - base)) : 100;
+  E.innerHTML = L.length ? L.map((o) => { const k = metasDe(o.pts), sig = metaN(k), base = k ? metaN(k - 1)[0] : 0, extra = k - METAS.length;
+    const pc = Math.round(100 * (o.pts - base) / (sig[0] - base));
     return `<li><div class="m-cab"><span>${parte(o.n)}</span><span>${puntosT(o.pts)}</span></div><div class="m-bar" aria-hidden="true"><i style="width:${pc}%"></i></div>`
-      + `<p class="m-txt">${ok.map((m) => `<span class="m-ok">✓ ${m[1]}</span>`).join('')}${sig ? 'Le faltan <b>' + puntosT(sig[0] - o.pts) + '</b> para: ' + sig[2] + '.' : '¡Todas las metas conseguidas!'}</p></li>`; }).join('')
+      + `<p class="m-txt">${METAS.slice(0, k).map((m) => `<span class="m-ok">✓ ${m[1]}</span>`).join('')}${extra > 0 ? `<span class="m-ok">✓ ${META_OTRA[0]}${extra > 1 ? ' ×' + extra : ''}</span>` : ''}`
+      + `Le faltan <b>${puntosT(sig[0] - o.pts)}</b> para: ${sig[2]}.</p></li>`; }).join('')
     : '<li class="vacio">Todavía ninguna provincia tiene puntos.</li>';
+  const A = $('ap-metas'), o1 = RPROV[0];              // en la tienda: cómo va la primera provincia
+  if (A) { A.hidden = !o1; if (o1) { const sg = metaN(metasDe(o1.pts)); A.innerHTML = `<b>${esc(o1.n)}</b> va la primera, con ${puntosT(o1.pts)}: con ${puntosT(sg[0] - o1.pts)} más, ${sg[2]}.`; } }
+  const Q = $('rk-esc'); if (!Q) return;                // la escalera entera: cada meta, con las provincias que ya la tienen
+  const quien = (p) => { const P = RPROV.filter((o) => o.pts >= p); return P.length ? (P.length > 3 ? miles(P.length) + ' provincias' : enumera(P.map((o) => [o.n, parte(o.n)]))) : ''; };
+  Q.innerHTML = METAS.map(([p, n, d]) => { const w = quien(p);
+    return `<li${w ? ' class="hecha"' : ''}><span class="disco${miles(p).length > 3 ? ' largo' : ''}" aria-hidden="true">${miles(p)}</span><span class="e-t"><b>${n}</b><span class="oculto">, a los ${puntosT(p)}</span><span class="e-d">${d.charAt(0).toUpperCase() + d.slice(1)}.</span>${w ? `<span class="e-w">✓ ${w}</span>` : ''}</span></li>`; }).join('')
+    + `<li><span class="disco largo" aria-hidden="true">+${META_CADA}</span><span class="e-t"><b>${META_OTRA[0]}</b><span class="e-d">Desde los ${miles(METAS[METAS.length - 1][0])}, cada ${miles(META_CADA)} puntos más: ${META_OTRA[1]}.</span></span></li>`;
+}
+function metaTexto(p) {                        // una línea para la ficha y la tarjeta: cuánto lleva la provincia del pueblo y qué consigue con la siguiente meta
+  const o = RPROV.find((x) => x.k === p), pts = o ? o.pts : 0, sig = metaN(metasDe(pts)), N = esc(PROV[p].n);
+  return pts ? `La provincia de ${N} suma ${puntosT(pts)}: con ${puntosT(sig[0] - pts)} más, ${sig[2]}.` : `Si los pueblos de ${N} suman ${puntosT(sig[0])}, ${sig[2]}.`;
 }
 function pintaTu() {                           // la tarjeta de tu pueblo (el guardado o, si no hay, el que estás mirando): puesto, cuánto le falta, nivel y WhatsApp
   const g = IDX.get(guardado.lee()), i = g != null ? g : sel, T = $('tu');
@@ -1521,6 +1558,7 @@ function pintaTu() {                           // la tarjeta de tu pueblo (el gu
     + `<div class="barra" aria-hidden="true"><i style="width:${sig ? Math.round(100 * pt / sig[0]) : 100}%"></i></div></div>`;
   const pp = RPROV.findIndex((o) => o.k === t.p), r = PROV[t.p].r, pc = RCCAA.findIndex((o) => o.k === r);
   if (pp >= 0) h += `<p>${esc(PROV[t.p].n)} va la ${pp + 1}.ª de ${RPROV.length === 1 ? 'la única provincia con puntos' : miles(RPROV.length) + ' provincias'}${pc >= 0 && COMUN[r] && RCCAA.length > 1 ? ', y ' + esc(COMUN[r]) + ' la ' + (pc + 1) + '.ª de ' + RCCAA.length + ' comunidades' : ''}.</p>`;
+  h += `<p class="tu-meta">${metaTexto(t.p)} <a href="#rk-esc-t">Ver las metas</a></p>`;
   if (ofrece && (JUEGO.pago.oro || JUEGO.pago.tuneo || JUEGO.pago.vecino)) h += `<div class="fila"><button type="button" class="boton dorado" data-i="${i}">Súmale puntos</button>${JUEGO.demo ? '' : `<a class="boton wa" href="${esc(waHref(i))}" target="_blank" rel="noopener">Pide apoyo por WhatsApp</a>`}</div>`;
   T.innerHTML = h;
 }
@@ -1539,8 +1577,10 @@ function pintaVecinos() {
     + (L2.length > 30 ? `<li class="vecs-mas">y ${miles(L2.length - 30)} más</li>` : '');
 }
 function pintaFeed() {
-  const F = JUEGO.feed.filter((e) => IDX.has(e.c)).slice(0, 8);
+  const F = JUEGO.feed.concat(JUEGO.metasF || []).filter((e) => IDX.has(e.c)).sort((a, b) => b.s - a.s || (b.t === 'meta') - (a.t === 'meta')).slice(0, 8);
   $('rk-feed').innerHTML = F.length ? F.map((e) => { const i = IDX.get(e.c), t = PUEBLOS[i];
+    if (e.t === 'meta') { const m = metaN(e.k);                  // una provincia llega a una meta (el pueblo es el que la ha hecho llegar)
+      return `<li class="f-meta"><button type="button" data-i="${i}"><span class="f-q">${esc(PROV[e.p].n)} <small>la provincia, gracias a ${parte(t.n)}</small></span><span class="f-que">¡Meta conseguida! ${m[1]}: ${m[2]}.</span><time datetime="${new Date(e.s * 1000).toISOString()}">${hace(e.s)}</time><span class="f-mas" aria-hidden="true">★</span></button></li>`; }
     const que = e.t === 'primer' ? 'Saldrá en primer plano' + (JUEGO.priDe.get(e.c) ? ' el ' + diaTexto(JUEGO.priDe.get(e.c)[0]) : ' en un episodio') : e.t === 'navidad' ? 'Se pone la Navidad: luces, nieve, árbol y estrella' + (e.n > 1 ? ' (x' + e.n + ')' : '') : e.t === 'flores' ? (e.n > 1 ? 'Le dejan ' + e.n + ' ramos de flores' : 'Le dejan flores') : e.t === 'tuneo' ? (e.pack ? 'Pack de tuneos: le ponen ' : 'Le ponen ') + COSAS[e.k].a + (e.n > 1 ? ' (' + votosT(e.n) + ')' : '') : e.t === 'vecino' ? (e.n > 1 ? 'Estrena ' + e.n + ' vecinos de honor' : 'Estrena vecino de honor' + (nombreVec(e) ? ': ' + esc(nombreVec(e)) : '')) : (e.pack ? 'Pack de oro: recibe ' : 'Recibe ') + (e.n > 1 ? e.n + ' apoyos' : 'un apoyo') + ' de oro';
     return `<li><button type="button" data-i="${i}"><span class="f-q">${parte(t.n)} <small>${parte(donde(t))}</small></span><span class="f-que">${que}</span><time datetime="${new Date(e.s * 1000).toISOString()}">${hace(e.s)}</time><span class="f-mas" aria-label="${puntosT(PTS[e.t] * e.n)} más">+${miles(PTS[e.t] * e.n)}</span></button></li>`; }).join('')
     : '<li class="vacio">Todavía no hay apoyos. El primero se pone el n.º 1.</li>';

@@ -35,6 +35,7 @@ PRECIO_ID = {   # precio de Stripe → tipo (los precios se ven en la página de
     'price_1UfpeN1p5e7gGFT3skohqbja': 'TUN', 'price_1Ufimc1p5e7gGFT3U79as1fQ': 'ORO', 'price_1Ufimg1p5e7gGFT3iGIFB8H7': 'VEC',
     'price_1UgB5f1p5e7gGFT3OTb4r2OM': 'PRI', 'price_1UgB5j1p5e7gGFT3y0CET0Lr': 'PKT', 'price_1UgB5l1p5e7gGFT39g5i9Psq': 'PKO',
     'price_1UgCSz1p5e7gGFT3gTogCtth': 'PNV', 'price_1UgCT11p5e7gGFT3fqAtnh06': 'FLO', 'price_1UgE7m1p5e7gGFT3x2uRNCpX': 'NEG'}
+GUIA = 'guia'   # las compras de la guía (su enlace de pago lleva metadata tipo «guia») no son del juego: no se apuntan
 VENTANA = 7 * 86400                                       # se miran los pagos de los últimos 7 días (una sesión de pago caduca a las 24 h)
 
 
@@ -273,6 +274,8 @@ def nuevos(sesiones, L, P, clave=None):
         if not str(s.get('id', '')).startswith('cs_') or s.get('payment_status') != 'paid' or s.get('status') not in (None, 'complete'):
             continue
         if huella(s['id']) in hechas:
+            continue
+        if (s.get('metadata') or {}).get('tipo') == GUIA:   # la guía: se vende aparte, no es del juego
             continue
         lineas = None
         if clave:                                    # de cada línea solo se usa el precio y la cantidad

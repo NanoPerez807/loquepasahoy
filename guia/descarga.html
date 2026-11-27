@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descarga tu guía · Lo Que Pasa Hoy</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0b1736">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:'Montserrat';src:url('../media/montserrat.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--tinta:#0b1736;--sol:#ffd43b;--oro:#ffc526;--niebla:#eef2f9;--gris:#4f5b76;--r:14px;--borde:3px solid var(--tinta)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,#0b1736 0%,#132a57 55%,#2f5fa3 100%);color:var(--tinta);font:500 17px/1.5 'Montserrat','Avenir Next','Segoe UI',system-ui,sans-serif}
+h1,p{margin:0}
+:focus-visible{outline:3px solid var(--sol);outline-offset:3px;border-radius:6px}
+.cab{max-width:640px;margin:0 auto;padding:14px 18px 0}
+.logo{display:inline-flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.05em}
+.logo i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--oro);color:var(--tinta);font-style:normal;font-weight:900;font-size:11px;letter-spacing:0}
+main{max-width:640px;margin:0 auto;padding:22px 18px 48px}
+.tarjeta{background:#fff;border:var(--borde);border-radius:20px;padding:22px 18px 24px;box-shadow:0 6px 0 rgba(3,10,30,.45)}
+.fila{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:center}
+.fila img{width:96px;height:auto;border-radius:8px;transform:rotate(-4deg);box-shadow:0 8px 18px rgba(11,23,54,.3)}
+h1{font-weight:900;font-size:clamp(26px,7vw,36px);line-height:1.05;letter-spacing:-.012em}
+.sub{margin-top:6px;font-weight:600;color:var(--gris)}
+.boton{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;margin-top:20px;padding:10px 18px;border:var(--borde);border-radius:var(--r);background:var(--sol);color:var(--tinta);font-family:inherit;font-weight:800;font-size:18px;line-height:1.2;text-decoration:none;box-shadow:0 5px 0 var(--tinta);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.boton:active{transform:translateY(4px);box-shadow:0 1px 0 var(--tinta)}
+.boton[disabled]{opacity:.6;cursor:progress}
+.boton.blanco{background:#fff;min-height:50px;font-size:16px;margin-top:12px}
+.estado{margin-top:12px;font-weight:700;font-size:15px;min-height:1.5em}
+.estado.mal{color:#b00020}
+.aviso{margin-top:18px;background:var(--niebla);border-radius:12px;padding:14px 15px;font-size:15.5px;font-weight:600}
+.aviso b{font-weight:800}
+.app{background:#fff4cc;border:2px solid var(--tinta)}
+.otra{display:block;margin-top:10px;font-weight:700;font-size:15px;text-align:center;color:var(--tinta)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="cab"><a class="logo" href="../" aria-label="LO QUE PASA: ir a la portada"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a></div>
+<main>
+  <div class="tarjeta">
+    <div class="fila">
+      <img src="media/portada.webp" width="900" height="1275" alt="">
+      <div>
+        <h1 id="titulo">¡Gracias! Aquí tienes tu guía</h1>
+        <p class="sub" id="subtitulo">Cómo hago vídeos virales con IA · PDF de 27 páginas</p>
+      </div>
+    </div>
+
+    <div class="aviso app" id="aviso-app" hidden>
+      <b>Estás dentro de una app.</b> Desde aquí a veces no se puede descargar. Copia el enlace y ábrelo en tu navegador (Safari o Chrome), o toca el menú ⋯ de la app y elige «Abrir en el navegador».
+    </div>
+
+    <button class="boton" id="bajar" type="button">Descargar la guía (PDF)</button>
+    <p class="estado" id="estado" role="status" aria-live="polite"></p>
+    <a class="otra" id="abrir" href="#" hidden target="_blank" rel="noopener">Si no se ha descargado, ábrela aquí</a>
+    <button class="boton blanco" id="copiar" type="button">Copiar el enlace de descarga</button>
+
+    <div class="aviso" id="guardar">
+      <b>Guarda este enlace.</b> Con él puedes volver a descargarla cuando quieras, en cualquier dispositivo. Si vuelves a esta página desde este mismo, la descarga te sigue esperando. ¿Algún problema? Escríbenos por <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a> con el número de tu recibo.
+    </div>
+  </div>
+</main>
+<script>
+(() => {
+'use strict';
+const GUARDADA = 'lqp-guia-k';
+const NOMBRE = 'Como-hago-videos-virales-con-IA.pdf';
+const $ = id => document.getElementById(id);
+const estado = (t, mal) => { $('estado').textContent = t; $('estado').classList.toggle('mal', !!mal); };
+
+function leeClave() {
+  const m = /(?:^|[#&])k=([A-Za-z0-9_-]{43})/.exec(location.hash);
+  if (m) return m[1];
+  try { return localStorage.getItem(GUARDADA); } catch (e) { return null; }   /* sin almacenamiento: vale con el enlace */
+}
+function bytes(b64u) {
+  const s = atob(b64u.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - b64u.length % 4) % 4));
+  return Uint8Array.from(s, c => c.charCodeAt(0));
+}
+const clave = leeClave();
+const enlace = clave ? location.origin + location.pathname + '#k=' + clave : null;
+if (clave && !location.hash) history.replaceState(null, '', '#k=' + clave);
+
+if (/Instagram|FBAN|FBAV|TikTok|musical_ly|Bytedance|BytedanceWebview|Line\/|Snapchat/i.test(navigator.userAgent)) $('aviso-app').hidden = false;
+
+if (!clave) {
+  $('titulo').textContent = 'Falta tu enlace de descarga';
+  $('subtitulo').textContent = 'Abre el enlace completo que te dimos al pagar (el que lleva «#k=» al final).';
+  $('bajar').disabled = true; $('copiar').hidden = true;
+}
+
+let url = null;
+async function prepara() {
+  if (url) return url;
+  if (!(window.crypto && crypto.subtle)) throw new Error('navegador');
+  const r = await fetch('guia.bin', { cache: 'no-cache' });
+  if (!r.ok) throw new Error('red');
+  const datos = new Uint8Array(await r.arrayBuffer());
+  const k = await crypto.subtle.importKey('raw', bytes(clave), { name: 'AES-GCM' }, false, ['decrypt']);
+  let pdf;
+  try { pdf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: datos.slice(0, 12) }, k, datos.slice(12)); }
+  catch (e) { throw new Error('clave'); }
+  try { localStorage.setItem(GUARDADA, clave); } catch (e) { /* no pasa nada */ }   /* solo una clave que funciona */
+  url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+  return url;
+}
+
+$('bajar').addEventListener('click', async () => {
+  if (!clave) return;
+  $('bajar').disabled = true;
+  estado('Preparando tu guía…');
+  try {
+    const u = await prepara();
+    const a = document.createElement('a');
+    a.href = u; a.download = NOMBRE; document.body.appendChild(a); a.click(); a.remove();
+    estado('¡Listo! Mira en tus descargas.');
+    $('abrir').href = u; $('abrir').hidden = false;
+  } catch (e) {
+    if (e.message === 'clave') estado('Este enlace no es válido. Usa el enlace completo que te dimos al pagar.', true);
+    else if (e.message === 'navegador') estado('Tu navegador no puede abrirla. Prueba con Safari o Chrome actualizados.', true);
+    else estado('No se ha podido descargar. Comprueba la conexión y vuelve a intentarlo.', true);
+  } finally {
+    $('bajar').disabled = false;
+  }
+});
+
+$('copiar').addEventListener('click', async () => {
+  if (!enlace) return;
+  try { await navigator.clipboard.writeText(enlace); estado('Enlace copiado. Pégalo en tus notas o en tu navegador.'); }
+  catch (e) { window.prompt('Copia este enlace:', enlace); }
+});
+})();
+</script>
+</body>
+</html>

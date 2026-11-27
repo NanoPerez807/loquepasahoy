@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo hago vídeos virales con IA · La guía de Lo Que Pasa Hoy</title>
+<meta name="description" content="El método tal cual lo uso para los «¿Sabías que…?» de Lo Que Pasa Hoy: los cuatro formatos, plantillas de guion, la voz con IA y los vídeos 3D hechos con Claude. PDF de 27 páginas.">
+<meta name="theme-color" content="#0b1736">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../media/icono-180.png">
+<meta property="og:type" content="product">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="LO QUE PASA">
+<meta property="og:title" content="Cómo hago vídeos virales con IA">
+<meta property="og:description" content="La guía de Lo Que Pasa Hoy: formatos, guiones, voz con IA y vídeos 3D hechos con Claude.">
+<meta property="og:url" content="https://loquepasahoy.es/guia/">
+<meta property="og:image" content="https://loquepasahoy.es/guia/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="../media/montserrat.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Montserrat';src:url('../media/montserrat.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{
+  /* Los colores de la guía (la portada es como las de los vídeos) y los de la web: amarillo del logo para los botones. */
+  color-scheme:light;
+  --tinta:#0b1736;
+  --noche:#132a57;
+  --cielo:#2f5fa3;
+  --sol:#ffd43b;
+  --oro:#ffc526;
+  --carton:#fff9ea;
+  --niebla:#eef2f9;
+  --gris:#4f5b76;
+  --letra:'Montserrat','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --r:14px;
+  --borde:3px solid var(--tinta);
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:#fff;color:var(--tinta);font:500 17px/1.5 var(--letra);overflow-wrap:break-word}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+img{max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sol);outline-offset:3px;border-radius:6px}
+
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:10px 22px;border:var(--borde);border-radius:var(--r);background:var(--sol);color:var(--tinta);font-weight:800;font-size:18px;line-height:1.2;text-align:center;text-decoration:none;box-shadow:0 5px 0 var(--tinta);cursor:pointer;transition:transform .08s,box-shadow .08s;-webkit-tap-highlight-color:transparent}
+.boton:active{transform:translateY(4px);box-shadow:0 1px 0 var(--tinta)}
+
+/* ---------- cabecera */
+.cab{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1120px;margin:0 auto;padding:14px 18px 0}
+.logo{display:inline-flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.05em}
+.logo i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--oro);color:var(--tinta);font-style:normal;font-weight:900;font-size:11px;letter-spacing:0}
+.cab nav a{color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:10px;border-radius:10px}
+.cab nav a:hover{background:rgba(255,255,255,.14)}
+
+/* ---------- portada de la página */
+.hero{background:linear-gradient(180deg,#0b1736 0%,#132a57 55%,#2f5fa3 100%);color:#fff;padding-bottom:44px}
+.hero-in{max-width:1120px;margin:0 auto;padding:26px 18px 0;display:grid;gap:26px;grid-template-columns:minmax(0,1fr)}
+.titular{display:grid;grid-template-columns:108px minmax(0,1fr);gap:16px;align-items:center}
+.titular img{width:108px;border-radius:8px;transform:rotate(-4deg);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.titular .pildora{display:inline-block;border:2px solid #fff;border-radius:999px;padding:3px 12px;font-weight:800;font-size:13px;margin-bottom:10px}
+h1{font-weight:900;font-size:clamp(30px,8.6vw,58px);line-height:1;letter-spacing:-.015em;text-wrap:balance}
+.hero .entradilla{font-size:17.5px;font-weight:600;color:#dfe7f6;max-width:34em}
+.precio{background:#fff;color:var(--tinta);border:var(--borde);border-radius:18px;padding:20px 18px 22px;box-shadow:0 6px 0 rgba(3,10,30,.45);max-width:520px}
+.precio .que{font-weight:800;font-size:15px;color:var(--gris)}
+.precio .cifra{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:2px}
+.precio .cifra b{font-weight:900;font-size:64px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.precio .cifra span{font-weight:700;font-size:15.5px}
+.cuenta{display:flex;gap:8px;margin-top:14px}
+.cuenta div{flex:1;background:var(--niebla);border-radius:10px;padding:8px 4px;text-align:center}
+.cuenta b{display:block;font-weight:900;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
+.cuenta span{font-weight:700;font-size:12.5px;color:var(--gris)}
+.precio .boton{width:100%;margin-top:18px}
+.precio .letra{margin-top:12px;font-size:14px;font-weight:600;color:var(--gris);text-align:center}
+.hecho{display:flex;flex-wrap:wrap;gap:8px 18px;font-weight:700;font-size:14.5px;color:#dfe7f6}
+.hecho span::before{content:'✓';color:var(--oro);font-weight:900;margin-right:6px}
+
+/* ---------- números */
+.numeros{background:#fff;padding:40px 18px 34px}
+.numeros-in{max-width:1120px;margin:0 auto}
+.sec-t{font-weight:900;font-size:clamp(28px,7vw,42px);line-height:1.04;letter-spacing:-.015em;text-wrap:balance}
+.sub{margin-top:8px;font-weight:600;color:var(--gris);max-width:36em}
+.contadores{display:grid;gap:12px;margin-top:22px;grid-template-columns:minmax(0,1fr)}
+.contador{border:var(--borde);border-radius:var(--r);padding:14px 16px 15px}
+.contador .red{font-weight:800;font-size:14px;color:var(--gris)}
+.contador b{display:block;font-weight:900;font-size:40px;line-height:1.05;letter-spacing:-.015em;font-variant-numeric:tabular-nums}
+.contador span{font-weight:600;font-size:15px}
+.portadas{display:flex;gap:12px;margin-top:22px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.portadas figure{flex:0 0 132px;scroll-snap-align:start}
+.portadas img{display:block;width:132px;aspect-ratio:9/16;object-fit:cover;border:2px solid var(--tinta);border-radius:10px}
+.portadas figcaption{margin-top:6px;font-size:13px;font-weight:600;line-height:1.3}
+.portadas figcaption b{display:block;font-weight:900;font-size:17px}
+
+/* ---------- dentro */
+.dentro{background:var(--carton);padding:44px 18px}
+.dentro-in{max-width:1120px;margin:0 auto}
+.capitulos{list-style:none;padding:0;margin-top:22px;display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.capitulos li{background:#fff;border:var(--borde);border-radius:var(--r);padding:13px 15px}
+.capitulos b{display:block;font-weight:800;font-size:16.5px}
+.capitulos span{display:block;margin-top:2px;font-size:15px;font-weight:500;color:var(--gris)}
+.capitulos .paso{display:inline-block;margin-right:8px;background:var(--tinta);color:#fff;border-radius:999px;padding:1px 9px;font-size:12.5px;font-weight:800;vertical-align:2px}
+.paginas{display:flex;gap:14px;margin-top:26px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x mandatory}
+.paginas img{flex:0 0 auto;width:236px;border:2px solid var(--tinta);border-radius:8px;box-shadow:0 5px 0 rgba(11,23,54,.18);scroll-snap-align:start}
+.paginas-nota{font-size:14px;font-weight:600;color:var(--gris)}
+
+/* ---------- preguntas */
+.preguntas{padding:44px 18px}
+.preguntas-in{max-width:760px;margin:0 auto}
+details{border-bottom:2px solid #d5dbe8}
+details:first-of-type{border-top:2px solid var(--tinta);margin-top:18px}
+summary{list-style:none;cursor:pointer;padding:16px 34px 16px 0;font-weight:800;font-size:17px;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';position:absolute;right:4px;top:12px;font-weight:900;font-size:24px}
+details[open] summary::after{content:'−'}
+details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
+
+/* ---------- cierre */
+.cierre{background:linear-gradient(180deg,#132a57 0%,#2f5fa3 100%);color:#fff;padding:46px 18px 50px}
+.cierre-in{max-width:760px;margin:0 auto;display:grid;gap:18px}
+.cierre .precio{color:var(--tinta)}
+
+/* ---------- pie */
+.pie{background:var(--tinta);color:#cdd5ee;padding:36px 18px 44px;font-size:14.5px;line-height:1.55}
+.pie-in{display:grid;gap:14px;max-width:1120px;margin:0 auto}
+.pie nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+.pie nav a{color:#fff;font-weight:800;font-size:16px;padding:8px 0;text-decoration:none}
+.pie p{max-width:66em}
+.pie b{color:#fff;font-weight:800}
+
+@media (min-width:760px){
+  .contadores{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .capitulos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .portadas{overflow:visible}
+  .portadas figure{flex:1 1 0}
+  .portadas img{width:100%}
+}
+@media (min-width:980px){
+  .hero-in{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:center;padding-top:40px;column-gap:56px}
+  .titular{grid-template-columns:minmax(0,1fr)}
+  .titular img{display:none}
+  .hero .lado{grid-row:1 / span 4;grid-column:2;justify-self:center}
+  .hero .lado img{display:block;width:min(400px,100%);border-radius:12px;transform:rotate(-3deg);box-shadow:0 22px 48px rgba(0,0,0,.4)}
+}
+@media (max-width:979px){.hero .lado{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="cab">
+    <a class="logo" href="../" aria-label="LO QUE PASA: ir a la portada"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a>
+    <nav aria-label="Secciones"><a href="#dentro">Qué hay dentro</a></nav>
+  </div>
+  <div class="hero-in">
+    <div class="titular">
+      <img src="media/portada.webp" width="900" height="1275" alt="Portada de la guía">
+      <div>
+        <span class="pildora">La guía</span>
+        <h1>Cómo hago vídeos virales con IA</h1>
+      </div>
+    </div>
+    <p class="entradilla">El método tal cual lo uso: los cuatro formatos, las plantillas de guion, la voz con IA y los vídeos en 3D que me monta Claude. Sin saber animar y sin salir a cámara.</p>
+
+    <div class="precio" data-oferta>
+      <div class="que" data-que>Precio de lanzamiento, solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25 €</b><span data-luego>Desde el lunes, 29 €</span></div>
+      <div class="cuenta" data-cuenta aria-label="Tiempo que queda del precio de lanzamiento">
+        <div><b data-d>2</b><span>días</span></div>
+        <div><b data-h>00</b><span>horas</span></div>
+        <div><b data-m>00</b><span>minutos</span></div>
+      </div>
+      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25 €</a>
+      <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
+    </div>
+
+    <p class="hecho"><span>4 formatos con ejemplos reales</span><span>Plantillas y prompts para copiar</span><span>4 vídeos desmontados plano a plano</span></p>
+
+    <div class="lado"><img src="media/portada.webp" width="900" height="1275" alt="Portada de la guía «Cómo hago vídeos virales con IA»"></div>
+  </div>
+</header>
+
+<main>
+<section class="numeros" aria-labelledby="t-numeros">
+  <div class="numeros-in">
+    <h2 class="sec-t" id="t-numeros">Lo que ha pasado con este método</h2>
+    <p class="sub">Cifras de las estadísticas de cada app a 25 de noviembre de 2026.</p>
+    <div class="contadores">
+      <div class="contador"><div class="red">Instagram, en 30 días</div><b>8.975.309</b><span>reproducciones</span></div>
+      <div class="contador"><div class="red">TikTok, en una semana</div><b>4,2 M</b><span>visualizaciones y 219.100 veces compartido</span></div>
+      <div class="contador"><div class="red">YouTube, en 7 días</div><b>704.900</b><span>visualizaciones</span></div>
+    </div>
+    <div class="portadas" aria-label="Algunos de los vídeos que más han funcionado">
+      <figure><img src="../media/v-avion.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo de los ojos verdes y el Airbus"><figcaption><b>4,8 M</b>en Instagram</figcaption></figure>
+      <figure><img src="../media/v-minero.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo del camión minero"><figcaption><b>1,5 M</b>en TikTok</figcaption></figure>
+      <figure><img src="../media/v-benidorm.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo de la crema y el portacontenedores"><figcaption><b>1 M</b>en TikTok</figcaption></figure>
+      <figure><img src="../media/v-espaguetis.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo de los espaguetis"><figcaption><b>1 M</b>en Instagram</figcaption></figure>
+      <figure><img src="../media/v-skincare.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo de la Kärcher"><figcaption><b>785.000</b>en Instagram</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="dentro" id="dentro" aria-labelledby="t-dentro">
+  <div class="dentro-in">
+    <h2 class="sec-t" id="t-dentro">Qué hay dentro</h2>
+    <p class="sub">27 páginas en PDF, pensadas para leerlas en el móvil.</p>
+    <ul class="capitulos">
+      <li><b>Los cuatro formatos que funcionan</b><span>«Te mueres», «lo recomendable», «nunca hizo» y las obviedades, con su estructura y un ejemplo real de cada uno.</span></li>
+      <li><b><span class="paso">Paso 1</span>El guion</b><span>Las reglas que me han funcionado y cuatro plantillas para rellenar.</span></li>
+      <li><b><span class="paso">Paso 2</span>La voz con IA</b><span>Qué voces uso, con qué ajustes, y cómo grabar la toma de una tirada.</span></li>
+      <li><b><span class="paso">Paso 3</span>El vídeo en 3D con Claude</b><span>Cómo me monta Claude los muñecos, los decorados y los datos en pantalla, sincronizados con la voz.</span></li>
+      <li><b><span class="paso">Paso 4</span>Publicar</b><span>Portada, descripción, comentario fijado, título para YouTube, hora y frecuencia.</span></li>
+      <li><b>Cuatro vídeos, plano a plano</b><span>El avión, el camión minero, el portacontenedores y la Kärcher: el guion tal cual y cada plano.</span></li>
+      <li><b>Series interactivas y ganar dinero</b><span>Cómo funciona el juego de los pueblos y de dónde sale el dinero desde España.</span></li>
+      <li><b>Errores, prompts y tu primera semana</b><span>Lo que me costó vídeos, los mensajes exactos que le pido a Claude, una lista para antes de publicar y un plan de siete días.</span></li>
+    </ul>
+    <div class="paginas" aria-label="Algunas páginas de la guía">
+      <img src="media/pag-formatos.webp" width="520" height="737" loading="lazy" alt="Página de los cuatro formatos">
+      <img src="media/pag-plantillas.webp" width="520" height="737" loading="lazy" alt="Página de las plantillas para rellenar">
+      <img src="media/pag-plano.webp" width="520" height="737" loading="lazy" alt="Página del vídeo del avión, plano a plano">
+      <img src="media/pag-prompts.webp" width="520" height="737" loading="lazy" alt="Página de los prompts para copiar">
+    </div>
+    <p class="paginas-nota">Algunas páginas de la guía.</p>
+  </div>
+</section>
+
+<section class="preguntas" aria-labelledby="t-preguntas">
+  <div class="preguntas-in">
+    <h2 class="sec-t" id="t-preguntas">Preguntas</h2>
+    <details><summary>¿Cómo la recibo?</summary><p>Nada más pagar, la página de pago te trae a la descarga. Guarda ese enlace: con él puedes volver a bajarla cuando quieras, y si vuelves desde el mismo móvil, la descarga te sigue esperando.</p></details>
+    <details><summary>¿Necesito saber programar?</summary><p>No. Claude escribe el código: tú le das el guion, el MP3 de la voz y lo que quieres en cada plano. Eso sí, el primer vídeo lleva su tiempo; a partir del segundo, solo cambian el decorado y los planos.</p></details>
+    <details><summary>¿Qué necesito para hacer los vídeos?</summary><p>Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo, y ElevenLabs para la voz. En la guía te cuento cómo uso cada uno.</p></details>
+    <details><summary>¿Tengo que salir en los vídeos?</summary><p>No. Todo lo hacen los muñecos en 3D, y la voz es de IA.</p></details>
+    <details><summary>¿Quién cobra el pago?</summary><p>Stripe, que se encarga de los impuestos de tu país y te manda el recibo por correo. Aquí no se pide ni se guarda ningún dato de pago.</p></details>
+    <details><summary>Tengo un problema con la descarga</summary><p>Escríbenos por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a> con el número de tu recibo y lo solucionamos.</p></details>
+  </div>
+</section>
+
+<section class="cierre" aria-label="Comprar la guía">
+  <div class="cierre-in">
+    <h2 class="sec-t">Tu primer vídeo, esta semana</h2>
+    <div class="precio" data-oferta>
+      <div class="que" data-que>Precio de lanzamiento, solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25 €</b><span data-luego>Desde el lunes, 29 €</span></div>
+      <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25 €</a>
+      <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="pie-in">
+    <a class="logo" href="../" aria-label="LO QUE PASA: ir a la portada"><i aria-hidden="true">LQP</i><span>LO QUE PASA</span></a>
+    <nav aria-label="Redes">
+      <a href="https://www.tiktok.com/@loquepasa.es">TikTok</a>
+      <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
+      <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
+    </nav>
+    <p><b>La guía.</b> PDF de 27 páginas para descargar. El pago se hace en una página externa de Stripe, que cobra, se encarga de los impuestos y manda el recibo; aquí no se pide ni se guarda ningún dato de pago. Cifras de las estadísticas de Instagram, TikTok y YouTube a 25 de noviembre de 2026.</p>
+    <p><b>Privacidad.</b> Esta página no usa cookies ni analítica. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+'use strict';
+/* Precio de lanzamiento hasta el domingo 29-11-2026 a las 23:59 (hora de Madrid = 22:59 UTC); después, el precio normal.
+   Los enlaces son de Stripe (uno por precio): al acabar el lanzamiento, el de 25 € se desactiva en Stripe. */
+const OFERTA = {
+  fin: Date.UTC(2026, 10, 29, 22, 59, 0),
+  lanzamiento: { precio: 25, enlace: 'https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b' },   // plink_1UgLOx1p5e7gGFT3H4nMmkj1
+  normal: { precio: 29, enlace: 'https://buy.stripe.com/eVq6oz8qFgtL9PBgg9dnW0c' },   // plink_1UgLP31p5e7gGFT3cyxSj4ec
+};
+const $$ = s => document.querySelectorAll(s);
+const dos = n => String(n).padStart(2, '0');
+
+function pinta() {
+  const queda = OFERTA.fin - Date.now();
+  const lanz = queda > 0;
+  const p = lanz ? OFERTA.lanzamiento : OFERTA.normal;
+  $$('[data-precio]').forEach(e => { e.textContent = p.precio + '\u00a0€'; });
+  $$('[data-comprar]').forEach(e => { e.textContent = 'Comprar la guía por ' + p.precio + '\u00a0€'; e.href = p.enlace; });
+  $$('[data-que]').forEach(e => { e.textContent = lanz ? 'Precio de lanzamiento, solo este fin de semana' : 'Precio de la guía'; });
+  $$('[data-luego]').forEach(e => { e.textContent = lanz ? 'Desde el lunes, ' + OFERTA.normal.precio + '\u00a0€' : 'Impuestos incluidos'; });
+  $$('[data-cuenta]').forEach(c => {
+    c.hidden = !lanz;
+    if (!lanz) return;
+    const min = Math.floor(queda / 60000);
+    c.querySelector('[data-d]').textContent = Math.floor(min / 1440);
+    c.querySelector('[data-h]').textContent = dos(Math.floor(min / 60) % 24);
+    c.querySelector('[data-m]').textContent = dos(min % 60);
+  });
+}
+pinta();
+setInterval(pinta, 20000);
+})();
+</script>
+</body>
+</html>

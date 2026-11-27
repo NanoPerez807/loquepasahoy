@@ -70,10 +70,13 @@ h1{font-weight:900;font-size:clamp(30px,8.6vw,58px);line-height:1;letter-spacing
 .precio .cifra{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:2px}
 .precio .cifra b{font-weight:900;font-size:64px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .precio .cifra span{font-weight:700;font-size:15.5px}
-.cuenta{display:flex;gap:8px;margin-top:14px}
-.cuenta div{flex:1;background:var(--niebla);border-radius:10px;padding:8px 4px;text-align:center}
-.cuenta b{display:block;font-weight:900;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
-.cuenta span{font-weight:700;font-size:12.5px;color:var(--gris)}
+.cuenta{display:flex;gap:6px;margin-top:14px}
+.cuenta div{flex:1 1 0;min-width:0;background:var(--tinta);color:#fff;border-radius:10px;padding:8px 2px 7px;text-align:center}
+.cuenta .ms{flex-grow:1.25;background:#e8273f}
+.cuenta b{display:block;font-weight:900;font-size:25px;line-height:1.05;font-variant-numeric:tabular-nums}
+.cuenta span{font-weight:700;font-size:11.5px;color:#c9d4ea}
+.cuenta .ms span{color:#fff}
+.precio .luego{display:block;margin-top:4px;font-weight:800;font-size:15.5px;color:#c8102e}
 .precio .boton{width:100%;margin-top:18px}
 .precio .letra{margin-top:12px;font-size:14px;font-weight:600;color:var(--gris);text-align:center}
 .hecho{display:flex;flex-wrap:wrap;gap:8px 18px;font-weight:700;font-size:14.5px;color:#dfe7f6}
@@ -106,6 +109,22 @@ h1{font-weight:900;font-size:clamp(30px,8.6vw,58px);line-height:1;letter-spacing
 .paginas{display:flex;gap:14px;margin-top:26px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x mandatory}
 .paginas img{flex:0 0 auto;width:236px;border:2px solid var(--tinta);border-radius:8px;box-shadow:0 5px 0 rgba(11,23,54,.18);scroll-snap-align:start}
 .paginas-nota{font-size:14px;font-weight:600;color:var(--gris)}
+
+.compras{background:#fff;padding:44px 18px;border-top:3px solid var(--tinta)}
+.compras-in{max-width:1120px;margin:0 auto}
+.dos{display:grid;gap:14px;margin-top:22px;grid-template-columns:minmax(0,1fr)}
+.lista{border:var(--borde);border-radius:var(--r);padding:16px 16px 18px}
+.lista h3{font-weight:900;font-size:21px}
+.lista ul{list-style:none;padding:0;margin-top:8px}
+.lista li{position:relative;padding-left:28px;margin-top:8px;font-size:16px;font-weight:500}
+.lista li::before{position:absolute;left:0;top:-1px;font-weight:900;font-size:18px}
+.lista.si{background:#eafaf3}
+.lista.si li::before{content:'✓';color:#0e8a5f}
+.lista.no{background:#fff0f2}
+.lista.no li::before{content:'✗';color:#c8102e}
+.compras .necesitas{margin-top:16px;font-size:16px;font-weight:500;max-width:52em}
+.compras .necesitas b{font-weight:800}
+@media (min-width:760px){.dos{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* ---------- preguntas */
 .preguntas{padding:44px 18px}
@@ -148,7 +167,7 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
 @media (max-width:979px){.hero .lado{display:none}}
 </style>
 </head>
-<body>
+<body data-pagina-guia>
 
 <header class="hero">
   <div class="cab">
@@ -163,18 +182,20 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
         <h1>Cómo hago vídeos virales con IA</h1>
       </div>
     </div>
-    <p class="entradilla">El método tal cual lo uso: los cuatro formatos, las plantillas de guion, la voz con IA y los vídeos en 3D que me monta Claude. Sin saber animar y sin salir a cámara.</p>
+    <p class="entradilla">Una guía en PDF con el método tal cual lo uso: los cuatro formatos, las plantillas de guion, cómo hago la voz con IA y cómo le pido a Claude los vídeos en 3D. Sin saber animar y sin salir a cámara.</p>
 
     <div class="precio" data-oferta>
-      <div class="que" data-que>Lanzamiento por Black Friday, solo este fin de semana</div>
-      <div class="cifra"><b data-precio>25&nbsp;€</b><span data-luego>Desde el lunes, 39&nbsp;€</span></div>
-      <div class="cuenta" data-cuenta aria-label="Tiempo que queda del precio de lanzamiento">
+      <div class="que" data-que>Lanzamiento por Black Friday: solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25&nbsp;€</b><span class="luego" data-luego>El lunes sube a 39&nbsp;€</span></div>
+      <div class="cuenta" data-cuenta data-solo-oferta role="timer" aria-label="Lo que queda del precio de lanzamiento">
         <div><b data-d>2</b><span>días</span></div>
         <div><b data-h>00</b><span>horas</span></div>
-        <div><b data-m>00</b><span>minutos</span></div>
+        <div><b data-m>00</b><span>min</span></div>
+        <div><b data-s>00</b><span>seg</span></div>
+        <div class="ms"><b data-ms>000</b><span>ms</span></div>
       </div>
       <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
-      <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
+      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código ni archivos. Impuestos incluidos. <a href="#que-compras">Qué incluye y qué no</a></p>
     </div>
 
     <p class="hecho"><span>4 formatos con ejemplos reales</span><span>Plantillas y prompts para copiar</span><span>4 vídeos desmontados plano a plano</span></p>
@@ -227,15 +248,50 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
   </div>
 </section>
 
+<section class="compras" id="que-compras" aria-labelledby="t-compras">
+  <div class="compras-in">
+    <h2 class="sec-t" id="t-compras">Qué compras exactamente</h2>
+    <p class="sub">Para que no haya sorpresas: esto es lo que hay y lo que no.</p>
+    <div class="dos">
+      <div class="lista si">
+        <h3>Incluye</h3>
+        <ul>
+          <li>La guía en PDF de 27 páginas, para leer en el móvil o imprimir.</li>
+          <li>Los cuatro formatos, con su estructura y ejemplos reales.</li>
+          <li>Las reglas del guion y cuatro plantillas para rellenar.</li>
+          <li>Qué voces uso en ElevenLabs y con qué ajustes.</li>
+          <li>Cómo le pido a Claude los vídeos en 3D, paso a paso, con los mensajes exactos que uso.</li>
+          <li>Cuatro vídeos desmontados plano a plano.</li>
+          <li>Cómo publico, cómo monté el juego de los pueblos y cómo gano dinero.</li>
+          <li>Una lista para antes de publicar y un plan para tu primera semana.</li>
+        </ul>
+      </div>
+      <div class="lista no">
+        <h3>No incluye</h3>
+        <ul>
+          <li>Mi motor de vídeo, ni código, ni muñecos, decorados o archivos de proyecto. Tu motor te lo monta Claude con los mensajes de la guía.</li>
+          <li>Mis vídeos ni su música.</li>
+          <li>Las suscripciones de Claude ni de ElevenLabs: cada uno tiene sus planes y precios.</li>
+          <li>Ayuda personal ni clases.</li>
+          <li>Visitas garantizadas: te cuento lo que me ha funcionado a mí, con mis cifras reales.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="necesitas"><b>Lo que vas a necesitar:</b> Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y ElevenLabs para la voz. Y paciencia con el primero: hasta tener tu motor, cuenta con varias sesiones de prueba.</p>
+  </div>
+</section>
+
 <section class="preguntas" aria-labelledby="t-preguntas">
   <div class="preguntas-in">
     <h2 class="sec-t" id="t-preguntas">Preguntas</h2>
     <details><summary>¿Cómo la recibo?</summary><p>Nada más pagar, la página de pago te trae a la descarga. Guarda ese enlace: con él puedes volver a bajarla cuando quieras, y si vuelves desde el mismo móvil, la descarga te sigue esperando.</p></details>
-    <details><summary>¿Necesito saber programar?</summary><p>No. Claude escribe el código: tú le das el guion, el MP3 de la voz y lo que quieres en cada plano. Eso sí, el primer vídeo lleva su tiempo; a partir del segundo, solo cambian el decorado y los planos.</p></details>
-    <details><summary>¿Qué necesito para hacer los vídeos?</summary><p>Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo, y ElevenLabs para la voz. En la guía te cuento cómo uso cada uno.</p></details>
+    <details><summary>¿Incluye tu motor de vídeo o el código?</summary><p>No. La guía explica el proceso y te da los mensajes con los que le pido a Claude el motor y cada vídeo, pero no incluye mi código, ni los muñecos, ni ningún archivo. Tu motor te lo monta Claude.</p></details>
+    <details><summary>¿Necesito saber programar?</summary><p>No hace falta: Claude escribe el código y tú le dices qué quieres. Pero el primer vídeo lleva su tiempo: cuenta con varias sesiones de prueba hasta tener tu motor. A partir de ahí, cada vídeo es mucho más rápido.</p></details>
+    <details><summary>¿Qué necesito para hacer los vídeos?</summary><p>Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y ElevenLabs para la voz. Los dos tienen sus propios planes y precios, que no van incluidos.</p></details>
+    <details><summary>¿Me garantizas que mis vídeos se harán virales?</summary><p>No. Te cuento lo que me ha funcionado a mí, con mis cifras reales, pero lo que pase con tus vídeos depende de muchas cosas.</p></details>
     <details><summary>¿Tengo que salir en los vídeos?</summary><p>No. Todo lo hacen los muñecos en 3D, y la voz es de IA.</p></details>
     <details><summary>¿Quién cobra el pago?</summary><p>Stripe, que se encarga de los impuestos de tu país y te manda el recibo por correo. Aquí no se pide ni se guarda ningún dato de pago.</p></details>
-    <details><summary>Tengo un problema con la descarga</summary><p>Escríbenos por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a> con el número de tu recibo y lo solucionamos.</p></details>
+    <details><summary>¿Y si tengo un problema con la compra o la descarga?</summary><p>Escríbenos por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a> con el número de tu recibo y lo solucionamos.</p></details>
   </div>
 </section>
 
@@ -243,10 +299,17 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
   <div class="cierre-in">
     <h2 class="sec-t">Tu primer vídeo, esta semana</h2>
     <div class="precio" data-oferta>
-      <div class="que" data-que>Lanzamiento por Black Friday, solo este fin de semana</div>
-      <div class="cifra"><b data-precio>25&nbsp;€</b><span data-luego>Desde el lunes, 39&nbsp;€</span></div>
+      <div class="que" data-que>Lanzamiento por Black Friday: solo este fin de semana</div>
+      <div class="cifra"><b data-precio>25&nbsp;€</b><span class="luego" data-luego>El lunes sube a 39&nbsp;€</span></div>
+      <div class="cuenta" data-cuenta data-solo-oferta role="timer" aria-label="Lo que queda del precio de lanzamiento">
+        <div><b data-d>2</b><span>días</span></div>
+        <div><b data-h>00</b><span>horas</span></div>
+        <div><b data-m>00</b><span>min</span></div>
+        <div><b data-s>00</b><span>seg</span></div>
+        <div class="ms"><b data-ms>000</b><span>ms</span></div>
+      </div>
       <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
-      <p class="letra">PDF de 27 páginas. Lo descargas nada más pagar. Impuestos incluidos.</p>
+      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código ni archivos. Impuestos incluidos.</p>
     </div>
   </div>
 </section>
@@ -260,44 +323,11 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
       <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
       <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
     </nav>
-    <p><b>La guía.</b> PDF de 27 páginas para descargar. El pago se hace en una página externa de Stripe, que cobra, se encarga de los impuestos y manda el recibo; aquí no se pide ni se guarda ningún dato de pago. Cifras de las estadísticas de Instagram, TikTok y YouTube a 25 de noviembre de 2026.</p>
+    <p><b>La guía.</b> PDF de 27 páginas para descargar; no incluye código, archivos ni suscripciones. El pago se hace en una página externa de Stripe, que cobra, se encarga de los impuestos y manda el recibo; aquí no se pide ni se guarda ningún dato de pago. Cifras de las estadísticas de Instagram, TikTok y YouTube a 25 de noviembre de 2026.</p>
     <p><b>Privacidad.</b> Esta página no usa cookies ni analítica. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP.</p>
   </div>
 </footer>
 
-<script>
-(() => {
-'use strict';
-/* Precio de lanzamiento hasta el domingo 29-11-2026 a las 23:59 (hora de Madrid = 22:59 UTC); después, el precio normal.
-   Los enlaces son de Stripe (uno por precio): al acabar el lanzamiento, el de 25 € se desactiva en Stripe. */
-const OFERTA = {
-  fin: Date.UTC(2026, 10, 29, 22, 59, 0),
-  lanzamiento: { precio: 25, enlace: 'https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b' },   // plink_1UgLOx1p5e7gGFT3H4nMmkj1
-  normal: { precio: 39, enlace: 'https://buy.stripe.com/fZubITeP3fpH1j59RLdnW0d' },   // plink_1UgLRv1p5e7gGFT3CNXyfsXt
-};
-const $$ = s => document.querySelectorAll(s);
-const dos = n => String(n).padStart(2, '0');
-
-function pinta() {
-  const queda = OFERTA.fin - Date.now();
-  const lanz = queda > 0;
-  const p = lanz ? OFERTA.lanzamiento : OFERTA.normal;
-  $$('[data-precio]').forEach(e => { e.textContent = p.precio + '\u00a0€'; });
-  $$('[data-comprar]').forEach(e => { e.textContent = 'Comprar la guía por ' + p.precio + '\u00a0€'; e.href = p.enlace; });
-  $$('[data-que]').forEach(e => { e.textContent = lanz ? 'Lanzamiento por Black Friday, solo este fin de semana' : 'Precio de la guía'; });
-  $$('[data-luego]').forEach(e => { e.textContent = lanz ? 'Desde el lunes, ' + OFERTA.normal.precio + '\u00a0€' : 'Impuestos incluidos'; });
-  $$('[data-cuenta]').forEach(c => {
-    c.hidden = !lanz;
-    if (!lanz) return;
-    const min = Math.floor(queda / 60000);
-    c.querySelector('[data-d]').textContent = Math.floor(min / 1440);
-    c.querySelector('[data-h]').textContent = dos(Math.floor(min / 60) % 24);
-    c.querySelector('[data-m]').textContent = dos(min % 60);
-  });
-}
-pinta();
-setInterval(pinta, 20000);
-})();
-</script>
+<script src="oferta.js"></script>
 </body>
 </html>

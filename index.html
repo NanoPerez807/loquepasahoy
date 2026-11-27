@@ -225,6 +225,13 @@ button,input{font:inherit;color:inherit}
 .guia p{margin-top:14px;font-size:17.5px;font-weight:600;max-width:30em}
 .guia-precio b{font-weight:900;font-size:24px}
 .guia .guia-boton{margin-top:20px;min-height:54px;padding:0 26px;font-size:17px}
+.guia-sube{font-weight:800;color:#c8102e}
+.guia .cuenta{display:flex;gap:6px;margin-top:14px;max-width:420px}
+.guia .cuenta div{flex:1 1 0;min-width:0;background:var(--tinta);color:#fff;border-radius:10px;padding:8px 2px 7px;text-align:center}
+.guia .cuenta .ms{flex-grow:1.25;background:#e8273f}
+.guia .cuenta b{display:block;font-weight:900;font-size:24px;line-height:1.05;font-variant-numeric:tabular-nums}
+.guia .cuenta span{font-weight:700;font-size:11.5px;color:#c9d4ea}
+.guia .cuenta .ms span{color:#fff}
 .pronto{display:inline-block;margin-top:22px;max-width:none;transform:rotate(-4deg);background:#fff;border:var(--borde);border-radius:10px;padding:6px 14px 5px;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.02em;box-shadow:0 4px 0 var(--tinta)}
 .guia-mono{justify-self:end;height:236px;width:auto;margin:-6px 6px -92px 0}
 
@@ -695,7 +702,15 @@ button,input{font:inherit;color:inherit}
     <div>
       <h2>La guía para hacer vídeos así</h2>
       <p>Ya está: el método tal cual lo uso, en un PDF de 27 páginas. Los cuatro formatos, las plantillas de guion, la voz con IA y los vídeos en 3D que me monta Claude.</p>
-      <p class="guia-precio"><b>25&nbsp;€</b> por el lanzamiento y el Black Friday, hasta el domingo a las 23:59. Desde el lunes, 39&nbsp;€.</p>
+      <p class="guia-precio" data-solo-oferta><b>25&nbsp;€</b> por el lanzamiento y el Black Friday, solo este fin de semana. <span class="guia-sube">El lunes sube a 39&nbsp;€.</span></p>
+      <p class="guia-precio" data-sin-oferta hidden><b>39&nbsp;€</b>. PDF de 27 páginas, para leer en el móvil.</p>
+      <div class="cuenta" data-cuenta data-solo-oferta role="timer" aria-label="Lo que queda del precio de lanzamiento de la guía">
+        <div><b data-d>2</b><span>días</span></div>
+        <div><b data-h>00</b><span>horas</span></div>
+        <div><b data-m>00</b><span>min</span></div>
+        <div><b data-s>00</b><span>seg</span></div>
+        <div class="ms"><b data-ms>000</b><span>ms</span></div>
+      </div>
       <a class="boton blanco guia-boton" href="guia/">Ver la guía</a>
     </div>
     <img class="guia-mono" src="media/m-senala.webp" width="475" height="900" loading="lazy" alt="" aria-hidden="true">
@@ -2021,5 +2036,6 @@ Promise.all([trae('data/mapa.json'), trae('data/pueblos.json'), trae('data/juego
 }).catch((e) => { $('carga').textContent = 'No se ha podido cargar el mapa. Comprueba la conexión y recarga la página.'; if (window.console) console.error(e); });
 })();
 </script>
+<script src="guia/oferta.js" defer></script>
 </body>
 </html>

@@ -391,6 +391,7 @@ button,input{font:inherit;color:inherit}
 .disco.navidad{border-color:#1f9d55}
 .disco.flores{border-color:#ff4d8d}
 .disco.metas{border-color:var(--oro);color:var(--oro-2)}.ap-metas{margin:6px 0 10px}
+.metas-img{display:block;width:100%;height:auto;border-radius:12px;border:3px solid var(--tinta);margin:8px 0 10px;background:#2a1f5c}
 .niveles .etiqueta{display:inline-block;vertical-align:3px;margin-left:6px;padding:3px 8px 2px;border-radius:999px;background:var(--tinta);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .oro .fila{display:grid;width:100%;gap:11px}
 .oro .fila .boton{justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:8px 12px 8px 16px;font-size:15.5px;text-align:left}
@@ -593,7 +594,7 @@ button,input{font:inherit;color:inherit}
       <article class="tu" id="tu" aria-live="polite"></article>
       <section class="rk-caja" aria-labelledby="rk-vec-t" id="rk-vec-caja" hidden><h3 id="rk-vec-t">Vecinos de honor</h3><p class="vecs-sub">Salen con su nombre en los agradecimientos del episodio. ¡Gracias!</p><ol class="vecs" id="rk-vec"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-metas-t"><h3 id="rk-metas-t">Metas por provincia</h3><p class="vecs-sub">Los puntos de todos sus pueblos suman para la provincia. Al llegar a una meta, se cumple en el episodio siguiente.</p><ol class="metas" id="rk-metas"></ol></section>
-      <section class="rk-caja" aria-labelledby="rk-esc-t"><h3 id="rk-esc-t">Todas las metas</h3><p class="vecs-sub">Lo que consigue una provincia con los puntos de todos sus pueblos. Lo conseguido antes de las 14:00 sale en el episodio de ese día.</p><ol class="niv esc" id="rk-esc"></ol></section>
+      <section class="rk-caja" aria-labelledby="rk-esc-t"><h3 id="rk-esc-t">Todas las metas</h3><img class="metas-img" src="media/metas.webp" alt="Así se ven las metas en el tablero de los episodios: el nombre de la provincia en letras gigantes, su bandera, la estatua de oro y fuegos artificiales" width="1080" height="600" loading="lazy"><p class="vecs-sub">Lo que consigue una provincia con los puntos de todos sus pueblos. Lo conseguido antes de las 14:00 sale en el episodio de ese día.</p><ol class="niv esc" id="rk-esc"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-feed-t"><h3 id="rk-feed-t">Últimos apoyos</h3><ol class="feed" id="rk-feed"></ol></section>
       <section class="rk-caja" aria-labelledby="rk-niv-t"><h3 id="rk-niv-t">Niveles de casita</h3><ol class="niv" id="rk-niv"></ol></section>
       <p class="rk-regla">Los puntos no salvan a nadie: el sorteo es igual para todos.</p>
@@ -735,7 +736,7 @@ button,input{font:inherit;color:inherit}
         <li class="nuevo"><span class="disco flores">1<small>€</small></span><div><h3>Flores para los caídos <span class="etiqueta">Nuevo</span></h3><p>Si tu pueblo cae, no se acaba: déjale flores. Se ven junto a sus ruinas en el mapa y suman 1 punto para él y para su provincia.</p>
           <button type="button" class="chip ir-pago" data-m="flores" hidden>Busca tu pueblo</button><p class="pronto mini" data-m="flores">Muy pronto</p></div></li>
         <li class="nuevo"><span class="disco metas" aria-hidden="true">★</span><div><h3>Metas por provincia <span class="etiqueta">Nuevas</span></h3><p>Todo lo que compras suma también para tu provincia. Con los puntos de todos sus pueblos llegan la bandera, el saludo, la portada, su nombre en letras gigantes, fuegos artificiales, un vuelo por la provincia, una estatua de oro y hasta un episodio especial.</p>
-          <p class="mini ap-metas" id="ap-metas" hidden></p><a class="chip" href="#rk-esc-t">Ver todas las metas</a></div></li>
+          <img class="metas-img" src="media/metas.webp" alt="Así se ven las metas en el tablero de los episodios: el nombre de la provincia en letras gigantes, su bandera, la estatua de oro y fuegos artificiales" width="1080" height="600" loading="lazy"><p class="mini ap-metas" id="ap-metas" hidden></p><a class="chip" href="#rk-esc-t">Ver todas las metas</a></div></li>
         <li><span class="disco azul">50<small>€ o más</small></span><div><h3>Negocios y ayuntamientos</h3><p>«Episodio con el apoyo de…», un cartel con vuestro nombre sobre vuestro pueblo en el mapa y 50 puntos en el ranking.</p>
           <a class="chip blanco" id="negocio-escribe" href="https://www.instagram.com/loquepasahoy.es">Escríbeme</a></div></li>
       </ul>

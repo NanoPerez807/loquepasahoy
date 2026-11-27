@@ -105,4 +105,34 @@ if ('IntersectionObserver' in window && tapar.length) {
   if (enGuia) addEventListener('scroll', actualiza, { passive: true });
   actualiza();
 }
+/* ---- casilla obligatoria: en la página de la guía, ningún botón de compra (tampoco el de la barra) lleva a Stripe
+   si no se ha marcado «He leído… y acepto las condiciones…»; si no está marcada, te lleva a la casilla y la sacude ---- */
+document.documentElement.classList.add('js');
+if (enGuia) {
+  const cajas = [...document.querySelectorAll('[data-acepto]')];
+  const pon = v => {
+    cajas.forEach(c => { c.checked = v; const l = c.closest('.acepto'); if (l && v) l.classList.remove('avisa'); });
+    document.documentElement.classList.toggle('aceptado', v);
+  };
+  cajas.forEach(c => c.addEventListener('change', () => pon(c.checked)));
+  pon(cajas.some(c => c.checked));
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-comprar],[data-comprar-enlace]');
+    if (!a || !cajas.length || document.documentElement.classList.contains('aceptado')) return;
+    e.preventDefault();
+    const c = (a.closest('.precio') && a.closest('.precio').querySelector('[data-acepto]')) || cajas[0];
+    const l = c.closest('.acepto');
+    l.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'center' });
+    l.classList.remove('avisa'); void l.offsetWidth; l.classList.add('avisa');
+    setTimeout(() => c.focus({ preventScroll: true }), 400);
+  }, true);
+  const abre = () => {
+    const d = document.querySelector('[data-condiciones]'); if (!d) return;
+    d.open = true;
+    requestAnimationFrame(() => { const sec = document.getElementById('condiciones'); if (sec) sec.scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' }); });
+  };
+  document.querySelectorAll('a[href="#condiciones"]').forEach(a => a.addEventListener('click', abre));
+  if (location.hash === '#condiciones') abre();
+  addEventListener('hashchange', () => { if (location.hash === '#condiciones') abre(); });
+}
 })();

@@ -165,6 +165,26 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
   .hero .lado img{display:block;width:min(400px,100%);border-radius:12px;transform:rotate(-3deg);box-shadow:0 22px 48px rgba(0,0,0,.4)}
 }
 @media (max-width:979px){.hero .lado{display:none}}
+
+/* casilla obligatoria antes de comprar y condiciones */
+.acepto{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:11px 12px;border:2px dashed #c3c9da;border-radius:12px;background:#f6f7fb;font-size:13.5px;font-weight:600;line-height:1.38;color:var(--tinta);text-align:left;cursor:pointer}
+.acepto input{flex:none;width:24px;height:24px;margin:1px 0 0;accent-color:#16a34a;cursor:pointer}
+.acepto a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.acepto .falta{display:none;margin-top:6px;color:#c8102e;font-weight:800}
+.acepto.avisa{border:2px solid #c8102e;background:#fff1f2;animation:sacude .45s}
+.acepto.avisa .falta{display:block}
+.aceptado .acepto{border-style:solid;border-color:#16a34a;background:#effbf3}
+html.js:not(.aceptado) [data-comprar]{opacity:.5;filter:saturate(.5)}
+@keyframes sacude{0%,100%{transform:none}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.acepto.avisa{animation:none}}
+.condiciones{background:#f1f3f8;color:var(--tinta);padding:38px 0 46px}
+.condiciones-in{max-width:760px;margin:0 auto;padding:0 18px}
+.condiciones .sec-t{font-size:clamp(24px,6vw,32px)}
+.condiciones details{margin-top:16px;background:#fff;border:var(--borde);border-radius:14px;padding:13px 16px}
+.condiciones summary{font-weight:800;font-size:16px;cursor:pointer}
+.condiciones ol{margin:14px 0 4px 20px;display:grid;gap:10px;font-size:15px;line-height:1.5}
+.condiciones li b{font-weight:800}
+.condiciones a{color:inherit}
 </style>
 </head>
 <body data-pagina-guia>
@@ -194,8 +214,9 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
         <div><b data-s>00</b><span>seg</span></div>
         <div class="ms"><b data-ms>000</b><span>ms</span></div>
       </div>
+      <label class="acepto"><input type="checkbox" data-acepto><span>He leído <a href="#que-compras">qué incluye y qué no</a> y acepto las <a href="#condiciones">condiciones de compra</a>. Es contenido digital: la recibo al momento y, una vez descargada, no hay derecho de desistimiento.<b class="falta">Marca la casilla para poder comprar.</b></span></label>
       <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
-      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código ni archivos. Impuestos incluidos. <a href="#que-compras">Qué incluye y qué no</a></p>
+      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código, archivos ni las herramientas (Claude y ElevenLabs van aparte y son de pago). Impuestos incluidos. <a href="#que-compras">Qué incluye y qué no</a></p>
     </div>
 
     <p class="hecho"><span>4 formatos con ejemplos reales</span><span>Plantillas y prompts para copiar</span><span>4 vídeos desmontados plano a plano</span></p>
@@ -208,11 +229,11 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
 <section class="numeros" aria-labelledby="t-numeros">
   <div class="numeros-in">
     <h2 class="sec-t" id="t-numeros">Lo que ha pasado con este método</h2>
-    <p class="sub">Cifras de las estadísticas de cada app a 25 de noviembre de 2026.</p>
+    <p class="sub">Cifras de las estadísticas de cada app a 27 de noviembre de 2026 (las de TikTok, del 17 al 23 de noviembre).</p>
     <div class="contadores">
-      <div class="contador"><div class="red">Instagram, en 30 días</div><b>8.975.309</b><span>reproducciones</span></div>
+      <div class="contador"><div class="red">Instagram, en 30 días</div><b>11.623.273</b><span>reproducciones y 23.926 seguidores</span></div>
       <div class="contador"><div class="red">TikTok, en una semana</div><b>4,2 M</b><span>visualizaciones y 219.100 veces compartido</span></div>
-      <div class="contador"><div class="red">YouTube, en 7 días</div><b>704.900</b><span>visualizaciones</span></div>
+      <div class="contador"><div class="red">YouTube, en 2 semanas</div><b>3,2 M</b><span>visualizaciones y 9.733 suscriptores</span></div>
     </div>
     <div class="portadas" aria-label="Algunos de los vídeos que más han funcionado">
       <figure><img src="../media/v-avion.webp" width="450" height="800" loading="lazy" alt="Portada del vídeo de los ojos verdes y el Airbus"><figcaption><b>4,8 M</b>en Instagram</figcaption></figure>
@@ -271,13 +292,13 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
         <ul>
           <li>Mi motor de vídeo, ni código, ni muñecos, decorados o archivos de proyecto. Tu motor te lo monta Claude con los mensajes de la guía.</li>
           <li>Mis vídeos ni su música.</li>
-          <li>Las suscripciones de Claude ni de ElevenLabs: cada uno tiene sus planes y precios.</li>
+          <li>Las herramientas: Claude y ElevenLabs van aparte y son de pago, cada uno con sus planes y precios.</li>
           <li>Ayuda personal ni clases.</li>
           <li>Visitas garantizadas: te cuento lo que me ha funcionado a mí, con mis cifras reales.</li>
         </ul>
       </div>
     </div>
-    <p class="necesitas"><b>Lo que vas a necesitar:</b> Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y ElevenLabs para la voz. Y paciencia con el primero: hasta tener tu motor, cuenta con varias sesiones de prueba.</p>
+    <p class="necesitas"><b>Lo que vas a necesitar:</b> Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y ElevenLabs para la voz. Los dos son de pago y van aparte. No hace falta un ordenador potente: el vídeo lo hace Claude en la nube, así que se puede hacer todo desde el móvil (con ordenador es más cómodo). Y paciencia con el primero: hasta tener tu motor, cuenta con varias sesiones de prueba.</p>
   </div>
 </section>
 
@@ -287,7 +308,8 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
     <details><summary>¿Cómo la recibo?</summary><p>Nada más pagar, la página de pago te trae a la descarga. Guarda ese enlace: con él puedes volver a bajarla cuando quieras, y si vuelves desde el mismo móvil, la descarga te sigue esperando.</p></details>
     <details><summary>¿Incluye tu motor de vídeo o el código?</summary><p>No. La guía explica el proceso y te da los mensajes con los que le pido a Claude el motor y cada vídeo, pero no incluye mi código, ni los muñecos, ni ningún archivo. Tu motor te lo monta Claude.</p></details>
     <details><summary>¿Necesito saber programar?</summary><p>No hace falta: Claude escribe el código y tú le dices qué quieres. Pero el primer vídeo lleva su tiempo: cuenta con varias sesiones de prueba hasta tener tu motor. A partir de ahí, cada vídeo es mucho más rápido.</p></details>
-    <details><summary>¿Qué necesito para hacer los vídeos?</summary><p>Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y ElevenLabs para la voz. Los dos tienen sus propios planes y precios, que no van incluidos.</p></details>
+    <details><summary>¿Qué necesito para hacer los vídeos?</summary><p>Un plan de pago de Claude con ejecución de código (por ejemplo, Claude Code) para el vídeo y uno de ElevenLabs para la voz. Van aparte: cada uno tiene sus planes y precios, que no están incluidos en la guía.</p></details>
+    <details><summary>¿Necesito ordenador?</summary><p>No hace falta uno potente: el vídeo lo hace Claude en la nube, así que puedes hacerlo todo desde el móvil. Con un ordenador es más cómodo. Para leer la guía vale cualquier móvil, tablet u ordenador que abra un PDF.</p></details>
     <details><summary>¿Me garantizas que mis vídeos se harán virales?</summary><p>No. Te cuento lo que me ha funcionado a mí, con mis cifras reales, pero lo que pase con tus vídeos depende de muchas cosas.</p></details>
     <details><summary>¿Tengo que salir en los vídeos?</summary><p>No. Todo lo hacen los muñecos en 3D, y la voz es de IA.</p></details>
     <details><summary>¿Quién cobra el pago?</summary><p>Stripe, que se encarga de los impuestos de tu país y te manda el recibo por correo. Aquí no se pide ni se guarda ningún dato de pago.</p></details>
@@ -297,7 +319,7 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
 
 <section class="cierre" aria-label="Comprar la guía">
   <div class="cierre-in">
-    <h2 class="sec-t">Tu primer vídeo, esta semana</h2>
+    <h2 class="sec-t">Empieza tu primer vídeo hoy</h2>
     <div class="precio" data-oferta>
       <div class="que" data-que>Lanzamiento por Black Friday: solo este fin de semana</div>
       <div class="cifra"><b data-precio>25&nbsp;€</b><span class="luego" data-luego>El lunes sube a 39&nbsp;€</span></div>
@@ -308,9 +330,28 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
         <div><b data-s>00</b><span>seg</span></div>
         <div class="ms"><b data-ms>000</b><span>ms</span></div>
       </div>
+      <label class="acepto"><input type="checkbox" data-acepto><span>He leído <a href="#que-compras">qué incluye y qué no</a> y acepto las <a href="#condiciones">condiciones de compra</a>. Es contenido digital: la recibo al momento y, una vez descargada, no hay derecho de desistimiento.<b class="falta">Marca la casilla para poder comprar.</b></span></label>
       <a class="boton" data-comprar href="https://buy.stripe.com/00w7sD7mB3GZ0f11lfdnW0b">Comprar la guía por 25&nbsp;€</a>
-      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código ni archivos. Impuestos incluidos.</p>
+      <p class="letra">Guía en PDF de 27 páginas: la descargas nada más pagar. No incluye código, archivos ni las herramientas (Claude y ElevenLabs van aparte y son de pago). Impuestos incluidos.</p>
     </div>
+  </div>
+</section>
+<section class="condiciones" id="condiciones" aria-labelledby="t-condiciones">
+  <div class="condiciones-in">
+    <h2 class="sec-t" id="t-condiciones">Condiciones de compra</h2>
+    <details data-condiciones><summary>Leer las condiciones</summary>
+      <ol>
+        <li><b>Qué compras.</b> «Cómo hago vídeos virales con IA», una guía en PDF de 27 páginas, en español. Es contenido digital: no se envía nada físico.</li>
+        <li><b>Qué no incluye.</b> Ni mi motor de vídeo, ni código, ni muñecos, decorados, vídeos, música o archivos de proyecto; ni ayuda personal o clases; ni resultados garantizados: visitas, seguidores o ingresos dependen de tus vídeos.</li>
+        <li><b>Las herramientas van aparte y son de pago.</b> Para hacer los vídeos como en la guía necesitas, por tu cuenta, un plan de pago de Claude con ejecución de código (por ejemplo, Claude Code) y uno de ElevenLabs para la voz. Sus precios y condiciones los ponen ellos y pueden cambiar.</li>
+        <li><b>Qué dispositivo necesitas.</b> Para leer la guía, cualquier móvil, tablet u ordenador que abra un PDF. Para hacer los vídeos no hace falta un ordenador potente: el vídeo lo hace Claude en la nube, así que se puede hacer todo desde el móvil; con ordenador es más cómodo. Hace falta conexión a internet.</li>
+        <li><b>Precio y pago.</b> El precio que ves, con los impuestos incluidos: 25 € durante el lanzamiento (hasta el domingo 29 de noviembre de 2026 a las 23:59, hora peninsular) y 39 € después. El pago se hace en una página de Stripe, que cobra, aplica los impuestos y te manda el recibo por correo. Aquí no se pide ni se guarda ningún dato de pago.</li>
+        <li><b>Entrega.</b> Nada más pagar, la página de pago te lleva a la descarga. Guarda ese enlace: es tu acceso para volver a bajarla.</li>
+        <li><b>Desistimiento.</b> Es contenido digital que recibes al momento. Al marcar la casilla aceptas recibirlo enseguida y sabes que, una vez descargado, no hay derecho de desistimiento. Si la descarga no te funciona, escríbenos y lo solucionamos o te devolvemos el dinero.</li>
+        <li><b>Uso.</b> La guía es para tu uso personal: no la compartas, la revendas ni la publiques. Las plantillas y los mensajes que trae sí puedes usarlos para tus vídeos.</li>
+        <li><b>Contacto.</b> Por mensaje en <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>, con el número de tu recibo.</li>
+      </ol>
+    </details>
   </div>
 </section>
 </main>
@@ -323,7 +364,7 @@ details p{padding:0 0 16px;font-weight:500;font-size:16px;max-width:40em}
       <a href="https://www.instagram.com/loquepasahoy.es">Instagram</a>
       <a href="https://www.youtube.com/@loquepasa-hoy">YouTube</a>
     </nav>
-    <p><b>La guía.</b> PDF de 27 páginas para descargar; no incluye código, archivos ni suscripciones. El pago se hace en una página externa de Stripe, que cobra, se encarga de los impuestos y manda el recibo; aquí no se pide ni se guarda ningún dato de pago. Cifras de las estadísticas de Instagram, TikTok y YouTube a 25 de noviembre de 2026.</p>
+    <p><b>La guía.</b> PDF de 27 páginas para descargar; no incluye código, archivos ni suscripciones. El pago se hace en una página externa de Stripe, que cobra, se encarga de los impuestos y manda el recibo; aquí no se pide ni se guarda ningún dato de pago. Cifras de las estadísticas de Instagram y YouTube a 27 de noviembre de 2026, y de TikTok del 17 al 23 de noviembre. <a href="#condiciones">Condiciones de compra</a>.</p>
     <p><b>Privacidad.</b> Esta página no usa cookies ni analítica. El servidor que aloja la página registra datos técnicos de cada visita, como la dirección IP.</p>
   </div>
 </footer>
